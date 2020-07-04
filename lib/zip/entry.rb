@@ -1,4 +1,7 @@
 require 'pathname'
+
+require_relative 'extra_field_set'
+
 module Zip
   class Entry
     STORED   = 0
