@@ -325,8 +325,8 @@ module Zip
 
       def atime(filename)
         e = get_entry(filename)
-        if e.extra.member? 'UniversalTime'
-          e.extra['UniversalTime'].atime
+        if e.extra['UT']
+          e.extra['UT'].atime
         elsif e.extra.member? 'NTFS'
           e.extra['NTFS'].atime
         end
@@ -334,8 +334,8 @@ module Zip
 
       def ctime(filename)
         e = get_entry(filename)
-        if e.extra.member? 'UniversalTime'
-          e.extra['UniversalTime'].ctime
+        if e.extra['UT']
+          e.extra['UT'].ctime
         elsif e.extra.member? 'NTFS'
           e.extra['NTFS'].ctime
         end

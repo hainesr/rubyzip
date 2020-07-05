@@ -129,5 +129,6 @@ module Zip
   end
 end
 
+require_relative 'extra_fields/universal_time'
 require_relative 'extra_fields/unknown'
 require_relative 'extra_fields/zip64'

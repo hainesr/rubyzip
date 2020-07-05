@@ -85,8 +85,8 @@ module Zip
     end
 
     def time
-      if @extra['UniversalTime']
-        @extra['UniversalTime'].mtime
+      if @extra['UT']
+        @extra['UT'].mtime
       elsif @extra['NTFS']
         @extra['NTFS'].mtime
       else
@@ -99,10 +99,10 @@ module Zip
     alias mtime time
 
     def time=(value)
-      unless @extra.member?('UniversalTime') || @extra.member?('NTFS')
-        @extra.create('UniversalTime')
+      unless @extra['UT'] || @extra["\n\x00"]
+        @extra.create('UT')
       end
-      (@extra['UniversalTime'] || @extra['NTFS']).mtime = value
+      (@extra['UT'] || @extra['NTFS']).mtime = value
       @time = value
     end
 
