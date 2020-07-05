@@ -20,6 +20,12 @@ module Zip
       def c_dir_size
         to_c_dir_bin.bytesize
       end
+
+      def ==(comp)
+        return false if self.class != comp.class
+
+        to_local_bin == comp.to_local_bin && to_c_dir_bin == comp.to_c_dir_bin
+      end
     end
   end
 end

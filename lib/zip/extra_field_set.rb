@@ -15,6 +15,14 @@ module Zip
     end
     # :startdoc:
 
+    def ==(comp)
+      return false if length != comp.length
+
+      @fields.each { |k, v| return false if v != comp[k] }
+
+      true
+    end
+
     def initialize(data = nil)
       @fields = {}
       merge(data) unless data.nil?

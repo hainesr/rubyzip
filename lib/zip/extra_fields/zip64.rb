@@ -18,6 +18,10 @@ module Zip
       def local_size
         16
       end
+
+      def ==(_comp)
+        true
+      end
     end
 
     # Info-ZIP Extra for Zip64 size.
@@ -48,13 +52,6 @@ module Zip
         zip64.relative_header_offset = header_offset
         zip64.disk_start_number = disk_start
         zip64
-      end
-
-      def ==(other)
-        other.original_size == @original_size &&
-          other.compressed_size == @compressed_size &&
-          other.relative_header_offset == @relative_header_offset &&
-          other.disk_start_number == @disk_start_number
       end
 
       def merge(data)
@@ -113,6 +110,13 @@ module Zip
           [@relative_header_offset, 8],
           [@disk_start_number, 4]
         ].reduce(0) { |acc, d| d[0].nil? ? acc : acc + d[1] }
+      end
+
+      def ==(comp)
+        comp.original_size == @original_size &&
+          comp.compressed_size == @compressed_size &&
+          comp.relative_header_offset == @relative_header_offset &&
+          comp.disk_start_number == @disk_start_number
       end
 
       private
