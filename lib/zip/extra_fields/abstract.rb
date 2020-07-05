@@ -5,10 +5,6 @@ module Zip
         ExtraFieldSet.register_extra_field_type(self)
       end
 
-      def id
-        self.class.const_get(:EXTRA_FIELD_ID)
-      end
-
       def to_local_bin
         ''
       end

@@ -75,14 +75,14 @@ class ZipLocalEntryTest < MiniTest::Test
     write_to_file(LEH_FILE, CEH_FILE, entry)
     local_entry, central_entry = read_from_file(LEH_FILE, CEH_FILE)
     assert(
-      local_entry.extra['Zip64Placeholder'],
+      local_entry.extra[::Zip::ExtraFieldSet.zip64_placeholder_id],
       'zip64 placeholder should be used in local file header'
     )
 
     # This was removed when writing the c_dir_entry, so remove from compare.
-    local_entry.extra.delete('Zip64Placeholder')
+    local_entry.extra.delete(::Zip::ExtraFieldSet.zip64_placeholder_id)
     assert(
-      central_entry.extra['Zip64Placeholder'].nil?,
+      central_entry.extra[::Zip::ExtraFieldSet.zip64_placeholder_id].nil?,
       'zip64 placeholder should not be used in central directory'
     )
 
@@ -94,8 +94,8 @@ class ZipLocalEntryTest < MiniTest::Test
     ::Zip.write_zip64_support = true
     entry = ::Zip::Entry.new('bigfile.zip', 'entry_name', 'my little equine',
                              'malformed extra field because why not',
-                             0x7766554433221100, 0xDEADBEEF, ::Zip::Entry::DEFLATED,
-                             0x9988776655443322)
+                             0x7766554433221100, 0xDEADBEEF,
+                             ::Zip::Entry::DEFLATED, 0x9988776655443322)
     write_to_file(LEH_FILE, CEH_FILE, entry)
     local_entry, central_entry = read_from_file(LEH_FILE, CEH_FILE)
     compare_local_entry_headers(entry, local_entry)
@@ -107,13 +107,13 @@ class ZipLocalEntryTest < MiniTest::Test
     buf1 = StringIO.new
     entry = ::Zip::Entry.new('file.zip', 'entry_name')
     entry.write_local_entry(buf1)
-    assert(entry.extra['Zip64'].nil?, 'zip64 extra is unnecessarily present')
+    refute(entry.extra.has_zip64?, 'zip64 extra is unnecessarily present')
 
     buf2 = StringIO.new
     entry.size = 0x123456789ABCDEF0
     entry.compressed_size = 0x0123456789ABCDEF
     entry.write_local_entry(buf2, true)
-    refute_nil(entry.extra['Zip64'])
+    assert(entry.extra.has_zip64?)
     refute_equal(buf1.size, 0)
     assert_equal(buf1.size, buf2.size) # it can't grow, or we'd clobber file data
   end

@@ -73,7 +73,7 @@ module Zip
       @time               = args[8] || ::Zip::DOSTime.now
 
       @ftype = name_is_directory? ? :directory : :file
-      @extra = ::Zip::ExtraField.new(@extra.to_s) unless @extra.kind_of?(::Zip::ExtraField)
+      @extra = ::Zip::ExtraFieldSet.new(@extra.to_s) unless @extra.kind_of?(::Zip::ExtraFieldSet)
     end
 
     def encrypted?
@@ -274,10 +274,10 @@ module Zip
         raise ::Zip::Error, 'Truncated local zip entry header'
       end
 
-      if @extra.kind_of?(::Zip::ExtraField)
+      if @extra.kind_of?(::Zip::ExtraFieldSet)
         @extra.merge(extra) if extra
       else
-        @extra = ::Zip::ExtraField.new(extra)
+        @extra = ::Zip::ExtraFieldSet.new(extra)
       end
 
       parse_zip64_extra(true)
@@ -285,7 +285,7 @@ module Zip
     end
 
     def pack_local_entry
-      zip64 = @extra['Zip64']
+      zip64 = @extra.zip64
       [::Zip::LOCAL_ENTRY_SIGNATURE,
        @version_needed_to_extract, # version needed to extract
        @gp_flags, # @gp_flags
@@ -383,10 +383,10 @@ module Zip
     end
 
     def read_c_dir_extra_field(io)
-      if @extra.kind_of?(::Zip::ExtraField)
+      if @extra.kind_of?(::Zip::ExtraFieldSet)
         @extra.merge(io.read(@extra_length))
       else
-        @extra = ::Zip::ExtraField.new(io.read(@extra_length))
+        @extra = ::Zip::ExtraFieldSet.new(io.read(@extra_length))
       end
     end
 
@@ -448,7 +448,7 @@ module Zip
     end
 
     def pack_c_dir_entry
-      zip64 = @extra['Zip64']
+      zip64 = @extra.zip64
       [
         @header_signature,
         @version, # version of encoding software
@@ -668,12 +668,13 @@ module Zip
     # apply missing data from the zip64 extra information field, if present
     # (required when file sizes exceed 2**32, but can be used for all files)
     def parse_zip64_extra(for_local_header) #:nodoc:all
-      return if @extra['Zip64'].nil?
+      return unless @extra.has_zip64?
 
       if for_local_header
-        @size, @compressed_size = @extra['Zip64'].parse(@size, @compressed_size)
+        @size, @compressed_size = @extra.zip64.parse(@size, @compressed_size)
       else
-        @size, @compressed_size, @local_header_offset = @extra['Zip64'].parse(@size, @compressed_size, @local_header_offset)
+        @size, @compressed_size, @local_header_offset =
+          @extra.zip64.parse(@size, @compressed_size, @local_header_offset)
       end
     end
 
@@ -689,29 +690,20 @@ module Zip
       need_zip64 ||= @local_header_offset >= 0xFFFFFFFF unless for_local_header
       if need_zip64
         @version_needed_to_extract = VERSION_NEEDED_TO_EXTRACT_ZIP64
-        @extra.delete('Zip64Placeholder')
-        zip64 = @extra.create('Zip64')
+
         if for_local_header
-          # local header always includes size and compressed size
-          zip64.original_size = @size
-          zip64.compressed_size = @compressed_size
+          # Local header always includes size and compressed size.
+          @extra.create_zip64(@size, @compressed_size)
         else
-          # central directory entry entries include whichever fields are necessary
-          zip64.original_size = @size if @size >= 0xFFFFFFFF
-          zip64.compressed_size = @compressed_size if @compressed_size >= 0xFFFFFFFF
-          zip64.relative_header_offset = @local_header_offset if @local_header_offset >= 0xFFFFFFFF
+          # Central directory entry entries only include necessary fields.
+          @extra.create_zip64(
+            @size >= 0xFFFFFFFF ? @size : nil,
+            @compressed_size >= 0xFFFFFFFF ? @compressed_size : nil,
+            @local_header_offset >= 0xFFFFFFFF ? @local_header_offset : nil
+          )
         end
       else
-        @extra.delete('Zip64')
-
-        # if this is a local header entry, create a placeholder
-        # so we have room to write a zip64 extra field afterward
-        # (we won't know if it's needed until the file data is written)
-        if for_local_header
-          @extra.create('Zip64Placeholder')
-        else
-          @extra.delete('Zip64Placeholder')
-        end
+        @extra.prep_zip64_placeholder(for_local_header)
       end
     end
   end
