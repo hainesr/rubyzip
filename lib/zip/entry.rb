@@ -87,8 +87,8 @@ module Zip
     def time
       if @extra['UT']
         @extra['UT'].mtime
-      elsif @extra['NTFS']
-        @extra['NTFS'].mtime
+      elsif @extra["\n\x00"]
+        @extra["\n\x00"].mtime
       else
         # Standard time field in central directory has local time
         # under archive creator. Then, we can't get timezone.
@@ -102,7 +102,7 @@ module Zip
       unless @extra['UT'] || @extra["\n\x00"]
         @extra.create('UT')
       end
-      (@extra['UT'] || @extra['NTFS']).mtime = value
+      (@extra['UT'] || @extra["\n\x00"]).mtime = value
       @time = value
     end
 

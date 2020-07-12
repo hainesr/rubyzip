@@ -327,8 +327,8 @@ module Zip
         e = get_entry(filename)
         if e.extra['UT']
           e.extra['UT'].atime
-        elsif e.extra.member? 'NTFS'
-          e.extra['NTFS'].atime
+        elsif e.extra["\n\x00"]
+          e.extra["\n\x00"].atime
         end
       end
 
@@ -336,8 +336,8 @@ module Zip
         e = get_entry(filename)
         if e.extra['UT']
           e.extra['UT'].ctime
-        elsif e.extra.member? 'NTFS'
-          e.extra['NTFS'].ctime
+        elsif e.extra["\n\x00"]
+          e.extra["\n\x00"].ctime
         end
       end
 
