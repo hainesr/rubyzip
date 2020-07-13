@@ -128,6 +128,7 @@ end
 
 require_relative 'extra_fields/ntfs'
 require_relative 'extra_fields/universal_time'
+require_relative 'extra_fields/unix1'
 require_relative 'extra_fields/unix2'
 require_relative 'extra_fields/unknown'
 require_relative 'extra_fields/zip64'
