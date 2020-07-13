@@ -44,7 +44,6 @@ module Zip
     def merge(data)
       return if data.empty?
 
-      fields = {}
       data = data.dup
       while data.bytesize.positive?
         id = data.slice!(0, 2)
@@ -53,16 +52,14 @@ module Zip
 
         payload = data.slice!(0, size)
 
-        if fields.member? id
-          fields[id].merge(payload)
+        if @fields.member? id
+          @fields[id].merge(payload)
         elsif type_map.member? id
-          fields[id] = type_map[id].new(payload)
+          @fields[id] = type_map[id].new(payload)
         else
-          fields[id] = ExtraFields::Unknown.new(payload)
+          @fields[id] = ExtraFields::Unknown.new(payload)
         end
       end
-
-      @fields.merge!(fields)
     end
 
     def create_zip64(size, compressed, offset = nil, start = nil)
