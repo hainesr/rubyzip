@@ -104,8 +104,8 @@ module Zip
 
         def gid
           e = get_entry
-          if e.extra.member? 'IUnix'
-            e.extra['IUnix'].gid || 0
+          if e.extra['Ux']
+            e.extra['Ux'].gid || 0
           else
             0
           end
@@ -113,8 +113,8 @@ module Zip
 
         def uid
           e = get_entry
-          if e.extra.member? 'IUnix'
-            e.extra['IUnix'].uid || 0
+          if e.extra['Ux']
+            e.extra['Ux'].uid || 0
           else
             0
           end
