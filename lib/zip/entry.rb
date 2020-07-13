@@ -668,7 +668,7 @@ module Zip
     # apply missing data from the zip64 extra information field, if present
     # (required when file sizes exceed 2**32, but can be used for all files)
     def parse_zip64_extra(for_local_header) #:nodoc:all
-      return unless @extra.has_zip64?
+      return unless @extra.zip64?
 
       if for_local_header
         @size, @compressed_size = @extra.zip64.parse(@size, @compressed_size)

@@ -5,8 +5,8 @@ class ZipExtraFieldsUnix1Test < MiniTest::Test
     str = "\x9D\xA6\f_\x9D\xA6\f_\xE9\x03\xEA\x03".force_encoding('BINARY')
     ux = ::Zip::ExtraFields::Unix1.new(str)
 
-    assert_equal(Zip::DOSTime.at(1594664605), ux.atime)
-    assert_equal(Zip::DOSTime.at(1594664605), ux.mtime)
+    assert_equal(Zip::DOSTime.at(1_594_664_605), ux.atime)
+    assert_equal(Zip::DOSTime.at(1_594_664_605), ux.mtime)
     assert_equal(1_002, ux.gid)
     assert_equal(1_001, ux.uid)
   end

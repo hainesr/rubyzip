@@ -43,22 +43,7 @@ Naming/AccessorMethodName:
 Style/AccessModifierDeclarations:
   Exclude:
     - 'lib/zip/central_directory.rb'
-    - 'lib/zip/extra_field/zip64.rb'
     - 'lib/zip/filesystem.rb'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect, EnforcedStyle.
-# SupportedStyles: nested, compact
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'lib/zip/extra_field/generic.rb'
-    - 'lib/zip/extra_field/ntfs.rb'
-    - 'lib/zip/extra_field/old_unix.rb'
-    - 'lib/zip/extra_field/universal_time.rb'
-    - 'lib/zip/extra_field/unix.rb'
-    - 'lib/zip/extra_field/zip64.rb'
-    - 'lib/zip/extra_field/zip64_placeholder.rb'
 
 # Offense count: 25
 Style/Documentation:
@@ -114,9 +99,7 @@ Style/NumericPredicate:
   Exclude:
     - 'spec/**/*'
     - 'lib/zip/entry.rb'
-    - 'lib/zip/extra_field/old_unix.rb'
-    - 'lib/zip/extra_field/universal_time.rb'
-    - 'lib/zip/extra_field/unix.rb'
+    - 'lib/zip/extra_fields/universal_time.rb'
     - 'lib/zip/file.rb'
     - 'lib/zip/filesystem.rb'
     - 'lib/zip/input_stream.rb'

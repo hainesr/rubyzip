@@ -19,7 +19,7 @@ module Zip
         16
       end
 
-      def ==(_comp)
+      def ==(_other)
         true
       end
     end
@@ -45,11 +45,11 @@ module Zip
         @disk_start_number      = nil
       end
 
-      def self.build(size, compressed, header_offset = nil, disk_start = nil)
+      def self.build(size, compressed, offset = nil, disk_start = nil)
         zip64 = new
         zip64.original_size = size
         zip64.compressed_size = compressed
-        zip64.relative_header_offset = header_offset
+        zip64.relative_header_offset = offset
         zip64.disk_start_number = disk_start
         zip64
       end
@@ -63,12 +63,10 @@ module Zip
       # pass the values from the base entry (if applicable)
       # wider values are only present in the extra field for base values set to all FFs
       # returns the final values for the four attributes (from the base or zip64 extra record)
-      def parse(size, compressed_size, header_offset = nil, disk_start = nil)
+      def parse(size, compressed_size, offset = nil, disk_start = nil)
         @original_size = extract(8) if size == 0xFFFFFFFF
         @compressed_size = extract(8) if compressed_size == 0xFFFFFFFF
-        if header_offset && header_offset == 0xFFFFFFFF
-          @relative_header_offset = extract(8)
-        end
+        @relative_header_offset = extract(8) if offset && offset == 0xFFFFFFFF
         @disk_start_number = extract(4) if disk_start && disk_start == 0xFFFF
 
         @content = nil
@@ -76,7 +74,7 @@ module Zip
         [
           @original_size || size,
           @compressed_size || compressed_size,
-          @relative_header_offset || header_offset,
+          @relative_header_offset || offset,
           @disk_start_number || disk_start
         ]
       end
@@ -112,11 +110,11 @@ module Zip
         ].reduce(0) { |acc, d| d[0].nil? ? acc : acc + d[1] }
       end
 
-      def ==(comp)
-        comp.original_size == @original_size &&
-          comp.compressed_size == @compressed_size &&
-          comp.relative_header_offset == @relative_header_offset &&
-          comp.disk_start_number == @disk_start_number
+      def ==(other)
+        other.original_size == @original_size &&
+          other.compressed_size == @compressed_size &&
+          other.relative_header_offset == @relative_header_offset &&
+          other.disk_start_number == @disk_start_number
       end
 
       private

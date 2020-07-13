@@ -28,7 +28,7 @@ module Zip
       cdir_size = eocd_offset - cdir_offset
       if ::Zip.write_zip64_support
         need_zip64_eocd = cdir_offset > 0xFFFFFFFF || cdir_size > 0xFFFFFFFF || @entry_set.size > 0xFFFF
-        need_zip64_eocd ||= @entry_set.any? { |entry| entry.extra.has_zip64? }
+        need_zip64_eocd ||= @entry_set.any? { |entry| entry.extra.zip64? }
         if need_zip64_eocd
           write_64_e_o_c_d(io, cdir_offset, cdir_size)
           write_64_eocd_locator(io, eocd_offset)

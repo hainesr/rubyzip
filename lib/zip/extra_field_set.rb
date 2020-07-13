@@ -15,10 +15,10 @@ module Zip
     end
     # :startdoc:
 
-    def ==(comp)
-      return false if length != comp.length
+    def ==(other)
+      return false if length != other.length
 
-      @fields.each { |k, v| return false if v != comp[k] }
+      @fields.each { |k, v| return false if v != other[k] }
 
       true
     end
@@ -86,7 +86,7 @@ module Zip
       @fields[zip64_id]
     end
 
-    def has_zip64?
+    def zip64?
       @fields.member? zip64_id
     end
 
