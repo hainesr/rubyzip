@@ -11,47 +11,31 @@ module Zip
       CTIME_MASK = 0b100
       MTIME_MASK = 0b001
 
-      attr_reader :atime, :ctime, :mtime
+      attr_accessor :atime, :ctime, :mtime
 
-      def initialize(binstr = nil)
+      def initialize(data = nil)
         @ctime = nil
         @mtime = nil
         @atime = nil
-        @flag  = 0
 
-        merge(binstr) unless binstr.nil?
-      end
-
-      def atime=(time)
-        @flag = time.nil? ? @flag & ~ATIME_MASK : @flag | ATIME_MASK
-        @atime = time
-      end
-
-      def ctime=(time)
-        @flag = time.nil? ? @flag & ~CTIME_MASK : @flag | CTIME_MASK
-        @ctime = time
-      end
-
-      def mtime=(time)
-        @flag = time.nil? ? @flag & ~MTIME_MASK : @flag | MTIME_MASK
-        @mtime = time
+        merge(data) unless data.nil?
       end
 
       def merge(data)
         return if data.empty?
 
-        @flag, *times = data.unpack('Cl<l<l<')
+        flag, *times = data.unpack('Cl<l<l<')
 
         # Parse the timestamps, in order, based on which flags are set.
         return if times[0].nil?
 
-        @mtime ||= ::Zip::DOSTime.at(times.shift) unless @flag & MTIME_MASK == 0
+        @mtime ||= ::Zip::DOSTime.at(times.shift) unless flag & MTIME_MASK == 0
         return if times[0].nil?
 
-        @atime ||= ::Zip::DOSTime.at(times.shift) unless @flag & ATIME_MASK == 0
+        @atime ||= ::Zip::DOSTime.at(times.shift) unless flag & ATIME_MASK == 0
         return if times[0].nil?
 
-        @ctime ||= ::Zip::DOSTime.at(times.shift) unless @flag & CTIME_MASK == 0
+        @ctime ||= ::Zip::DOSTime.at(times.shift) unless flag & CTIME_MASK == 0
       end
 
       def ==(other)
@@ -61,28 +45,35 @@ module Zip
       end
 
       def to_local_bin
-        s = [@flag].pack('C')
-        s << [@mtime.to_i].pack('l<') unless @flag & MTIME_MASK == 0
-        s << [@atime.to_i].pack('l<') unless @flag & ATIME_MASK == 0
-        s << [@ctime.to_i].pack('l<') unless @flag & CTIME_MASK == 0
+        s = to_c_dir_bin
+        s << [@atime.to_i].pack('l<') unless @atime.nil?
+        s << [@ctime.to_i].pack('l<') unless @ctime.nil?
         s
       end
 
       def to_c_dir_bin
-        s = [@flag].pack('C')
-        s << [@mtime.to_i].pack('l<') unless @flag & MTIME_MASK == 0
+        s = [flags].pack('C')
+        s << [@mtime.to_i].pack('l<') unless @mtime.nil?
         s
       end
 
       def local_size
         1 +
-          (@flag & MTIME_MASK == 0 ? 0 : 4) +
-          (@flag & ATIME_MASK == 0 ? 0 : 4) +
-          (@flag & CTIME_MASK == 0 ? 0 : 4)
+          (@mtime.nil? ? 0 : 4) +
+          (@atime.nil? ? 0 : 4) +
+          (@ctime.nil? ? 0 : 4)
       end
 
       def c_dir_size
-        1 + (@flag & MTIME_MASK == 0 ? 0 : 4)
+        1 + (@mtime.nil? ? 0 : 4)
+      end
+
+      private
+
+      def flags
+        (@mtime.nil? ? 0 : MTIME_MASK) +
+        (@atime.nil? ? 0 : ATIME_MASK) +
+        (@ctime.nil? ? 0 : CTIME_MASK)
       end
     end
   end
