@@ -14,7 +14,7 @@ class ZipExtraFieldsUniversalTimeTest < MiniTest::Test
   def test_parse
     PARSE_TESTS.each do |bin, flags, a, c, m|
       ut = ::Zip::ExtraFields::UniversalTime.new(bin)
-      assert_equal(flags, ut.flag)
+      assert_equal(flags, flag(ut))
       assert(ut.atime.nil? == a)
       assert(ut.ctime.nil? == c)
       assert(ut.mtime.nil? == m)
@@ -23,7 +23,7 @@ class ZipExtraFieldsUniversalTimeTest < MiniTest::Test
 
   def test_parse_nil
     ut = ::Zip::ExtraFields::UniversalTime.new
-    assert_equal(0b000, ut.flag)
+    assert_equal(0b000, flag(ut))
     assert_nil(ut.atime)
     assert_nil(ut.ctime)
     assert_nil(ut.mtime)
@@ -32,30 +32,30 @@ class ZipExtraFieldsUniversalTimeTest < MiniTest::Test
   def test_set_clear_times
     time = ::Zip::DOSTime.now
     ut = ::Zip::ExtraFields::UniversalTime.new
-    assert_equal(0b000, ut.flag)
+    assert_equal(0b000, flag(ut))
 
     ut.mtime = time
-    assert_equal(0b001, ut.flag)
+    assert_equal(0b001, flag(ut))
     assert_equal(time, ut.mtime)
 
     ut.ctime = time
-    assert_equal(0b101, ut.flag)
+    assert_equal(0b101, flag(ut))
     assert_equal(time, ut.ctime)
 
     ut.atime = time
-    assert_equal(0b111, ut.flag)
+    assert_equal(0b111, flag(ut))
     assert_equal(time, ut.atime)
 
     ut.ctime = nil
-    assert_equal(0b011, ut.flag)
+    assert_equal(0b011, flag(ut))
     assert_nil ut.ctime
 
     ut.mtime = nil
-    assert_equal(0b010, ut.flag)
+    assert_equal(0b010, flag(ut))
     assert_nil ut.mtime
 
     ut.atime = nil
-    assert_equal(0b000, ut.flag)
+    assert_equal(0b000, flag(ut))
     assert_nil ut.atime
   end
 
@@ -100,5 +100,11 @@ class ZipExtraFieldsUniversalTimeTest < MiniTest::Test
     assert_equal(9, extra.c_dir_size)
     assert_equal(ut_data, extra.to_local_bin)
     assert_equal("UT\x05\x00\x07PS>A", extra.to_c_dir_bin)
+  end
+
+  private
+
+  def flag(ut)
+    ut.to_local_bin.unpack1('C')
   end
 end

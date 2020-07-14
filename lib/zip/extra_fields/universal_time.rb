@@ -11,7 +11,7 @@ module Zip
       CTIME_MASK = 0b100
       MTIME_MASK = 0b001
 
-      attr_reader :atime, :ctime, :mtime, :flag
+      attr_reader :atime, :ctime, :mtime
 
       def initialize(binstr = nil)
         @ctime = nil
