@@ -1,11 +1,12 @@
-require_relative 'abstract'
+require_relative 'extension'
 
 module Zip
   module ExtraFields
     # PKWARE NTFS Extra Field (0x000a)
     # Only Tag 0x0001 is supported
-    class NTFS < Abstract
+    class NTFS < Extension
       EXTRA_FIELD_ID = [0x000A].pack('v')
+      PROVIDES = :timestamp
       register_extra_field_type
 
       WINDOWS_TICK = 10_000_000.0

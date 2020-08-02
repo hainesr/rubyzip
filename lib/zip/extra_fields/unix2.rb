@@ -1,10 +1,11 @@
-require_relative 'abstract'
+require_relative 'extension'
 
 module Zip
   module ExtraFields
     # Info-ZIP Extra for UNIX uid/gid.
-    class Unix2 < Abstract
+    class Unix2 < Extension
       EXTRA_FIELD_ID = 'Ux'
+      PROVIDES = :ownership
       register_extra_field_type
 
       attr_accessor :uid, :gid

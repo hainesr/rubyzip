@@ -31,6 +31,7 @@ require 'zip/deflater'
 require 'zip/streamable_stream'
 require 'zip/streamable_directory'
 require 'zip/errors'
+require_relative 'zip/extra_fields/config'
 
 module Zip
   extend self
@@ -45,6 +46,8 @@ module Zip
                 :force_entry_names_encoding,
                 :validate_entry_sizes
 
+  attr_reader   :extra_fields
+
   def reset!
     @_ran_once = false
     @unicode_names = false
@@ -56,6 +59,8 @@ module Zip
     @warn_invalid_date = true
     @case_insensitive_match = false
     @validate_entry_sizes = true
+    @extra_fields = ExtraFields::Config.instance
+    @extra_fields.reset!
   end
 
   def setup

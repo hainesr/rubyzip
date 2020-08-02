@@ -1,10 +1,11 @@
-require_relative 'abstract'
+require_relative 'extension'
 
 module Zip
   module ExtraFields
     # Info-ZIP Additional timestamp field
-    class UniversalTime < Abstract
+    class UniversalTime < Extension
       EXTRA_FIELD_ID = 'UT'
+      PROVIDES = :timestamp
       register_extra_field_type
 
       ATIME_MASK = 0b010

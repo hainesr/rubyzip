@@ -1,9 +1,9 @@
-require_relative 'abstract'
+require_relative 'extension'
 
 module Zip
   module ExtraFields
     # Old Info-ZIP Extra for UNIX uid/gid and file timestamps.
-    class Unix1 < Abstract
+    class Unix1 < Extension
       EXTRA_FIELD_ID = 'UX'
       register_extra_field_type
 

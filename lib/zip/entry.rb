@@ -76,6 +76,16 @@ module Zip
       @extra = ::Zip::ExtraFieldSet.new(@extra.to_s) unless @extra.kind_of?(::Zip::ExtraFieldSet)
     end
 
+    def method_missing(symbol, *args)
+      return super unless respond_to?(symbol)
+
+      @extra.extension(symbol, *args)
+    end
+
+    def respond_to_missing?(symbol, include_all)
+      @extra.respond_to?(symbol, include_all)
+    end
+
     def encrypted?
       gp_flags & 1 == 1
     end
