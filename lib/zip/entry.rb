@@ -67,7 +67,7 @@ module Zip
       @crc                = args[5] || 0
       @compression_method = args[6] || ::Zip::Entry::DEFLATED
       @size               = args[7] || 0
-      @time               = args[8] || ::Zip::DOSTime.now
+      @time               = ::Zip::DOSTime.from_time(args[8])
 
       @ftype = name_is_directory? ? :directory : :file
       @extra = ::Zip::ExtraField.new(@extra.to_s) unless @extra.kind_of?(::Zip::ExtraField)

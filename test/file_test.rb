@@ -88,7 +88,7 @@ class ZipFileTest < MiniTest::Test
       assert_equal(custom_entry_args[3], entry.crc)
       assert_equal(custom_entry_args[4], entry.compression_method)
       assert_equal(custom_entry_args[5], entry.size)
-      assert_equal(custom_entry_args[6], entry.time)
+      assert(entry.time.dos_equals(custom_entry_args[6]))
 
       zf.get_output_stream('entry.bin') do |os|
         os.write(::File.open('test/data/generated/5entry.zip', 'rb').read)

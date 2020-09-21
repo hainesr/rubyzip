@@ -31,6 +31,8 @@ module Zip
 
     # Create a DOSTime instance from a vanilla Time instance.
     def self.from_time(time)
+      return now if time.nil?
+
       local(time.year, time.month, time.day, time.hour, time.min, time.sec)
     end
 
