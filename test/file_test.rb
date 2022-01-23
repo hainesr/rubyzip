@@ -695,6 +695,18 @@ class ZipFileTest < MiniTest::Test
     end
   end
 
+  # Abusing CI to help debug this as I don't have a Mac!
+  def test_odd_macos_behaviour
+    require 'pp'
+
+    zip_file = 'test/data/archive-6-entries.zip'
+
+    ::Zip::File.open(zip_file) do |zf|
+      pp zf
+      assert_equal(6, zf.size)
+    end
+  end
+
   private
 
   def assert_contains(zip_file, entry_name, filename = entry_name)
