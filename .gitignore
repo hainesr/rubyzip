@@ -2,10 +2,7 @@
 *.gem
 .bundle
 Gemfile.lock
-+samples/*.zip
-+samples/*.zip.*
-samples/zipdialogui.rb
-coverage
+coverage/
 pkg/
 .ruby-gemset
 .ruby-version

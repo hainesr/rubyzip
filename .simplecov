@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Copyright (c) 2002-2022, The Rubyzip Developers.
+#
+# Licensed under the BSD License. See LICENCE for details.
+
 require 'simplecov-lcov'
 
 SimpleCov::Formatter::LcovFormatter.config do |c|
@@ -18,5 +22,5 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(
 
 SimpleCov.start do
   enable_coverage :branch
-  add_filter ['/test/', '/samples/']
+  add_filter ['/test/']
 end
