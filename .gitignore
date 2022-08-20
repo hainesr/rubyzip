@@ -3,6 +3,7 @@
 .bundle
 Gemfile.lock
 coverage/
+html/
 pkg/
 .ruby-gemset
 .ruby-version
