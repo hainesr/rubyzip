@@ -11,5 +11,6 @@ require 'rubyzip/version'
 class VersionTest < MiniTest::Test
   def test_version_exists
     assert(defined? Rubyzip::VERSION)
+    assert_instance_of(String, Rubyzip::VERSION)
   end
 end
