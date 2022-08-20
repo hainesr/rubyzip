@@ -8,4 +8,5 @@
 module Rubyzip
 end
 
+require_relative 'rubyzip/constants'
 require_relative 'rubyzip/version'
