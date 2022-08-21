@@ -30,5 +30,9 @@ module Rubyzip
     def read16(data, offset = 0)
       data[offset, 2].unpack1('v')
     end
+
+    def read32(data, offset = 0)
+      data[offset, 4].unpack1('V')
+    end
   end
 end
