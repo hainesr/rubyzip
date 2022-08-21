@@ -15,12 +15,20 @@ module Rubyzip
       @header_data = header
     end
 
+    def compressed_size
+      Utilities.read32(@header_data, LOC_OFF_COMP_SIZE) unless @header_data.nil?
+    end
+
     def compression_method
       Utilities.read16(@header_data, LOC_OFF_COMP_METHOD) unless @header_data.nil?
     end
 
     def crc32
       Utilities.read32(@header_data, LOC_OFF_CRC32) unless @header_data.nil?
+    end
+
+    def uncompressed_size
+      Utilities.read32(@header_data, LOC_OFF_UNCOMP_SIZE) unless @header_data.nil?
     end
   end
 end

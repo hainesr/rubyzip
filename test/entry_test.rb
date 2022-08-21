@@ -14,8 +14,10 @@ class EntryTest < MiniTest::Test
     entry = Rubyzip::Entry.new(name)
 
     assert_equal(name, entry.name)
+    assert_nil(entry.compressed_size)
     assert_nil(entry.compression_method)
     assert_nil(entry.crc32)
+    assert_nil(entry.uncompressed_size)
   end
 
   def test_create_with_name_and_header
@@ -24,7 +26,9 @@ class EntryTest < MiniTest::Test
     entry = Rubyzip::Entry.new(name, header: header)
 
     assert_equal(name, entry.name)
+    assert_equal(1439, entry.compressed_size)
     assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, entry.compression_method)
     assert_equal(0xBB66B4EC, entry.crc32)
+    assert_equal(3666, entry.uncompressed_size)
   end
 end
