@@ -39,8 +39,23 @@ class EntryTest < MiniTest::Test
     assert_equal(0xBB66B4EC, @entry_with_header.crc32)
   end
 
+  def test_encrypted?
+    assert_nil(@entry.encrypted?)
+    refute_predicate(@entry_with_header, :encrypted?)
+  end
+
+  def test_streamed?
+    assert_nil(@entry.streamed?)
+    refute_predicate(@entry_with_header, :streamed?)
+  end
+
   def test_uncompressed_size
     assert_nil(@entry.uncompressed_size)
     assert_equal(3666, @entry_with_header.uncompressed_size)
+  end
+
+  def test_utf8?
+    assert_nil(@entry.utf8?)
+    refute_predicate(@entry_with_header, :utf8?)
   end
 end

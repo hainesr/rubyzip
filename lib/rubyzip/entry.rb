@@ -27,8 +27,26 @@ module Rubyzip
       Utilities.read32(@header_data, LOC_OFF_CRC32) unless @header_data.nil?
     end
 
+    def encrypted?
+      test_flag(GP_FLAGS_ENCRYPTED) unless @header_data.nil?
+    end
+
+    def streamed?
+      test_flag(GP_FLAGS_STREAMED) unless @header_data.nil?
+    end
+
     def uncompressed_size
       Utilities.read32(@header_data, LOC_OFF_UNCOMP_SIZE) unless @header_data.nil?
+    end
+
+    def utf8?
+      test_flag(GP_FLAGS_UTF8) unless @header_data.nil?
+    end
+
+    private
+
+    def test_flag(mask)
+      (Utilities.read16(@header_data, LOC_OFF_GP_FLAGS) & mask) == mask
     end
   end
 end
