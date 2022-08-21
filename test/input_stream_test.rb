@@ -23,6 +23,10 @@ class InputStreamTest < MiniTest::Test
       entry = zis.next_entry
       assert_instance_of(Rubyzip::Entry, entry)
       assert_equal('lorem_ipsum.txt', entry.name)
+      assert_equal(
+        Rubyzip::COMPRESSION_METHOD_DEFLATE,
+        entry.compression_method
+      )
     end
   end
 
