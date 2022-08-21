@@ -10,3 +10,5 @@ require_relative 'rubyzip/version'
 # Rubyzip is a ruby module for reading and writing zip files.
 module Rubyzip
 end
+
+require_relative 'rubyzip/input_stream'
