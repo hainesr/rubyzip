@@ -25,4 +25,17 @@ class InputStreamTest < MiniTest::Test
       assert_equal('lorem_ipsum.txt', entry.name)
     end
   end
+
+  def test_next_entry_too_far
+    ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+
+      entry = zis.next_entry
+      assert_instance_of(Rubyzip::Entry, entry)
+      assert_equal('lorem_ipsum.txt', entry.name)
+
+      entry = zis.next_entry
+      assert_nil(entry)
+    end
+  end
 end
