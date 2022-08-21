@@ -6,6 +6,11 @@
 
 ##
 module Rubyzip # :nodoc:
+  # Local headers.
+  LOC_PACK = 'VCCvvvvVVVvv'
+  LOC_SIGN = 0x04034b50     # "PK\x03\x04"
+  LOC_SIZE = 30             # Including signature
+
   # File types.
   FILE_TYPE_DIR     = 0o04
   FILE_TYPE_FILE    = 0o10
