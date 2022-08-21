@@ -15,6 +15,7 @@ class EntryTest < MiniTest::Test
 
     assert_equal(name, entry.name)
     assert_nil(entry.compression_method)
+    assert_nil(entry.crc32)
   end
 
   def test_create_with_name_and_header
@@ -24,5 +25,6 @@ class EntryTest < MiniTest::Test
 
     assert_equal(name, entry.name)
     assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, entry.compression_method)
+    assert_equal(0xBB66B4EC, entry.crc32)
   end
 end
