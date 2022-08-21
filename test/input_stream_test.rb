@@ -15,4 +15,13 @@ class InputStreamTest < MiniTest::Test
     # Should not raise anything.
     Rubyzip::InputStream.new(zip)
   end
+
+  def test_get_next_entry
+    zip = ::File.open(ZIP_ONE_TEXT_FILE, 'rb')
+    zis = Rubyzip::InputStream.new(zip)
+
+    entry = zis.next_entry
+    assert_instance_of(Rubyzip::Entry, entry)
+    assert_equal('lorem_ipsum.txt', entry.name)
+  end
 end
