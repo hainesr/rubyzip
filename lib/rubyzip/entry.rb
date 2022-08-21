@@ -16,7 +16,7 @@ module Rubyzip
     end
 
     def compression_method
-      Utilities.read16(@header_data, 8) unless @header_data.nil?
+      Utilities.read16(@header_data, LOC_OFF_COMP_METHOD) unless @header_data.nil?
     end
   end
 end

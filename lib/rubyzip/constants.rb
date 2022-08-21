@@ -5,11 +5,27 @@
 # Licensed under the BSD License. See LICENCE for details.
 
 ##
-module Rubyzip # :nodoc:
+module Rubyzip # rubocop:disable Metrics/ModuleLength
+  # :nodoc:
+
   # Local headers.
   LOC_PACK = 'VCCvvvvVVVvv'
   LOC_SIGN = 0x04034b50     # "PK\x03\x04"
   LOC_SIZE = 30             # Including signature
+
+  # Local header offsets.
+  LOC_OFF_SIGNATURE   = 0
+  LOC_OFF_VER_EXTRACT = 4
+  LOC_OFF_FS_TYPE     = 5
+  LOC_OFF_GP_FLAGS    = 6
+  LOC_OFF_COMP_METHOD = 8
+  LOC_OFF_MOD_TIME    = 10
+  LOC_OFF_MOD_DATE    = 12
+  LOC_OFF_CRC32       = 14
+  LOC_OFF_COMP_SIZE   = 18
+  LOC_OFF_UNCOMP_SIZE = 22
+  LOC_OFF_NAME_LEN    = 26
+  LOC_OFF_EXTRA_LEN   = 28
 
   # File types.
   FILE_TYPE_DIR     = 0o04
