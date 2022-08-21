@@ -39,6 +39,14 @@ class EntryTest < MiniTest::Test
     assert_equal(0xBB66B4EC, @entry_with_header.crc32)
   end
 
+  def test_directory?
+    refute_predicate(@entry, :directory?)
+    refute_predicate(@entry_with_header, :directory?)
+
+    entry = Rubyzip::Entry.new('this_is_a_directory/')
+    assert_predicate(entry, :directory?)
+  end
+
   def test_encrypted?
     assert_nil(@entry.encrypted?)
     refute_predicate(@entry_with_header, :encrypted?)

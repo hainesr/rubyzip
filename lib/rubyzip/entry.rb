@@ -27,6 +27,10 @@ module Rubyzip
       Utilities.read32(@header_data, LOC_OFF_CRC32) unless @header_data.nil?
     end
 
+    def directory?
+      @name.end_with?('/')
+    end
+
     def encrypted?
       test_flag(GP_FLAGS_ENCRYPTED) unless @header_data.nil?
     end
