@@ -11,6 +11,8 @@ module Rubyzip
     attr_reader :name
 
     def initialize(name, header: nil)
+      raise ArgumentError, 'Entry name cannot be longer than 65,535 characters.' if name.length > 0xFFFF
+
       @name = name
       @header_data = header
     end

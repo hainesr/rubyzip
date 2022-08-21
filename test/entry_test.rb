@@ -21,6 +21,18 @@ class EntryTest < MiniTest::Test
     assert_equal(@entry_name, @entry_with_header.name)
   end
 
+  def test_create_name_too_long
+    name = 'a' * 0xFFFF
+
+    # Should not raise anything.
+    Rubyzip::Entry.new(name)
+
+    name += 'a'
+    assert_raises(ArgumentError) do
+      Rubyzip::Entry.new(name)
+    end
+  end
+
   def test_compressed_size
     assert_nil(@entry.compressed_size)
     assert_equal(1439, @entry_with_header.compressed_size)
