@@ -27,6 +27,11 @@ module Rubyzip # rubocop:disable Metrics/ModuleLength
   LOC_OFF_NAME_LEN    = 26
   LOC_OFF_EXTRA_LEN   = 28
 
+  # General purpose flags.
+  GP_FLAGS_ENCRYPTED = (1 << 0)
+  GP_FLAGS_STREAMED  = (1 << 3)
+  GP_FLAGS_UTF8      = (1 << 11)
+
   # File types.
   FILE_TYPE_DIR     = 0o04
   FILE_TYPE_FILE    = 0o10
