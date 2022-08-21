@@ -9,4 +9,5 @@ module Rubyzip
 end
 
 require_relative 'rubyzip/constants'
+require_relative 'rubyzip/input_stream'
 require_relative 'rubyzip/version'
