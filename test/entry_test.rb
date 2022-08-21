@@ -14,5 +14,15 @@ class EntryTest < MiniTest::Test
     entry = Rubyzip::Entry.new(name)
 
     assert_equal(name, entry.name)
+    assert_nil(entry.compression_method)
+  end
+
+  def test_create_with_name_and_header
+    name = 'lorem_ipsum.txt'
+    header = ::File.read(BIN_LOCAL_HEADER)
+    entry = Rubyzip::Entry.new(name, header: header)
+
+    assert_equal(name, entry.name)
+    assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, entry.compression_method)
   end
 end

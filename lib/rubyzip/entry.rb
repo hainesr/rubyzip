@@ -10,8 +10,13 @@ module Rubyzip
   class Entry
     attr_reader :name
 
-    def initialize(name)
+    def initialize(name, header: nil)
       @name = name
+      @header_data = header
+    end
+
+    def compression_method
+      Utilities.read16(@header_data, 8) unless @header_data.nil?
     end
   end
 end
