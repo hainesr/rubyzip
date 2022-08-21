@@ -6,4 +6,6 @@
 
 require 'minitest/autorun'
 
+require_relative 'fixtures'
+
 Minitest::Test.make_my_diffs_pretty!
