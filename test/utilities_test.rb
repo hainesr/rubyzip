@@ -7,6 +7,7 @@
 require_relative 'test_helper'
 
 require 'rubyzip/utilities'
+require 'stringio'
 
 class UtilitiesTest < MiniTest::Test
   include Rubyzip::Utilities
@@ -19,6 +20,16 @@ class UtilitiesTest < MiniTest::Test
       assert_equal('lorem_ipsum.txt', name)
       assert_equal(Rubyzip::LOC_SIZE, header_data.length)
       assert_equal(name.length + header_data.length + extras.length, header.tell)
+    end
+  end
+
+  def test_read_local_header_with_bad_signature
+    header = ::File.read(BIN_LOCAL_HEADER)
+    header[0] = 'Z'
+    io = StringIO.new(header)
+
+    assert_raises(Rubyzip::Error) do
+      read_local_header(io)
     end
   end
 end
