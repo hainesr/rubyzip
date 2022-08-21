@@ -32,4 +32,11 @@ class UtilitiesTest < MiniTest::Test
       read_local_header(io)
     end
   end
+
+  def test_read16
+    header = ::File.read(BIN_LOCAL_HEADER)
+
+    assert_equal(0x4b50, read16(header))
+    assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, read16(header, 8))
+  end
 end

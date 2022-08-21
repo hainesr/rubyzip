@@ -26,5 +26,9 @@ module Rubyzip
 
       [name, header_data, extras]
     end
+
+    def read16(data, offset = 0)
+      data[offset, 2].unpack1('v')
+    end
   end
 end
