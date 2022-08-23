@@ -25,3 +25,5 @@ module Rubyzip
     end
   end
 end
+
+require_relative 'codecs/decompressors'
