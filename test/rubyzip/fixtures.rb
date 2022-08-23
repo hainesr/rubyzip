@@ -7,6 +7,7 @@
 # Fixtures directories.
 FIXTURES_DIR = File.expand_path('fixtures', __dir__)
 BIN_FIXTURES = File.join(FIXTURES_DIR, 'bin')
+TXT_FIXTURES = File.join(FIXTURES_DIR, 'text')
 ZIP_FIXTURES = File.join(FIXTURES_DIR, 'zip')
 
 # Test zips.
@@ -16,3 +17,6 @@ ZIP_ONE_DIRECTORY = File.join(ZIP_FIXTURES, 'one_directory.zip')
 
 # Test binary data.
 BIN_LOCAL_HEADER = File.join(BIN_FIXTURES, 'local_header.bin')
+
+# Test text data.
+TXT_LOREM_IPSUM = File.join(TXT_FIXTURES, 'lorem_ipsum.txt')
