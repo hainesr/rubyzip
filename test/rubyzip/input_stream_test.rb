@@ -30,4 +30,28 @@ class InputStreamTest < Minitest::Test
       assert_nil(zis.next_entry)
     end
   end
+
+  def test_read_stored_entry
+    text = File.read(TXT_LOREM_IPSUM)
+
+    File.open(ZIP_ONE_TEXT_FILE_STOR, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+      zis.next_entry
+      contents = zis.read
+
+      assert_equal(text, contents)
+    end
+  end
+
+  def test_read_deflated_entry
+    text = File.read(TXT_LOREM_IPSUM)
+
+    File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+      zis.next_entry
+      contents = zis.read
+
+      assert_equal(text, contents)
+    end
+  end
 end
