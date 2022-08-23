@@ -37,6 +37,9 @@ Metrics/BlockLength:
   Exclude:
     - 'rubyzip.gemspec'
 
+Metrics/CyclomaticComplexity:
+  Max: 10
+
 Minitest/MultipleAssertions:
   Max: 5
 
