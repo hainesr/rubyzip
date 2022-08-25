@@ -9,7 +9,7 @@ require_relative 'test_helper'
 require 'rubyzip/utilities'
 require 'stringio'
 
-class UtilitiesTest < MiniTest::Test
+class UtilitiesTest < Minitest::Test
   include Rubyzip::Utilities
 
   def test_read_local_header

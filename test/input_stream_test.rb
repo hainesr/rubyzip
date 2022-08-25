@@ -8,7 +8,7 @@ require_relative 'test_helper'
 
 require 'rubyzip/input_stream'
 
-class InputStreamTest < MiniTest::Test
+class InputStreamTest < Minitest::Test
   def test_create_from_stream
     ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
       # Should not raise anything.

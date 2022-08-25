@@ -8,7 +8,7 @@ require_relative 'test_helper'
 
 require 'rubyzip/entry'
 
-class EntryTest < MiniTest::Test
+class EntryTest < Minitest::Test
   def setup
     header = ::File.read(BIN_LOCAL_HEADER)
     @entry_name = 'lorem_ipsum.txt'

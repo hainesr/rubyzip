@@ -8,7 +8,7 @@ require_relative 'test_helper'
 
 require 'rubyzip/codecs'
 
-class CodecsTest < MiniTest::Test
+class CodecsTest < Minitest::Test
   TEST_METHOD_NOT_STORED = -99
   TEST_DECOMPRESSION_METHOD = -1
 

@@ -8,7 +8,7 @@ require_relative 'test_helper'
 
 require 'rubyzip/version'
 
-class VersionTest < MiniTest::Test
+class VersionTest < Minitest::Test
   def test_version_exists
     assert(defined? Rubyzip::VERSION)
     assert_instance_of(String, Rubyzip::VERSION)

@@ -8,7 +8,7 @@ require_relative '../test_helper'
 
 require 'rubyzip/codecs/stored_decompressor'
 
-class StoredDecompressorTest < MiniTest::Test
+class StoredDecompressorTest < Minitest::Test
   # Fake entry which implements uncompressed_size.
   class TestEntry
     attr_reader :uncompressed_size

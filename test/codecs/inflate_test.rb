@@ -8,7 +8,7 @@ require_relative '../test_helper'
 
 require 'rubyzip/codecs/inflater'
 
-class InflaterTest < MiniTest::Test
+class InflaterTest < Minitest::Test
   # Fake entry which implements compressed_size.
   class TestEntry
     attr_reader :compressed_size
