@@ -9,11 +9,18 @@ require_relative '../constants'
 ##
 module Rubyzip
   module Codecs
-    # The base class for decompressors.
+    # This is the superclass for all decompressors. Subclasses are required
+    # to implement `read_stream` and `eof?`.
     class Decompressor
       def initialize(io, entry)
         @io = io
         @entry = entry
+      end
+
+      def read(len = nil)
+        return (len.nil? || len.zero? ? '' : nil) if eof?
+
+        read_stream(len)
       end
     end
   end
