@@ -11,6 +11,7 @@ require 'zlib'
 ##
 module Rubyzip
   module Codecs
+    # A decompressor that implements the Inflate algorithm.
     class Inflater < Decompressor
       DECOMPRESSION_METHOD = COMPRESSION_METHOD_DEFLATE
       MAX_CHUNK_SIZE = 32_768

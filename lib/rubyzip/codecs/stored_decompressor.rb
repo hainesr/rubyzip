@@ -9,6 +9,7 @@ require_relative 'decompressor'
 ##
 module Rubyzip
   module Codecs
+    # A pass-through decompressor that handles Stored data.
     class StoredDecompressor < Decompressor
       DECOMPRESSION_METHOD = COMPRESSION_METHOD_STORE
 
