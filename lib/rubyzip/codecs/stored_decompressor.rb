@@ -18,9 +18,13 @@ module Rubyzip
         @remaining = @entry.uncompressed_size
       end
 
-      def read(len = nil)
-        return (len.nil? || len.zero? ? '' : nil) if eof?
+      def eof?
+        @remaining <= 0
+      end
 
+      private
+
+      def read_stream(len)
         len = @remaining if len.nil? || len > @remaining
 
         buf = @io.read(len)
@@ -28,10 +32,6 @@ module Rubyzip
 
         @remaining -= buf.length
         buf
-      end
-
-      def eof?
-        @remaining <= 0
       end
     end
   end

@@ -27,9 +27,9 @@ module Rubyzip
         @buffer.empty? && @zlib_inflater.finished?
       end
 
-      def read(len = nil)
-        return (len.nil? || len.zero? ? '' : nil) if eof?
+      private
 
+      def read_stream(len)
         while len.nil? || (@buffer.bytesize < len)
           break if @zlib_inflater.finished?
 
@@ -40,8 +40,6 @@ module Rubyzip
 
         @buffer.slice!(0...(len || @buffer.bytesize))
       end
-
-      private
 
       def inflate(len)
         retried = 0

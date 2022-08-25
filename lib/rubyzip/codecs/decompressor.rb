@@ -14,6 +14,12 @@ module Rubyzip
         @io = io
         @entry = entry
       end
+
+      def read(len = nil)
+        return (len.nil? || len.zero? ? '' : nil) if eof?
+
+        read_stream(len)
+      end
     end
   end
 end
