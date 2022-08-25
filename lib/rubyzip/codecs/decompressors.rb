@@ -6,3 +6,11 @@
 
 require_relative 'stored_decompressor'
 require_relative 'inflater'
+
+##
+module Rubyzip
+  module Codecs
+    register_decompressor(StoredDecompressor)
+    register_decompressor(Inflater)
+  end
+end

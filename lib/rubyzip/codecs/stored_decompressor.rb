@@ -34,7 +34,5 @@ module Rubyzip
         @remaining <= 0
       end
     end
-
-    Codecs.register_decompressor(StoredDecompressor)
   end
 end
