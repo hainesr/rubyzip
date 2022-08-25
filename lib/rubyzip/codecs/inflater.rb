@@ -13,14 +13,14 @@ module Rubyzip
   module Codecs
     class Inflater < Decompressor
       DECOMPRESSION_METHOD = COMPRESSION_METHOD_DEFLATE
-      CHUNK_SIZE = 32_768
+      MAX_CHUNK_SIZE = 32_768
 
       def initialize(io, entry)
         super
 
         @zlib_inflater = Zlib::Inflate.new(-Zlib::MAX_WBITS)
         @buffer = +''
-        @eof = false
+        @remaining = @entry.compressed_size
       end
 
       def eof?
@@ -33,7 +33,9 @@ module Rubyzip
         while len.nil? || (@buffer.bytesize < len)
           break if @zlib_inflater.finished?
 
-          @buffer << inflate
+          read_len = @remaining < MAX_CHUNK_SIZE ? @remaining : MAX_CHUNK_SIZE
+          @buffer << inflate(read_len)
+          @remaining -= read_len
         end
 
         @buffer.slice!(0...(len || @buffer.bytesize))
@@ -41,10 +43,10 @@ module Rubyzip
 
       private
 
-      def inflate
+      def inflate(len)
         retried = 0
         begin
-          @zlib_inflater.inflate(@io.read(CHUNK_SIZE))
+          @zlib_inflater.inflate(@io.read(len))
         rescue Zlib::BufError
           raise if retried >= 5 # Seems legit?
 

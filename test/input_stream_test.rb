@@ -36,10 +36,8 @@ class InputStreamTest < MiniTest::Test
 
       entry = zis.next_entry
       assert_instance_of(Rubyzip::Entry, entry)
-      assert_equal('lorem_ipsum.txt', entry.name)
-
-      entry = zis.next_entry
-      assert_nil(entry)
+      assert_nil(zis.next_entry)
+      assert_nil(zis.next_entry)
     end
   end
 
