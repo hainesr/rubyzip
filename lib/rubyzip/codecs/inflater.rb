@@ -57,7 +57,5 @@ module Rubyzip
         end
       end
     end
-
-    Codecs.register_decompressor(Inflater)
   end
 end
