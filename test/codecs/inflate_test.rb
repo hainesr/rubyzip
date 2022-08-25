@@ -7,6 +7,7 @@
 require_relative '../test_helper'
 
 require 'rubyzip/codecs/inflater'
+require 'stringio'
 
 class InflaterTest < Minitest::Test
   # Fake entry which implements compressed_size.
@@ -52,6 +53,18 @@ class InflaterTest < Minitest::Test
       assert_empty(decompressor.read(0))
       assert_empty(decompressor.read)
       assert_nil(decompressor.read(1))
+    end
+  end
+
+  def test_mangled_input
+    data = ::File.read(BIN_LOREM_IPSUM_DEFLATED)
+    data[10, 6] = 'broken'
+    is = StringIO.new(data)
+    entry = TestEntry.new(data.length)
+    decompressor = Rubyzip::Codecs::Inflater.new(is, entry)
+
+    assert_raises(Zlib::DataError) do
+      decompressor.read
     end
   end
 end
