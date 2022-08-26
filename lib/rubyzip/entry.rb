@@ -4,6 +4,9 @@
 #
 # Licensed under the BSD License. See LICENCE for details.
 
+require_relative 'constants'
+require_relative 'utilities'
+
 ##
 module Rubyzip
   # Entry represents an entry in a zip file.
