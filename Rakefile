@@ -5,16 +5,14 @@
 # Licensed under the BSD License. See LICENCE for details.
 
 require 'bundler/gem_tasks'
-require 'rake/testtask'
+require 'minitest/test_task'
 require 'rdoc/task'
 require 'rubocop/rake_task'
 
 task default: :test
 
-Rake::TestTask.new(:test) do |test|
-  test.libs << 'lib'
-  test.pattern = 'test/**/*_test.rb'
-  test.verbose = true
+Minitest::TestTask.create do |test|
+  test.test_globs = 'test/**/*_test.rb'
 end
 
 RDoc::Task.new do |rdoc|
