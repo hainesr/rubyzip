@@ -79,4 +79,16 @@ class InputStreamTest < Minitest::Test
       assert_empty(zis.read)
     end
   end
+
+  def test_read_multiple_entries
+    File.open(ZIP_MULTI_FILE, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+
+      ['lorem_ipsum.txt', 'zip.png', 'one_level/lorem_ipsum.txt'].each do |name|
+        entry = zis.next_entry
+
+        assert_equal(name, entry.name)
+      end
+    end
+  end
 end
