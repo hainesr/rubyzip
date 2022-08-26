@@ -66,4 +66,17 @@ class InputStreamTest < Minitest::Test
       assert_empty(zis.read)
     end
   end
+
+  def test_read_binary_entry
+    png = File.binread(BIN_PNG_FILE)
+
+    File.open(ZIP_ONE_PNG_FILE, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+      entry = zis.next_entry
+
+      assert_equal('zip.png', entry.name)
+      assert_equal(png, zis.read)
+      assert_empty(zis.read)
+    end
+  end
 end
