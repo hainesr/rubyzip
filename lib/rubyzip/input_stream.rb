@@ -18,7 +18,16 @@ module Rubyzip
       @current_entry = nil
     end
 
+    def close_entry
+      # Just read to the end of the current entry.
+      read
+
+      nil
+    end
+
     def next_entry
+      close_entry unless @current_entry.nil?
+
       begin
         name, header, = Utilities.read_local_header(@io)
       rescue Error
@@ -33,10 +42,10 @@ module Rubyzip
     end
 
     def read(len = nil)
-      return if @current_entry.nil?
+      return (len.nil? || len.zero? ? '' : nil) if @current_entry.nil?
 
       buf = @decompressor.read(len)
-      @current_entry = nil if buf.nil?
+      @current_entry = nil if buf.nil? || @decompressor.eof?
 
       buf
     end
