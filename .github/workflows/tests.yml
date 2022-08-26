@@ -45,6 +45,21 @@ jobs:
         flag-name: ${{ matrix.ruby }}
         parallel: true
 
+  test-isolated:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout rubyzip code
+      uses: actions/checkout@v2
+
+    - name: Install and set up ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '2.7'
+        bundler-cache: true
+
+    - name: Run isolated tests
+      run: bundle exec rake test:isolated
+
   test-yjit:
     strategy:
       fail-fast: false
