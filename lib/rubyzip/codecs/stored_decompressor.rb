@@ -14,25 +14,19 @@ module Rubyzip
     class StoredDecompressor < Decompressor
       DECOMPRESSION_METHOD = COMPRESSION_METHOD_STORE
 
-      def initialize(io, entry)
-        super
-
-        @remaining = @entry.uncompressed_size
-      end
-
       def eof?
-        @remaining <= 0
+        @remaining_data <= 0
       end
 
       private
 
       def read_stream(len)
-        len = @remaining if len.nil? || len > @remaining
+        len = @remaining_data if len.nil? || len > @remaining_data
 
         buf = @io.read(len)
         raise EOFError, 'Unexpected EOF.' if buf.nil?
 
-        @remaining -= buf.length
+        @remaining_data -= buf.length
         buf
       end
     end

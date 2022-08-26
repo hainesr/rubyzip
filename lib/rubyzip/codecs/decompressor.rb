@@ -15,6 +15,7 @@ module Rubyzip
       def initialize(io, entry)
         @io = io
         @entry = entry
+        @remaining_data = @entry.compressed_size
       end
 
       def read(len = nil)
