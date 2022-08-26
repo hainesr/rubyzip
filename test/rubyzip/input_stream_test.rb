@@ -55,4 +55,15 @@ class InputStreamTest < Minitest::Test
       assert_equal(text, contents)
     end
   end
+
+  def test_read_directory_entry
+    File.open(ZIP_ONE_DIRECTORY, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+      entry = zis.next_entry
+
+      assert_equal('directory/', entry.name)
+      assert_predicate(entry, :directory?)
+      assert_empty(zis.read)
+    end
+  end
 end
