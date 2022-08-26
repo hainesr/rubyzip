@@ -1,0 +1,9 @@
+# Copyright (c) 2002-2025, The Rubyzip Developers.
+#
+# Licensed under the BSD License. See LICENCE for details.
+
+# Anything with a .bin extension should be considered binary.
+*.bin binary
+
+# Anything with a .txt extension should be left alone.
+*.txt eol=lf
