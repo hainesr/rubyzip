@@ -22,7 +22,6 @@ module Rubyzip
 
         @zlib_inflater = Zlib::Inflate.new(-Zlib::MAX_WBITS)
         @buffer = +''
-        @remaining = @entry.compressed_size
       end
 
       def eof?
@@ -35,9 +34,9 @@ module Rubyzip
         while len.nil? || (@buffer.bytesize < len)
           break if @zlib_inflater.finished?
 
-          read_len = [@remaining, MAX_CHUNK_SIZE].min
+          read_len = [@remaining_data, MAX_CHUNK_SIZE].min
           @buffer << inflate(read_len)
-          @remaining -= read_len
+          @remaining_data -= read_len
         end
 
         @buffer.slice!(0...(len || @buffer.bytesize))
