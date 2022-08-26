@@ -45,7 +45,10 @@ module Rubyzip
       return (len.nil? || len.zero? ? '' : nil) if @current_entry.nil?
 
       buf = @decompressor.read(len)
-      @current_entry = nil if buf.nil? || @decompressor.eof?
+      if buf.nil? || @decompressor.eof?
+        @current_entry = nil
+        @decompressor.validate_crc32!
+      end
 
       buf
     end
