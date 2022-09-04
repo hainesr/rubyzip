@@ -22,13 +22,20 @@ module Rubyzip
         @io = io
         @entry = entry
         @remaining_data = @entry.compressed_size
+        @processed_data = 0
         @crc32 = Zlib.crc32
+        @output_data_length_warning = false
       end
 
       def read(len = nil)
         return (len.nil? || len.zero? ? '' : nil) if eof?
 
         buf = read_stream(len)
+        @processed_data += buf.length
+        if !@output_data_length_warning && (@processed_data > @entry.uncompressed_size)
+          @output_data_length_warning = true
+          warn "Entry '#{@entry.name}' should be #{@entry.uncompressed_size}B, but is larger when inflated."
+        end
         @crc32 = Zlib.crc32(buf, @crc32)
 
         buf
