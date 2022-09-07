@@ -20,6 +20,7 @@ ZIP_MULTI_FILE = ::File.join(ZIP_FIXTURES, 'multi_file.zip')
 # Test binary data.
 BIN_LOCAL_HEADER = ::File.join(BIN_FIXTURES, 'local_header.bin')
 BIN_LOREM_IPSUM_DEFLATED = ::File.join(BIN_FIXTURES, 'lorem_ipsum_deflated.bin')
+BIN_LOREM_IPSUM_ENC = ::File.join(BIN_FIXTURES, 'lorem_ipsum_enc.bin')
 BIN_PNG_FILE = ::File.join(BIN_FIXTURES, 'zip.png')
 
 # Test text data.
