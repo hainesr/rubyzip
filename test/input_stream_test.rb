@@ -99,4 +99,16 @@ class InputStreamTest < Minitest::Test
       end
     end
   end
+
+  def test_read_encrypted_stored_entry
+    text = ::File.read(TXT_LOREM_IPSUM)
+
+    ::File.open(ZIP_ENC_ONE_TEXT_FILE_STOR, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+
+      zis.next_entry(password: 'Rubyz1p!')
+      contents = zis.read
+      assert_equal(text, contents)
+    end
+  end
 end

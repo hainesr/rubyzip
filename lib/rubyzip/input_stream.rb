@@ -4,8 +4,8 @@
 #
 # Licensed under the BSD License. See LICENCE for details.
 
-require_relative 'codecs'
 require_relative 'entry'
+require_relative 'entry_input_stream'
 require_relative 'utilities'
 
 ##
@@ -25,7 +25,7 @@ module Rubyzip
       nil
     end
 
-    def next_entry
+    def next_entry(password: '')
       close_entry unless @current_entry.nil?
 
       begin
@@ -35,8 +35,7 @@ module Rubyzip
       end
 
       @current_entry = Entry.new(name, header: header)
-      decompressor_class = Codecs.decompressor_for_entry(@current_entry)
-      @decompressor = decompressor_class.new(@io, @current_entry)
+      @entry_input_stream = EntryInputStream.new(@io, @current_entry, password)
 
       @current_entry
     end
@@ -44,10 +43,10 @@ module Rubyzip
     def read(len = nil)
       return (len.nil? || len.zero? ? '' : nil) if @current_entry.nil?
 
-      buf = @decompressor.read(len)
-      if buf.nil? || @decompressor.eof?
+      buf = @entry_input_stream.read(len)
+      if buf.nil? || @entry_input_stream.eof?
         @current_entry = nil
-        @decompressor.validate_crc32!
+        @entry_input_stream.validate_crc32!
       end
 
       buf
