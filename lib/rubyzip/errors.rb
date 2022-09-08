@@ -21,7 +21,8 @@ module Rubyzip
     end
 
     def message
-      "Invalid CRC32 checksum when decompressed - expected 0x#{@expected}; got 0x#{@actual}."
+      'Invalid CRC32 checksum when decompressed - ' \
+        "expected 0x#{@expected.to_s(16)}; got 0x#{@actual.to_s(16)}."
     end
   end
 end

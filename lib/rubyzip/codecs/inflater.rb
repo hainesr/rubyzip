@@ -17,7 +17,7 @@ module Rubyzip
       DECOMPRESSION_METHOD = COMPRESSION_METHOD_DEFLATE
       MAX_CHUNK_SIZE = 32_768
 
-      def initialize(io, entry)
+      def initialize(io, data_length)
         super
 
         @zlib_inflater = Zlib::Inflate.new(-Zlib::MAX_WBITS)
