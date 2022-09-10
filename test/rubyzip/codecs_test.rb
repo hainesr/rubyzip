@@ -17,15 +17,6 @@ class CodecsTest < Minitest::Test
     DECOMPRESSION_METHOD = TEST_DECOMPRESSION_METHOD
   end
 
-  # Fake entry which uses fake decompressor.
-  class TestEntry
-    attr_reader :compression_method
-
-    def initialize
-      @compression_method = TEST_DECOMPRESSION_METHOD
-    end
-  end
-
   def setup
     Rubyzip::Codecs.register_decompressor(TestDecompressor)
   end
@@ -46,7 +37,8 @@ class CodecsTest < Minitest::Test
   end
 
   def test_decompressor_for_entry
-    entry = TestEntry.new
+    entry = Minitest::Mock.new
+    entry.expect(:compression_method, TEST_DECOMPRESSION_METHOD)
 
     assert_equal(
       TestDecompressor,
