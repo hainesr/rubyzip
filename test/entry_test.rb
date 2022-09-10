@@ -22,14 +22,19 @@ class EntryTest < Minitest::Test
   end
 
   def test_create_name_too_long
-    name = 'a' * 0xFFFF
+    name = 'a' * 0xFFFE
 
     # Should not raise anything.
-    Rubyzip::Entry.new(name)
+    Rubyzip::Entry.new("#{name}a")
 
-    name += 'a'
+    # One character too long.
     assert_raises(ArgumentError) do
-      Rubyzip::Entry.new(name)
+      Rubyzip::Entry.new("a#{name}a")
+    end
+
+    # Length OK, but byte size is too big due to the UTF8 character in it.
+    assert_raises(ArgumentError) do
+      Rubyzip::Entry.new("#{name}å")
     end
   end
 
