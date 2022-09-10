@@ -18,6 +18,13 @@ module Rubyzip
       @current_entry = nil
     end
 
+    def self.open(io)
+      zis = new(io)
+      return zis unless block_given?
+
+      yield zis
+    end
+
     def close_entry
       # Just read to the end of the current entry.
       read
