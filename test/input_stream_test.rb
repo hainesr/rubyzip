@@ -96,6 +96,33 @@ class InputStreamTest < Minitest::Test
     end
   end
 
+  def test_partial_reads_from_entry
+    text = ::File.read(TXT_LOREM_IPSUM)
+    half_len = text.length / 2
+
+    ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+      Rubyzip::InputStream.open(zip) do |zis|
+        zis.next_entry
+        assert_empty(zis.read(0))
+        assert_equal(text[(0...half_len)], zis.read(half_len))
+        assert_equal(text[(half_len...text.length)], zis.read)
+      end
+    end
+  end
+
+  def test_read_at_eof
+    ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+      Rubyzip::InputStream.open(zip) do |zis|
+        zis.next_entry
+        zis.read
+
+        assert_empty(zis.read)
+        assert_empty(zis.read(0))
+        assert_nil(zis.read(1))
+      end
+    end
+  end
+
   def test_read_multiple_entries
     ::File.open(ZIP_MULTI_FILE, 'rb') do |zip|
       zis = Rubyzip::InputStream.new(zip)
