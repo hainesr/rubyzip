@@ -46,4 +46,12 @@ class UtilitiesTest < Minitest::Test
     assert_equal(0x04034b50, read32(header))
     assert_equal(3666, read32(header, 22))
   end
+
+  def test_dos_to_ruby_time
+    time1 = Time.local(2022, 8, 21, 14, 58, 20)
+    assert_equal(time1, dos_to_ruby_time(0x5515774A))
+
+    time2 = Time.local(2022, 8, 26, 14, 0, 32)
+    assert_equal(time2, dos_to_ruby_time(0x551A7010))
+  end
 end
