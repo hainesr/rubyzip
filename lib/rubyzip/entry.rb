@@ -52,6 +52,12 @@ module Rubyzip
       test_flag(GP_FLAGS_UTF8) unless @header_data.nil?
     end
 
+    def version_needed_to_extract
+      return 10 if @header_data.nil?
+
+      Utilities.read16(@header_data, LOC_OFF_VER_EXTRACT)
+    end
+
     private
 
     def test_flag(mask)

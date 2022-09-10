@@ -78,4 +78,9 @@ class EntryTest < Minitest::Test
     assert_nil(@entry.utf8?)
     refute_predicate(@entry_with_header, :utf8?)
   end
+
+  def test_version_needed_to_extract
+    assert_equal(10, @entry.version_needed_to_extract)
+    assert_equal(20, @entry_with_header.version_needed_to_extract)
+  end
 end
