@@ -83,4 +83,11 @@ class EntryTest < Minitest::Test
     assert_equal(10, @entry.version_needed_to_extract)
     assert_equal(20, @entry_with_header.version_needed_to_extract)
   end
+
+  def test_mtime
+    assert_nil(@entry.mtime)
+
+    time = Time.local(2022, 8, 21, 14, 58, 20)
+    assert_equal(time, @entry_with_header.mtime)
+  end
 end

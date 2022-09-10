@@ -40,6 +40,12 @@ module Rubyzip
       test_flag(GP_FLAGS_ENCRYPTED) unless @header_data.nil?
     end
 
+    def mtime
+      return if @header_data.nil?
+
+      Utilities.dos_to_ruby_time(Utilities.read32(@header_data, LOC_OFF_MOD_TIME))
+    end
+
     def streamed?
       test_flag(GP_FLAGS_STREAMED) unless @header_data.nil?
     end
