@@ -16,11 +16,21 @@ class InputStreamTest < Minitest::Test
     end
   end
 
+  def test_create_from_filename
+    # Should not raise anything.
+    Rubyzip::InputStream.new(ZIP_ONE_PNG_FILE)
+  end
+
   def test_open_from_stream
     ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
       # Should not raise anything.
       assert_instance_of(Rubyzip::InputStream, Rubyzip::InputStream.open(zip))
     end
+  end
+
+  def test_open_from_filename
+    # Should not raise anything.
+    assert_instance_of(Rubyzip::InputStream, Rubyzip::InputStream.open(ZIP_MULTI_FILE))
   end
 
   def test_get_next_entry
@@ -145,6 +155,15 @@ class InputStreamTest < Minitest::Test
 
       # The underlying stream used by InputStream should not be closed here.
       refute_predicate(zip, :closed?)
+    end
+  end
+
+  def test_read_multiple_entries_via_block_from_filename
+    Rubyzip::InputStream.open(ZIP_MULTI_FILE) do |zis|
+      ['lorem_ipsum.txt', 'zip.png', 'one_level/lorem_ipsum.txt'].each do |name|
+        entry = zis.next_entry
+        assert_equal(name, entry.name)
+      end
     end
   end
 
