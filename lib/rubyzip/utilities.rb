@@ -38,12 +38,20 @@ module Rubyzip
       [name, header_data, extras]
     end
 
+    def read8(data, offset = 0)
+      data[offset].unpack1('C')
+    end
+
     def read16(data, offset = 0)
       data[offset, 2].unpack1('v')
     end
 
     def read32(data, offset = 0)
       data[offset, 4].unpack1('V')
+    end
+
+    def read32s(data, offset = 0)
+      data[offset, 4].unpack1('l<')
     end
   end
 end
