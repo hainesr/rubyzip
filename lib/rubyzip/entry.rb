@@ -6,6 +6,7 @@
 
 require_relative 'constants'
 require_relative 'utilities'
+require_relative 'extra_fields/set'
 
 ##
 module Rubyzip
@@ -16,11 +17,12 @@ module Rubyzip
 
     attr_reader :name
 
-    def initialize(name, header: nil)
+    def initialize(name, header: nil, extra_field_data: nil)
       raise ArgumentError, NAME_TOO_LONG_MESSAGE if name.bytesize > 0xFFFF
 
       @name = name
       @header_data = header
+      @extra_fields = ExtraFields::Set.new(extra_field_data)
     end
 
     def compressed_size
@@ -65,6 +67,16 @@ module Rubyzip
       return 10 if @header_data.nil?
 
       Utilities.read16(@header_data, LOC_OFF_VER_EXTRACT)
+    end
+
+    def method_missing(symbol, *args)
+      return super unless respond_to?(symbol)
+
+      @extra_fields.delegate(symbol, *args)
+    end
+
+    def respond_to_missing?(symbol, include_all)
+      @extra_fields.respond_to?(symbol, include_all)
     end
 
     private
