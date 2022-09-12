@@ -20,7 +20,7 @@ module Rubyzip
       minute = (bin_dos_date_time >> 5) & 0x3f
       second = (bin_dos_date_time << 1) & 0x3e
 
-      Time.local(year, month, day, hour, minute, second)
+      Time.utc(year, month, day, hour, minute, second)
     end
 
     def read_local_header(io)

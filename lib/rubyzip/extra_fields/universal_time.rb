@@ -66,7 +66,8 @@ module Rubyzip
       def time(type)
         return if @index[type].nil?
 
-        Time.at(Utilities.read32s(@data, 1 + (@index[type] * 4)))
+        # Change the below to 'UTC' when TruffleRuby supports it?
+        Time.at(Utilities.read32s(@data, 1 + (@index[type] * 4)), in: '+00:00')
       end
     end
   end

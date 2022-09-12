@@ -34,7 +34,7 @@ class SetTest < Minitest::Test
     assert_equal(1, efs.length)
     refute_nil(efs['UniversalTime'])
 
-    mtime = Time.local(2022, 8, 21, 14, 58, 20)
+    mtime = Time.utc(2022, 8, 21, 13, 58, 20)
     assert_equal(mtime, efs['UniversalTime'].mtime)
   end
 
@@ -59,10 +59,10 @@ class SetTest < Minitest::Test
 
     assert_nil(efs.delegate(:ctime))
 
-    mtime = Time.local(2022, 8, 21, 14, 58, 20)
+    mtime = Time.utc(2022, 8, 21, 13, 58, 20)
     assert_equal(mtime, efs.delegate(:mtime))
 
-    atime = Time.local(2022, 8, 21, 14, 58, 22)
+    atime = Time.utc(2022, 8, 21, 13, 58, 22)
     assert_equal(atime, efs.delegate(:atime))
   end
 
