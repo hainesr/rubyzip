@@ -31,7 +31,7 @@ class SetTest < Minitest::Test
     extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
     efs = Rubyzip::ExtraFields::Set.new(extra_data)
 
-    assert_equal(1, efs.length)
+    assert_equal(2, efs.length)
     refute_nil(efs['UniversalTime'])
 
     mtime = Time.utc(2022, 8, 21, 13, 58, 20)
