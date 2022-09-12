@@ -13,12 +13,12 @@ class ExtraFieldsTest < Minitest::Test
   TEST_EXTRA_FIELD_ID = 'QQ'
 
   # Fake extra field.
-  class TestExtraField
+  class TestExtraField < Rubyzip::ExtraFields::Field
     EXTRA_FIELD_ID = TEST_EXTRA_FIELD_ID
   end
 
   def setup
-    Rubyzip::ExtraFields.register_extra_field_type(TestExtraField)
+    Rubyzip::ExtraFields.register_extra_field_type(TestExtraField, :method, :method=)
   end
 
   def test_register_non_extra_field_types
@@ -33,5 +33,17 @@ class ExtraFieldsTest < Minitest::Test
     )
 
     assert_nil(Rubyzip::ExtraFields.extra_field_type_for(TEST_EXTRA_FIELD_ID_NOT_STORED))
+  end
+
+  def test_extra_field_for_method
+    assert_equal(
+      'TestExtraField', Rubyzip::ExtraFields.extra_field_for_method(:method)
+    )
+
+    assert_equal(
+      'TestExtraField', Rubyzip::ExtraFields.extra_field_for_method(:method=)
+    )
+
+    assert_nil(Rubyzip::ExtraFields.extra_field_for_method(:symbol))
   end
 end
