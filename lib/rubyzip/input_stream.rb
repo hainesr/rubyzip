@@ -51,12 +51,12 @@ module Rubyzip
       close_entry unless @current_entry.nil?
 
       begin
-        name, header, = Utilities.read_local_header(@io)
+        name, header, extras = Utilities.read_local_header(@io)
       rescue Error
         return nil
       end
 
-      @current_entry = Entry.new(name, header: header)
+      @current_entry = Entry.new(name, header: header, extra_field_data: extras)
       @entry_input_stream = EntryInputStream.new(@io, @current_entry, password)
 
       @current_entry
