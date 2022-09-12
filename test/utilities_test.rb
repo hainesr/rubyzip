@@ -33,6 +33,14 @@ class UtilitiesTest < Minitest::Test
     end
   end
 
+  def test_read
+    header = ::File.read(BIN_LOCAL_HEADER)
+
+    assert_equal(0x50, read(header, 8))
+    assert_equal(0x4b50, read(header, 16))
+    assert_equal(0x04034b50, read(header, 32))
+  end
+
   def test_read16
     header = ::File.read(BIN_LOCAL_HEADER)
 

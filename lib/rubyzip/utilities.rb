@@ -38,6 +38,11 @@ module Rubyzip
       [name, header_data, extras]
     end
 
+    def read(data, size, offset = 0)
+      method = "read#{size}".to_sym
+      __send__(method, data, offset)
+    end
+
     def read8(data, offset = 0)
       data[offset].unpack1('C')
     end
