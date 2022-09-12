@@ -9,6 +9,6 @@ require_relative 'universal_time'
 ##
 module Rubyzip
   module ExtraFields
-    register_extra_field_type(UniversalTime)
+    register_extra_field_type(UniversalTime, :atime, :ctime, :mtime)
   end
 end
