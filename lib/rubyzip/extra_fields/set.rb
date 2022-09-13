@@ -36,11 +36,11 @@ module Rubyzip
         while data.bytesize.positive?
           id = data.slice!(0, 2)
           size = data.slice!(0, 2).unpack1('v')
-          return if size.nil? || size > data.bytesize
+          next if size.nil? || size > data.bytesize
 
           payload = data.slice!(0, size)
           field_type = ExtraFields.extra_field_type_for(id)
-          return if field_type.nil? || payload.empty?
+          next if field_type.nil? || payload.empty?
 
           @fields[field_type.label] = field_type.new(payload)
         end
