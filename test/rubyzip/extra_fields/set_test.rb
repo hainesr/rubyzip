@@ -24,7 +24,9 @@ class SetTest < Minitest::Test
   end
 
   def test_new_nonsense
-    efs = Rubyzip::ExtraFields::Set.new('xxxx')
+    # This data checks an unsupported field then a supported field
+    # with no payload.
+    efs = Rubyzip::ExtraFields::Set.new("xx\x01\x00\x00UT\x01\x00")
 
     assert_equal(0, efs.length)
     assert_equal(0, efs.size)
