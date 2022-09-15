@@ -25,49 +25,22 @@ module Rubyzip
       CTIME_MASK = 0b100
       MTIME_MASK = 0b001
 
-      def initialize(data)
-        @index = {}
-        super
-      end
-
-      def atime
-        time(:atime)
-      end
-
-      def ctime
-        time(:ctime)
-      end
-
-      def mtime
-        time(:mtime)
-      end
+      attr_reader :atime, :ctime, :mtime
 
       private
 
-      def merge
-        i = 0
-        if test_flag(MTIME_MASK)
-          @index[:mtime] = i
-          i += 1
-        end
+      def merge(data)
+        flags = Utilities.read8(data)
+        i = -3 # Start at -3 so we can increment i below first.
 
-        if test_flag(ATIME_MASK)
-          @index[:atime] = i
-          i += 1
-        end
+        @mtime, @atime, @ctime =
+          [MTIME_MASK, ATIME_MASK, CTIME_MASK].map do |mask|
+            next if (flags & mask).zero?
 
-        @index[:ctime] = i if test_flag(CTIME_MASK)
-      end
-
-      def test_flag(mask)
-        (Utilities.read8(@data) & mask) == mask
-      end
-
-      def time(type)
-        return if @index[type].nil?
-
-        # Change the below to 'UTC' when TruffleRuby supports it?
-        Time.at(Utilities.read32s(@data, 1 + (@index[type] * 4)), in: '+00:00')
+            i += 4
+            # Change the below to 'UTC' when TruffleRuby supports it?
+            Time.at(Utilities.read32s(data, i), in: '+00:00')
+          end
       end
     end
   end

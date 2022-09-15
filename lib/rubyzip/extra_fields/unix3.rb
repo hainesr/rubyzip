@@ -14,25 +14,18 @@ module Rubyzip
     class Unix3 < Field
       EXTRA_FIELD_ID = 'ux'
 
-      def gid
-        Utilities.read(@data, @gid_size * 8, @gid_offset)
-      end
-
-      def uid
-        Utilities.read(@data, @uid_size * 8, @uid_offset)
-      end
-
-      def version
-        Utilities.read8(@data)
-      end
+      attr_reader :gid, :uid, :version
 
       private
 
-      def merge
-        @uid_size = Utilities.read8(@data, 1)
-        @uid_offset = 2
-        @gid_size = Utilities.read8(@data, @uid_offset + @uid_size)
-        @gid_offset = @uid_offset + @uid_size + 1
+      def merge(data)
+        @version = Utilities.read8(data)
+
+        uid_size = Utilities.read8(data, 1)
+        @uid = Utilities.read(data, uid_size * 8, 2)
+
+        gid_size = Utilities.read8(data, uid_size + 2)
+        @gid = Utilities.read(data, gid_size * 8, uid_size + 3)
       end
     end
   end
