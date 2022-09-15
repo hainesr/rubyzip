@@ -94,7 +94,7 @@ class EntryTest < Minitest::Test
   def test_mtime
     assert_nil(@entry.mtime)
 
-    time = Time.utc(2022, 8, 21, 14, 58, 20)
+    time = Time.utc(2022, 8, 21, 13, 58, 20)
     assert_equal(time, @entry_with_header.mtime)
   end
 

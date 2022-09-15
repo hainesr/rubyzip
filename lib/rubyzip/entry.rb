@@ -48,7 +48,9 @@ module Rubyzip
     def mtime
       return if @header_data.nil?
 
-      Utilities.dos_to_ruby_time(Utilities.read32(@header_data, LOC_OFF_MOD_TIME))
+      # If there is an extra field that provides mtime, use it if it's set.
+      time = @extra_fields.delegate(:mtime) if @extra_fields.respond_to?(:mtime)
+      time || Utilities.dos_to_ruby_time(Utilities.read32(@header_data, LOC_OFF_MOD_TIME))
     end
 
     def streamed?
