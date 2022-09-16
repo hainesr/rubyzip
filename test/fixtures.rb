@@ -19,6 +19,8 @@ ZIP_MULTI_FILE = ::File.join(ZIP_FIXTURES, 'multi_file.zip')
 
 ZIP_ENC_ONE_TEXT_FILE_STOR = ::File.join(ZIP_FIXTURES, 'one_text_file_stored_enc.zip')
 
+ZIP64_SIMPLE = ::File.join(ZIP_FIXTURES, 'zip64_simple.zip')
+
 # Test binary data.
 BIN_LOCAL_HEADER = ::File.join(BIN_FIXTURES, 'local_header.bin')
 BIN_LOCAL_HEADER_ZIP64 = ::File.join(BIN_FIXTURES, 'local_header_zip64.bin')
