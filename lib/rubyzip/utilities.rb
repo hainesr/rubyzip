@@ -58,5 +58,9 @@ module Rubyzip
     def read32s(data, offset = 0)
       data[offset, 4].unpack1('l<')
     end
+
+    def read64(data, offset = 0)
+      data[offset, 8].unpack1('Q<')
+    end
   end
 end
