@@ -33,3 +33,7 @@ Metrics/ClassLength:
 Metrics/MethodLength:
   Exclude:
     - 'test/**/*.rb'
+
+# Turn on checks for exclusionary terms in the codebase.
+Naming/InclusiveLanguage:
+  Enabled: true
