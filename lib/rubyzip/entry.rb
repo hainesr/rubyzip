@@ -26,7 +26,10 @@ module Rubyzip
     end
 
     def compressed_size
-      Utilities.read32(@header_data, LOC_OFF_COMP_SIZE) unless @header_data.nil?
+      return if @header_data.nil?
+
+      size = Utilities.read32(@header_data, LOC_OFF_COMP_SIZE)
+      zip64? && size == ZIP64_MASK_4B ? @extra_fields['Zip64'].compressed_size : size
     end
 
     def compression_method
@@ -58,11 +61,18 @@ module Rubyzip
     end
 
     def uncompressed_size
-      Utilities.read32(@header_data, LOC_OFF_UNCOMP_SIZE) unless @header_data.nil?
+      return if @header_data.nil?
+
+      size = Utilities.read32(@header_data, LOC_OFF_UNCOMP_SIZE)
+      zip64? && size == ZIP64_MASK_4B ? @extra_fields['Zip64'].uncompressed_size : size
     end
 
     def utf8?
       test_flag(GP_FLAGS_UTF8) unless @header_data.nil?
+    end
+
+    def zip64?
+      !@extra_fields['Zip64'].nil?
     end
 
     def version_needed_to_extract

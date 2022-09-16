@@ -32,6 +32,10 @@ module Rubyzip # rubocop:disable Metrics/ModuleLength
   GP_FLAGS_STREAMED  = (1 << 3)
   GP_FLAGS_UTF8      = (1 << 11)
 
+  # Zip64 extension constants.
+  ZIP64_MASK_2B = (1 << 16) - 1
+  ZIP64_MASK_4B = (1 << 32) - 1
+
   # File types.
   FILE_TYPE_DIR     = 0o04
   FILE_TYPE_FILE    = 0o10

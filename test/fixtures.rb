@@ -21,6 +21,8 @@ ZIP_ENC_ONE_TEXT_FILE_STOR = ::File.join(ZIP_FIXTURES, 'one_text_file_stored_enc
 
 # Test binary data.
 BIN_LOCAL_HEADER = ::File.join(BIN_FIXTURES, 'local_header.bin')
+BIN_LOCAL_HEADER_ZIP64 = ::File.join(BIN_FIXTURES, 'local_header_zip64.bin')
+
 BIN_LOREM_IPSUM_DEFLATED = ::File.join(BIN_FIXTURES, 'lorem_ipsum_deflated.bin')
 BIN_LOREM_IPSUM_ENC = ::File.join(BIN_FIXTURES, 'lorem_ipsum_enc.bin')
 BIN_PNG_FILE = ::File.join(BIN_FIXTURES, 'zip.png')
