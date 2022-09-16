@@ -102,6 +102,16 @@ class EntryTest < Minitest::Test
     assert_equal(time, @entry_with_header.mtime)
   end
 
+  def test_mtime_no_extra_fields
+    File.open(BIN_LOCAL_HEADER_NO_EXTRAS, 'rb') do |header|
+      name, header_data, extras = Rubyzip::Utilities.read_local_header(header)
+      entry = Rubyzip::Entry.new(name, header_data, extras)
+      time = Time.local(2022, 9, 16, 16, 22, 18)
+
+      assert_equal(time, entry.mtime)
+    end
+  end
+
   def test_respond_to
     assert_respond_to(@entry_with_header, :atime)
     refute_respond_to(@entry_with_header, :xtime)
