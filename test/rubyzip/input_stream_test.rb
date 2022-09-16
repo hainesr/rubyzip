@@ -179,4 +179,13 @@ class InputStreamTest < Minitest::Test
       assert_equal(text, contents)
     end
   end
+
+  def test_read_entry_with_zip64
+    Rubyzip::InputStream.open(ZIP64_SIMPLE) do |zis|
+      entry = zis.next_entry
+      contents = zis.read
+
+      assert_equal(entry.uncompressed_size, contents.size)
+    end
+  end
 end
