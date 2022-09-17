@@ -108,6 +108,19 @@ class EntryTest < Minitest::Test
     end
   end
 
+  def test_time_with_ut_ntfs_extra_fields
+    ::File.open(BIN_LOCAL_HEADER_UT_NTFS, 'rb') do |header|
+      name, header_data, extras = Rubyzip::Utilities.read_local_header(header)
+      entry = Rubyzip::Entry.new(name, header: header_data, extra_field_data: extras)
+
+      # The UT times should override the NTFS ones, even though some are nil.
+      time = Time.utc(2004, 9, 8, 0, 33, 20)
+      assert_equal(time, entry.mtime)
+      assert_nil(entry.atime)
+      assert_nil(entry.ctime)
+    end
+  end
+
   def test_respond_to
     assert_respond_to(@entry_with_header, :atime)
     refute_respond_to(@entry_with_header, :xtime)
