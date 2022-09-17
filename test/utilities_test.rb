@@ -24,7 +24,7 @@ class UtilitiesTest < Minitest::Test
   end
 
   def test_read_local_header_with_bad_signature
-    header = ::File.read(BIN_LOCAL_HEADER)
+    header = ::File.binread(BIN_LOCAL_HEADER)
     header[0] = 'Z'
     io = StringIO.new(header)
 
@@ -34,7 +34,7 @@ class UtilitiesTest < Minitest::Test
   end
 
   def test_read
-    header = ::File.read(BIN_LOCAL_HEADER)
+    header = ::File.binread(BIN_LOCAL_HEADER)
 
     assert_equal(0x50, read(header, 8))
     assert_equal(0x4b50, read(header, 16))
@@ -42,21 +42,21 @@ class UtilitiesTest < Minitest::Test
   end
 
   def test_read16
-    header = ::File.read(BIN_LOCAL_HEADER)
+    header = ::File.binread(BIN_LOCAL_HEADER)
 
     assert_equal(0x4b50, read16(header))
     assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, read16(header, 8))
   end
 
   def test_read32
-    header = ::File.read(BIN_LOCAL_HEADER)
+    header = ::File.binread(BIN_LOCAL_HEADER)
 
     assert_equal(0x04034b50, read32(header))
     assert_equal(3666, read32(header, 22))
   end
 
   def test_read64
-    header = ::File.read(BIN_LOCAL_HEADER)
+    header = ::File.binread(BIN_LOCAL_HEADER)
 
     assert_equal(0x1404034b50, read64(header))
     assert_equal(0x774a000800000014, read64(header, 4))

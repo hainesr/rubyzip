@@ -19,7 +19,7 @@ module Rubyzip
     # timestamps are stored using per-second granularity (zip's default
     # behavior can only store timestamps to the nearest even second).
     class UniversalTime < Field
-      EXTRA_FIELD_ID = 'UT'
+      EXTRA_FIELD_ID = 'UT'.b
 
       ATIME_MASK = 0b010
       CTIME_MASK = 0b100

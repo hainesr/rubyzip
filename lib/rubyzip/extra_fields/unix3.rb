@@ -12,7 +12,7 @@ module Rubyzip
   module ExtraFields # :nodoc:
     # Info-ZIP New Unix Extra Field.
     class Unix3 < Field
-      EXTRA_FIELD_ID = 'ux'
+      EXTRA_FIELD_ID = 'ux'.b
 
       attr_reader :gid, :uid, :version
 

@@ -24,13 +24,13 @@ class SetTest < Minitest::Test
   def test_new_nonsense
     # This data checks an unsupported field then a supported field
     # with no payload.
-    efs = Rubyzip::ExtraFields::Set.new("xx\x01\x00\x00UT\x01\x00")
+    efs = Rubyzip::ExtraFields::Set.new("xx\x01\x00\x00UT\x01\x00".b)
     assert_equal(0, efs.length)
     assert_equal(0, efs.size)
   end
 
   def test_new
-    extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
+    extra_data = ::File.binread(BIN_LOCAL_HEADER).slice(0x2d..0x49)
     efs = Rubyzip::ExtraFields::Set.new(extra_data)
 
     assert_equal(2, efs.length)
@@ -41,7 +41,7 @@ class SetTest < Minitest::Test
   end
 
   def test_respond_to
-    extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
+    extra_data = ::File.binread(BIN_LOCAL_HEADER).slice(0x2d..0x49)
     efs = Rubyzip::ExtraFields::Set.new(extra_data)
 
     assert_respond_to(efs, :mtime)
@@ -56,7 +56,7 @@ class SetTest < Minitest::Test
   end
 
   def test_delegate
-    extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
+    extra_data = ::File.binread(BIN_LOCAL_HEADER).slice(0x2d..0x49)
     efs = Rubyzip::ExtraFields::Set.new(extra_data)
 
     assert_nil(efs.delegate(:ctime))

@@ -45,7 +45,7 @@ class InflaterTest < Minitest::Test
   end
 
   def test_mangled_input
-    data = ::File.read(BIN_LOREM_IPSUM_DEFLATED)
+    data = ::File.binread(BIN_LOREM_IPSUM_DEFLATED)
     data[10, 6] = 'broken'
     is = StringIO.new(data)
     decompressor = Rubyzip::Codecs::Inflater.new(is, data.length)
