@@ -18,7 +18,7 @@ module Rubyzip
       WINDOWS_TICK = 10_000_000.0
       SEC_TO_UNIX_EPOCH = 11_644_473_600
 
-      attr_accessor :atime, :ctime, :mtime
+      attr_reader :atime, :ctime, :mtime
 
       private
 
