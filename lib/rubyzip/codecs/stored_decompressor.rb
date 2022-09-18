@@ -11,7 +11,7 @@ module Rubyzip
   module Codecs
     # A pass-through decompressor that handles Stored data.
     class StoredDecompressor < Decompressor
-      DECOMPRESSION_METHOD = COMPRESSION_METHOD_STORE
+      DECOMPRESSION_METHOD = COMPRESSION_METHOD_STORE # :nodoc:
 
       def eof?
         @remaining_data <= 0

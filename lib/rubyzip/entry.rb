@@ -12,9 +12,10 @@ require_relative 'extra_fields/set'
 module Rubyzip
   # Entry represents an entry in a zip file.
   class Entry
-    NAME_TOO_LONG_MESSAGE =
+    NAME_TOO_LONG_MESSAGE = # :nodoc:
       'Entry name cannot be longer than 65,535 characters or larger than 65,535 bytes.'
 
+    # The name of this Entry.
     attr_reader :name
 
     def initialize(name, header: nil, extra_field_data: nil)

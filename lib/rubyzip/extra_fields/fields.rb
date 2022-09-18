@@ -12,7 +12,7 @@ require_relative 'zip64'
 
 ##
 module Rubyzip
-  module ExtraFields
+  module ExtraFields # :nodoc:
     # The order of these lines is important when there are fields which
     # provide the same methods: the later lines will gazump the earlier lines
     # when calling the methods.

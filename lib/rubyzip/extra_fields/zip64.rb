@@ -12,9 +12,10 @@ module Rubyzip
   module ExtraFields # :nodoc:
     # Zip64 extra field.
     class Zip64 < Field
+      # The ID of this extra field (0x0001).
       EXTRA_FIELD_ID = "\x01\x00".b
 
-      attr_reader :compressed_size, :uncompressed_size
+      attr_reader :compressed_size, :uncompressed_size # :nodoc:
 
       private
 
