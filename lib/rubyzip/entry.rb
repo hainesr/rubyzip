@@ -28,16 +28,16 @@ module Rubyzip
     def compressed_size
       return if @header_data.nil?
 
-      size = Utilities.read32(@header_data, LOC_OFF_COMP_SIZE)
+      size = Utilities.read4(@header_data, LOC_OFF_COMP_SIZE)
       zip64? && size == ZIP64_MASK_4B ? @extra_fields['Zip64'].compressed_size : size
     end
 
     def compression_method
-      Utilities.read16(@header_data, LOC_OFF_COMP_METHOD) unless @header_data.nil?
+      Utilities.read2(@header_data, LOC_OFF_COMP_METHOD) unless @header_data.nil?
     end
 
     def crc32
-      Utilities.read32(@header_data, LOC_OFF_CRC32) unless @header_data.nil?
+      Utilities.read4(@header_data, LOC_OFF_CRC32) unless @header_data.nil?
     end
 
     def directory?
@@ -53,7 +53,7 @@ module Rubyzip
 
       # If there is an extra field that provides mtime, use it if it's set.
       time = @extra_fields.delegate(:mtime) if @extra_fields.respond_to?(:mtime)
-      time || Utilities.dos_to_ruby_time(Utilities.read32(@header_data, LOC_OFF_MOD_TIME))
+      time || Utilities.dos_to_ruby_time(Utilities.read4(@header_data, LOC_OFF_MOD_TIME))
     end
 
     def streamed?
@@ -63,7 +63,7 @@ module Rubyzip
     def uncompressed_size
       return if @header_data.nil?
 
-      size = Utilities.read32(@header_data, LOC_OFF_UNCOMP_SIZE)
+      size = Utilities.read4(@header_data, LOC_OFF_UNCOMP_SIZE)
       zip64? && size == ZIP64_MASK_4B ? @extra_fields['Zip64'].uncompressed_size : size
     end
 
@@ -78,7 +78,7 @@ module Rubyzip
     def version_needed_to_extract
       return 10 if @header_data.nil?
 
-      Utilities.read16(@header_data, LOC_OFF_VER_EXTRACT)
+      Utilities.read2(@header_data, LOC_OFF_VER_EXTRACT)
     end
 
     def method_missing(symbol, *args)
@@ -94,7 +94,7 @@ module Rubyzip
     private
 
     def test_flag(mask)
-      (Utilities.read16(@header_data, LOC_OFF_GP_FLAGS) & mask) == mask
+      (Utilities.read2(@header_data, LOC_OFF_GP_FLAGS) & mask) == mask
     end
   end
 end

@@ -43,23 +43,23 @@ module Rubyzip
       __send__(method, data, offset)
     end
 
-    def read8(data, offset = 0)
+    def read1(data, offset = 0)
       data[offset].unpack1('C')
     end
 
-    def read16(data, offset = 0)
+    def read2(data, offset = 0)
       data[offset, 2].unpack1('v')
     end
 
-    def read32(data, offset = 0)
+    def read4(data, offset = 0)
       data[offset, 4].unpack1('V')
     end
 
-    def read32s(data, offset = 0)
+    def read4s(data, offset = 0)
       data[offset, 4].unpack1('l<')
     end
 
-    def read64(data, offset = 0)
+    def read8(data, offset = 0)
       data[offset, 8].unpack1('Q<')
     end
   end

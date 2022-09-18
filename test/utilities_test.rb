@@ -36,30 +36,30 @@ class UtilitiesTest < Minitest::Test
   def test_read
     header = ::File.binread(BIN_LOCAL_HEADER)
 
-    assert_equal(0x50, read(header, 8))
-    assert_equal(0x4b50, read(header, 16))
-    assert_equal(0x04034b50, read(header, 32))
+    assert_equal(0x50, read(header, 1))
+    assert_equal(0x4b50, read(header, 2))
+    assert_equal(0x04034b50, read(header, 4))
   end
 
-  def test_read16
+  def test_read2
     header = ::File.binread(BIN_LOCAL_HEADER)
 
-    assert_equal(0x4b50, read16(header))
-    assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, read16(header, 8))
+    assert_equal(0x4b50, read2(header))
+    assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, read2(header, 8))
   end
 
-  def test_read32
+  def test_read4
     header = ::File.binread(BIN_LOCAL_HEADER)
 
-    assert_equal(0x04034b50, read32(header))
-    assert_equal(3666, read32(header, 22))
+    assert_equal(0x04034b50, read4(header))
+    assert_equal(3666, read4(header, 22))
   end
 
-  def test_read64
+  def test_read8
     header = ::File.binread(BIN_LOCAL_HEADER)
 
-    assert_equal(0x1404034b50, read64(header))
-    assert_equal(0x774a000800000014, read64(header, 4))
+    assert_equal(0x1404034b50, read8(header))
+    assert_equal(0x774a000800000014, read8(header, 4))
   end
 
   def test_dos_to_ruby_time

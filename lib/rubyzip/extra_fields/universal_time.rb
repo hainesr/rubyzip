@@ -30,7 +30,7 @@ module Rubyzip
       private
 
       def merge(data)
-        flags = Utilities.read8(data)
+        flags = Utilities.read1(data)
         i = -3 # Start at -3 so we can increment i below first.
 
         @mtime, @atime, @ctime =
@@ -39,7 +39,7 @@ module Rubyzip
 
             i += 4
             # Change the below to 'UTC' when TruffleRuby supports it?
-            Time.at(Utilities.read32s(data, i), in: '+00:00')
+            Time.at(Utilities.read4s(data, i), in: '+00:00')
           end
       end
     end

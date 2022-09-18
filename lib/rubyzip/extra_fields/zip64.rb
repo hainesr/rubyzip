@@ -21,8 +21,8 @@ module Rubyzip
       # We're currently only reading local headers, so we know we will have
       # compressed and uncompressed size, and those are all we need here.
       def merge(data)
-        @uncompressed_size = Utilities.read64(data)
-        @compressed_size = Utilities.read64(data, 8)
+        @uncompressed_size = Utilities.read8(data)
+        @compressed_size = Utilities.read8(data, 8)
       end
     end
   end

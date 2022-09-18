@@ -28,9 +28,9 @@ module Rubyzip
       # Given the above we can afford to take a few shortcuts here...
       def merge(data)
         # Tag1 data starts at byte 4, and the time data starts at byte 8.
-        @mtime = from_ntfs_time(Utilities.read64(data, 8))
-        @atime = from_ntfs_time(Utilities.read64(data, 16))
-        @ctime = from_ntfs_time(Utilities.read64(data, 24))
+        @mtime = from_ntfs_time(Utilities.read8(data, 8))
+        @atime = from_ntfs_time(Utilities.read8(data, 16))
+        @ctime = from_ntfs_time(Utilities.read8(data, 24))
       end
 
       def from_ntfs_time(ntfs_time)

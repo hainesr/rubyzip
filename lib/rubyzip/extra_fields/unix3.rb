@@ -19,13 +19,13 @@ module Rubyzip
       private
 
       def merge(data)
-        @version = Utilities.read8(data)
+        @version = Utilities.read1(data)
 
-        uid_size = Utilities.read8(data, 1)
-        @uid = Utilities.read(data, uid_size * 8, 2)
+        uid_size = Utilities.read1(data, 1)
+        @uid = Utilities.read(data, uid_size, 2)
 
-        gid_size = Utilities.read8(data, uid_size + 2)
-        @gid = Utilities.read(data, gid_size * 8, uid_size + 3)
+        gid_size = Utilities.read1(data, uid_size + 2)
+        @gid = Utilities.read(data, gid_size, uid_size + 3)
       end
     end
   end

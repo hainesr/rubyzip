@@ -21,8 +21,8 @@ module Rubyzip
       private
 
       def merge(data)
-        @uid = Utilities.read16(data)
-        @gid = Utilities.read16(data, 2)
+        @uid = Utilities.read2(data)
+        @gid = Utilities.read2(data, 2)
       end
     end
   end
