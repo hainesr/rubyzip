@@ -103,7 +103,7 @@ class EntryTest < Minitest::Test
       name, header_data, extras = Rubyzip::Utilities.read_local_header(header)
       entry = Rubyzip::Entry.new(name, header: header_data, extra_field_data: extras)
 
-      time = Time.utc(2022, 9, 16, 16, 22, 18)
+      time = Time.local(2022, 9, 16, 16, 22, 18)
       assert_equal(time, entry.mtime)
     end
   end
