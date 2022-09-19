@@ -1,0 +1,44 @@
+# frozen_string_literal: true
+
+# Copyright (c) 2002-2022, The Rubyzip Developers.
+#
+# Licensed under the BSD License. See LICENCE for details.
+
+##
+module Rubyzip
+  # This module provides configuration for Rubyzip. Configuration is
+  # accessed through Rubyzip, as follows:
+  #
+  # ```
+  # Rubyzip.error_on_invalid_crc32 = true
+  # ```
+  #
+  # Or:
+  #
+  # ```
+  # Rubyzip.configure do |config|
+  #   config.error_on_invalid_crc32 = true
+  # end
+  # ```
+  module Configuration
+    # Configure whether we validate CRC-32 checksums when reading entries.
+    # Default: `true`.
+    attr_accessor :error_on_invalid_crc32
+
+    # Configure whether we validate extracted size when reading entries.
+    # Default: `true`.
+    attr_accessor :error_on_invalid_entry_size
+
+    def reset!
+      @__configured = false
+
+      @error_on_invalid_crc32 = true
+      @error_on_invalid_entry_size = true
+    end
+
+    def configure
+      yield self unless @__configured
+      @__configured = true
+    end
+  end
+end
