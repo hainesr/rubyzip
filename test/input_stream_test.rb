@@ -140,7 +140,9 @@ class InputStreamTest < Minitest::Test
       ['lorem_ipsum.txt', 'zip.png', 'one_level/lorem_ipsum.txt'].each do |name|
         entry = zis.next_entry
 
-        # Ensure that explicitly closing the entry doesn't skip an entry.
+        # Ensure that explicitly closing the entry multiple times
+        # doesn't skip an entry.
+        zis.close_entry
         zis.close_entry
 
         assert_equal(name, entry.name)
