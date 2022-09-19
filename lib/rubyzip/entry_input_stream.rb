@@ -34,9 +34,11 @@ module Rubyzip
       buf = @decompressor.read(len)
       @processed_data += buf.length
       if !@output_data_length_warning && (@processed_data > @entry.uncompressed_size)
+        error = EntrySizeError.new(@entry)
+        raise error if Rubyzip.error_on_invalid_entry_size
+
         @output_data_length_warning = true
-        warn "Entry '#{@entry.name}' should be #{@entry.uncompressed_size}B, " \
-             'but is larger when inflated.'
+        warn "WARNING: #{error.message}"
       end
       @crc32 = Zlib.crc32(buf, @crc32)
 
