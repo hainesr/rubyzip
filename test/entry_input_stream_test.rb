@@ -114,6 +114,34 @@ class EntryInputStreamTest < Minitest::Test
     entry.verify
   end
 
+  def test_too_long_input_raises_error_by_default
+    fake_size = 100
+    entry = Minitest::Mock.new
+    entry.expect(:compressed_size, ::File.size(BIN_LOREM_IPSUM_DEFLATED))
+    entry.expect(:compression_method, Rubyzip::COMPRESSION_METHOD_DEFLATE)
+    entry.expect(:encrypted?, false)
+    entry.expect(:name, 'test_entry')
+    entry.expect(:uncompressed_size, fake_size)
+    entry.expect(:uncompressed_size, fake_size)
+    entry.expect(:uncompressed_size, fake_size)
+    entry.expect(:uncompressed_size, fake_size)
+
+    ::File.open(BIN_LOREM_IPSUM_DEFLATED, 'rb') do |is|
+      eis = Rubyzip::EntryInputStream.new(is, entry)
+
+      # Should not raise anything.
+      eis.read(50)
+
+      error = assert_raises(Rubyzip::EntrySizeError) { eis.read(100) }
+      assert_match(/.+'test_entry'.+#{fake_size}B.+/, error.message)
+
+      # Should keep raising errors.
+      assert_raises(Rubyzip::EntrySizeError) { eis.read(50) }
+    end
+
+    entry.verify
+  end
+
   def test_warn_on_too_long_input
     fake_size = 100
     entry = Minitest::Mock.new
@@ -129,10 +157,13 @@ class EntryInputStreamTest < Minitest::Test
       eis = Rubyzip::EntryInputStream.new(is, entry)
 
       assert_silent { eis.read(50) }
-      assert_output('', /.+'test_entry'.+#{fake_size}B.+/) do
-        eis.read(100)
+      Rubyzip.stub :error_on_invalid_entry_size, false do
+        assert_output('', /.+'test_entry'.+#{fake_size}B.+/) do
+          eis.read(100)
+        end
+
+        assert_silent { eis.read(50) } # Should only warn once.
       end
-      assert_silent { eis.read(50) } # Should only warn once.
     end
 
     entry.verify
