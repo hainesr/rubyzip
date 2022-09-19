@@ -139,7 +139,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.verify
   end
 
-  def test_detect_invalid_crc32 # rubocop:disable Metrics/AbcSize
+  def test_invalid_crc32_raises_error_by_default # rubocop:disable Metrics/AbcSize
     text = StringIO.new('Test text of 29 characters...')
 
     entry = Minitest::Mock.new
@@ -155,6 +155,29 @@ class EntryInputStreamTest < Minitest::Test
     assert_equal(text.string, eis.read)
     error = assert_raises(Rubyzip::CRC32Error) { eis.validate_crc32! }
     assert_match(/expected 0x12345678/, error.message)
+    entry.verify
+  end
+
+  def test_invalid_crc32_prints_warning # rubocop:disable Metrics/AbcSize
+    text = StringIO.new('Test text of 29 characters...')
+
+    entry = Minitest::Mock.new
+    entry.expect(:compressed_size, text.length)
+    entry.expect(:compression_method, Rubyzip::COMPRESSION_METHOD_STORE)
+    entry.expect(:crc32, 0x12345678)
+    entry.expect(:crc32, 0x12345678)
+    entry.expect(:encrypted?, false)
+    entry.expect(:uncompressed_size, text.length)
+
+    eis = Rubyzip::EntryInputStream.new(text, entry)
+
+    assert_equal(text.string, eis.read)
+    Rubyzip.stub :error_on_invalid_crc32, false do
+      assert_output('', /expected 0x12345678; got 0x21141a5/) do
+        eis.validate_crc32!
+      end
+    end
+
     entry.verify
   end
 end
