@@ -25,4 +25,18 @@ module Rubyzip
         "expected 0x#{@expected.to_s(16)}; got 0x#{@actual.to_s(16)}."
     end
   end
+
+  # This error is raised if the size of an entry gets too big as it is being
+  # extracted.
+  class EntrySizeError < Error
+    def initialize(entry)
+      super()
+      @entry = entry
+    end
+
+    def message
+      "Entry '#{@entry.name}' should be #{@entry.uncompressed_size}B, " \
+        'but is larger when extracted.'
+    end
+  end
 end
