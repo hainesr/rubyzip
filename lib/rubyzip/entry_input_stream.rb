@@ -46,7 +46,12 @@ module Rubyzip
     end
 
     def validate_crc32!
-      raise CRC32Error.new(@entry.crc32, @crc32) unless valid_crc32?
+      return if valid_crc32?
+
+      error = CRC32Error.new(@entry.crc32, @crc32)
+      raise error if Rubyzip.error_on_invalid_crc32
+
+      warn "WARNING: #{error.message}"
     end
 
     private
