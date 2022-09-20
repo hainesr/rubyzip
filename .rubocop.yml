@@ -37,3 +37,7 @@ Metrics/MethodLength:
 # Turn on checks for exclusionary terms in the codebase.
 Naming/InclusiveLanguage:
   Enabled: true
+
+# Turn this on in case we make use of this feature in future.
+Style/DocumentDynamicEvalDefinition:
+  Enabled: true

@@ -13,6 +13,10 @@ module Rubyzip
     class StoredDecompressor < Decompressor
       DECOMPRESSION_METHOD = COMPRESSION_METHOD_STORE # :nodoc:
 
+      # :call-seq:
+      #   eof? -> true or false
+      #
+      # Have we reached the end of this stream?
       def eof?
         @remaining_data <= 0
       end
