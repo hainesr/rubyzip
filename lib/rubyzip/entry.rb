@@ -25,9 +25,9 @@ module Rubyzip
     def initialize(name, header: nil, extra_field_data: nil)
       raise ArgumentError, NAME_TOO_LONG_MESSAGE if name.bytesize > 0xFFFF
 
-      @name = name
       @header_data = header
       @extra_fields = ExtraFields::Set.new(extra_field_data)
+      @name = normalize_string_encoding(name)
     end
 
     # :call-seq:
@@ -158,6 +158,16 @@ module Rubyzip
     end
 
     private
+
+    def normalize_string_encoding(string)
+      return string if string.frozen?
+
+      if utf8?
+        string.force_encoding('UTF-8')
+      else
+        string.force_encoding(Rubyzip.name_and_comment_encoding)
+      end
+    end
 
     def test_flag(mask)
       (Utilities.read2(@header_data, LOC_OFF_GP_FLAGS) & mask) == mask
