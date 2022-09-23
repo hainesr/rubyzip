@@ -28,6 +28,8 @@ Along the way we will return to the Zip specification and make sure that we adhe
 - [x] Decompressed size checks (warning).
 - [x] Decompressed size checks (error).
 - [x] Configurable decompressed size checks.
+- [x] UTF-8 by default, but configurable.
+- [x] Ignore, but configurably warn about, invalid dates in Zip archives.
 - [ ] Handle streamed Zip entries (GP bit 3).
 - [ ] Handle archives created by OSX Archive Tool (non-standard streamed).
 - [ ] `OutputStream` and other writing APIs.
