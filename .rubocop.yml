@@ -41,3 +41,6 @@ Naming/InclusiveLanguage:
 # Turn this on in case we make use of this feature in future.
 Style/DocumentDynamicEvalDefinition:
   Enabled: true
+
+Style/RegexpLiteral:
+  AllowInnerSlashes: true

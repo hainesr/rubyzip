@@ -33,4 +33,8 @@ module Rubyzip
   def error_on_invalid_entry_size
     true
   end
+
+  def warn_on_invalid_date
+    true
+  end
 end
