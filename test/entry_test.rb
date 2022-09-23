@@ -180,4 +180,23 @@ class EntryTest < Minitest::Test
       assert_equal('lörèm_ipşuṁ.txt', entry.name)
     end
   end
+
+  def test_update_streaming_data
+    # Before:
+    # * CRC-32 == 0xbb66b4ec
+    # * Compressed size == 0x59f
+    # * Uncompressed size == 0xe52
+
+    # After
+    new_crc32 = 0xbb66b4ff
+    new_comp  = 0x590
+    new_ucomp = 0xe5f
+    streaming_header = [new_crc32, new_comp, new_ucomp].pack('VVV')
+
+    @entry_with_header.update_streaming_data(streaming_header)
+
+    assert_equal(new_crc32, @entry_with_header.crc32)
+    assert_equal(new_comp, @entry_with_header.compressed_size)
+    assert_equal(new_ucomp, @entry_with_header.uncompressed_size)
+  end
 end

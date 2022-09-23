@@ -157,6 +157,11 @@ module Rubyzip
       @extra_fields.respond_to?(symbol, include_all)
     end
 
+    # :nodoc:
+    def update_streaming_data(new_data)
+      @header_data = @header_data.slice(0...LOC_OFF_CRC32) + new_data
+    end
+
     private
 
     def normalize_string_encoding(string)

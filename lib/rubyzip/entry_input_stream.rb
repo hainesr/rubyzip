@@ -44,6 +44,8 @@ module Rubyzip
       end
       @crc32 = Zlib.crc32(buf, @crc32)
 
+      @entry.update_streaming_data(Utilities.read_streaming_header(@io)) if eof? && @entry.streamed?
+
       buf
     end
 
