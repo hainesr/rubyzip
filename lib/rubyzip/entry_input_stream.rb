@@ -30,7 +30,7 @@ module Rubyzip
     end
 
     # :nodoc:
-    def read(len = nil) # rubocop:disable Metrics/MethodLength
+    def read(len = nil) # rubocop:disable Metrics
       return (len.nil? || len.zero? ? '' : nil) if eof?
 
       buf = @decompressor.read(len)
