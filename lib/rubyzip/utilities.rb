@@ -37,7 +37,7 @@ module Rubyzip
       name = io.read(name_len)
       extras = io.read(extra_len)
 
-      [name, header_data, extras]
+      [name, header_data.slice(0...LOC_OFF_NAME_LEN), extras]
     end
 
     def read(data, size, offset = 0)

@@ -18,8 +18,10 @@ class UtilitiesTest < Minitest::Test
       name, header_data, extras = read_local_header(header)
 
       assert_equal('lorem_ipsum.txt', name)
-      assert_equal(Rubyzip::LOC_SIZE, header_data.length)
-      assert_equal(name.length + header_data.length + extras.length, header.tell)
+
+      # We throw away the header data for name length and extras length.
+      assert_equal(Rubyzip::LOC_SIZE - 4, header_data.length)
+      assert_equal(name.length + header_data.length + extras.length, header.tell - 4)
     end
   end
 
