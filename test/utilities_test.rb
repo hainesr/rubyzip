@@ -35,6 +35,20 @@ class UtilitiesTest < Minitest::Test
     end
   end
 
+  def test_read_streaming_header_with_sig
+    header = [0x08074b50, 0xbb66b4ec, 0x59f, 0xe52].pack('VVVV')
+    header_stream = StringIO.new(header)
+
+    assert_equal(header.slice(4..), read_streaming_header(header_stream))
+  end
+
+  def test_read_streaming_header_no_sig
+    header = [0xbb66b4ec, 0x59f, 0xe52].pack('VVV')
+    header_stream = StringIO.new(header)
+
+    assert_equal(header, read_streaming_header(header_stream))
+  end
+
   def test_read
     header = ::File.binread(BIN_LOCAL_HEADER)
 

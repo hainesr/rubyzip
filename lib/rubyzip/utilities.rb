@@ -40,6 +40,18 @@ module Rubyzip
       [name, header_data.slice(0...LOC_OFF_NAME_LEN), extras]
     end
 
+    def read_streaming_header(io)
+      sig = io.read(4)
+
+      # If we have a signature then read 12 bytes. If not then we already
+      # have the CRC-32 field, so just read 8 bytes and join them up.
+      if read4(sig) == STR_SIGN
+        io.read(12)
+      else
+        sig + io.read(8)
+      end
+    end
+
     def read(data, size, offset = 0)
       method = "read#{size}".to_sym
       __send__(method, data, offset)

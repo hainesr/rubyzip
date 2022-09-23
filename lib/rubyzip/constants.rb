@@ -27,6 +27,9 @@ module Rubyzip # rubocop:disable Metrics/ModuleLength
   LOC_OFF_NAME_LEN    = 26
   LOC_OFF_EXTRA_LEN   = 28
 
+  # Streaming headers.
+  STR_SIGN = 0x08074b50 # "PK\x07\x08"
+
   # General purpose flags.
   GP_FLAGS_ENCRYPTED = (1 << 0)
   GP_FLAGS_STREAMED  = (1 << 3)
