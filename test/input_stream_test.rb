@@ -197,4 +197,28 @@ class InputStreamTest < Minitest::Test
       assert_equal(entry.uncompressed_size, contents.size)
     end
   end
+
+  def test_read_streamed_deflated_entries
+    text = ::File.read(TXT_LOREM_IPSUM)
+
+    Rubyzip::InputStream.open(ZIP_MULTI_FILE_STREAMED) do |zis|
+      while (entry = zis.next_entry)
+        assert_predicate(entry, :streamed?)
+        assert_equal(text, zis.read)
+        assert_equal(text.length, entry.uncompressed_size)
+      end
+    end
+  end
+
+  def test_read_streamed_deflated_encrypted_entries
+    text = ::File.read(TXT_LOREM_IPSUM)
+
+    Rubyzip::InputStream.open(ZIP_ENC_MULTI_FILE_STREAMED) do |zis|
+      while (entry = zis.next_entry(password: 'Rubyz1p'))
+        assert_predicate(entry, :streamed?)
+        assert_equal(text, zis.read)
+        assert_equal(text.length, entry.uncompressed_size)
+      end
+    end
+  end
 end
