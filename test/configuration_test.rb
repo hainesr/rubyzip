@@ -14,8 +14,11 @@ class ConfigurationTest < Minitest::Test
     reset!
   end
 
-  def test_config
+  def setup
     TestRubyzip.reset!
+  end
+
+  def test_config
     TestRubyzip.error_on_invalid_crc32 = false
     TestRubyzip.error_on_invalid_entry_size = false
 
@@ -24,7 +27,6 @@ class ConfigurationTest < Minitest::Test
   end
 
   def test_config_with_block
-    TestRubyzip.reset!
     TestRubyzip.configure do |config|
       config.error_on_invalid_crc32 = false
       config.error_on_invalid_entry_size = false
@@ -35,8 +37,6 @@ class ConfigurationTest < Minitest::Test
   end
 
   def test_re_config_with_block
-    TestRubyzip.reset!
-
     # Dummy config.
     TestRubyzip.configure do |config|
       config
