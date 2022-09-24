@@ -6,6 +6,7 @@
 
 require_relative 'ntfs'
 require_relative 'universal_time'
+require_relative 'unix1'
 require_relative 'unix2'
 require_relative 'unix3'
 require_relative 'zip64'
@@ -17,9 +18,10 @@ module Rubyzip
     # provide the same methods: the later lines will gazump the earlier lines
     # when calling the methods.
     #
-    # For example, below, UniversalTime is preferred over NTFS. This is
-    # correct as UniversalTime is the more modern field.
+    # For example, below, UniversalTime is preferred over NTFS and Unix1.
+    # This is correct as UniversalTime is the more modern field.
     register_extra_field_type(NTFS, :atime, :ctime, :mtime)
+    register_extra_field_type(Unix1, :atime, :mtime, :uid, :gid)
     register_extra_field_type(UniversalTime, :atime, :ctime, :mtime)
     register_extra_field_type(Unix2, :uid, :gid)
     register_extra_field_type(Unix3, :version, :uid, :gid)
