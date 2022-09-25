@@ -31,6 +31,9 @@ BIN_LOCAL_HEADER_UT_NTFS = ::File.join(BIN_FIXTURES, 'local_header_ut_ntfs.bin')
 BIN_LOCAL_HEADER_UTF8_GP = ::File.join(BIN_FIXTURES, 'local_header_utf8_gp.bin')
 BIN_LOCAL_HEADER_UTF8_NOGP = ::File.join(BIN_FIXTURES, 'local_header_utf8_nogp.bin')
 
+BIN_CDIR_END_RECORD = ::File.join(BIN_FIXTURES, 'cdir_end_record.bin')
+BIN_CDIR_END_RECORD_ZIP64 = ::File.join(BIN_FIXTURES, 'cdir_end_record_zip64.bin')
+
 BIN_LOREM_IPSUM_DEFLATED = ::File.join(BIN_FIXTURES, 'lorem_ipsum_deflated.bin')
 BIN_LOREM_IPSUM_ENC = ::File.join(BIN_FIXTURES, 'lorem_ipsum_enc.bin')
 BIN_PNG_FILE = ::File.join(BIN_FIXTURES, 'zip.png')

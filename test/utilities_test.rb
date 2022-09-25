@@ -49,6 +49,68 @@ class UtilitiesTest < Minitest::Test
     assert_equal(header, read_streaming_header(header_stream))
   end
 
+  def test_unpack_cdir_end_records
+    record = ::File.binread(BIN_CDIR_END_RECORD)
+    num, offset, comment = unpack_end_central_directory_records(record, nil)
+
+    assert_equal(2, num)
+    assert_equal(0xb6f, offset)
+    assert_empty(comment)
+  end
+
+  def test_unpack_cdir_end_records_zip64
+    data = ::File.binread(BIN_CDIR_END_RECORD_ZIP64)
+    record_zip64 = data.slice!(0...Rubyzip::CEN_Z64_END_RECORD_SIZE)
+    record = data.slice!(Rubyzip::CEN_Z64_END_RECORD_LOC_SIZE..)
+    num, offset, comment = unpack_end_central_directory_records(record, record_zip64)
+
+    assert_equal(2, num)
+    assert_equal(0x240, offset)
+    assert_empty(comment)
+  end
+
+  def test_read_cdir_end_records
+    ::File.open(BIN_CDIR_END_RECORD, 'rb') do |record|
+      num, offset, comment = read_end_central_directory_records(record)
+
+      assert_equal(2, num)
+      assert_equal(0xb6f, offset)
+      assert_empty(comment)
+    end
+  end
+
+  def test_read_cdir_end_records_with_no_end_record
+    data = ("\x00" * 4) + ::File.binread(BIN_CDIR_END_RECORD).slice(4..)
+    record = StringIO.new(data)
+
+    error = assert_raises(Rubyzip::Error) do
+      read_end_central_directory_records(record)
+    end
+
+    assert_match(/Zip end of central directory signature not found/, error.message)
+  end
+
+  def test_read_cdir_end_records_zip64
+    ::File.open(BIN_CDIR_END_RECORD_ZIP64, 'rb') do |record|
+      num, offset, comment = read_end_central_directory_records(record)
+
+      assert_equal(2, num)
+      assert_equal(0x240, offset)
+      assert_empty(comment)
+    end
+  end
+
+  def test_read_cdir_end_records_zip64_with_no_zip64_end_record
+    data = ("\x00" * 1000) + ::File.binread(BIN_CDIR_END_RECORD_ZIP64).slice(4..)
+    record = StringIO.new(data)
+
+    error = assert_raises(Rubyzip::Error) do
+      read_end_central_directory_records(record)
+    end
+
+    assert_match(/Zip64 end of central directory signature not found/, error.message)
+  end
+
   def test_read
     header = ::File.binread(BIN_LOCAL_HEADER)
 

@@ -52,6 +52,61 @@ module Rubyzip
       end
     end
 
+    def read_end_central_directory_records(io) # rubocop:disable Metrics
+      begin
+        io.seek(-CEN_MAX_END_RECORD_SIZE, IO::SEEK_END)
+      rescue Errno::EINVAL
+        io.seek(0, IO::SEEK_SET)
+      end
+
+      base_location = io.tell
+      data = io.read
+      end_location = data.rindex([CEN_END_RECORD_SIGN].pack('V'))
+      raise Error, 'Zip end of central directory signature not found.' unless end_location
+
+      end_data = data.slice(end_location..)
+
+      zip64_end_locator = data.rindex([CEN_Z64_END_RECORD_LOC_SIGN].pack('V'))
+
+      zip64_end_data =
+        if zip64_end_locator
+          zip64_end_location = data.rindex([CEN_Z64_END_RECORD_SIGN].pack('V'))
+
+          if zip64_end_location
+            data.slice(zip64_end_location..zip64_end_locator)
+          else
+            zip64_end_location = unpack_64_end_locator(data.slice(zip64_end_locator..end_location))
+            raise Error, 'Zip64 end of central directory signature not found.' unless zip64_end_location
+
+            io.seek(zip64_end_location, IO::SEEK_SET)
+            io.read(base_location + zip64_end_locator - zip64_end_location)
+          end
+        end
+
+      unpack_end_central_directory_records(end_data, zip64_end_data)
+    end
+
+    def unpack_64_end_locator(data)
+      _, _, zip64_end_offset, = data.unpack(CEN_Z64_END_RECORD_LOC_PACK)
+
+      zip64_end_offset
+    end
+
+    def unpack_end_central_directory_records(end_data, zip64_end_data)
+      _, _, _, _, num_entries, _, cdir_offset, = end_data.unpack(CEN_END_RECORD_PACK)
+
+      unless zip64_end_data.nil?
+        sig, _, _, _, _, _, _, z64_num_entries, _,
+        z64_cdir_offset = zip64_end_data.unpack(CEN_Z64_END_RECORD_PACK)
+        raise Error, 'Zip64 end of central directory signature not found.' unless sig == CEN_Z64_END_RECORD_SIGN
+
+        num_entries = z64_num_entries if num_entries == ZIP64_MASK_2B
+        cdir_offset = z64_cdir_offset if cdir_offset == ZIP64_MASK_4B
+      end
+
+      [num_entries, cdir_offset, end_data.slice(CEN_END_RECORD_SIZE..)]
+    end
+
     def read(data, size, offset = 0)
       method = "read#{size}".to_sym
       __send__(method, data, offset)

@@ -30,6 +30,24 @@ module Rubyzip # rubocop:disable Metrics/ModuleLength
   # Streaming headers.
   STR_SIGN = 0x08074b50 # "PK\x07\x08"
 
+  # Central directory headers.
+  CEN_END_RECORD_PACK = 'VvvvvVVv'
+  CEN_END_RECORD_SIGN = 0x06054b50 # "PK\x05\x06"
+  CEN_END_RECORD_SIZE = 22         # Including signature
+
+  CEN_MAX_COMMENT_SIZE  = (1 << 16) - 1
+
+  CEN_Z64_END_RECORD_PACK = 'VQ<vvVVQ<Q<Q<Q<'
+  CEN_Z64_END_RECORD_SIGN = 0x06064b50     # "PK\x06\x06"
+  CEN_Z64_END_RECORD_SIZE = 56             # Including signature
+
+  CEN_Z64_END_RECORD_LOC_PACK = 'VVQ<V'
+  CEN_Z64_END_RECORD_LOC_SIGN = 0x07064b50 # "PK\x06\x07"
+  CEN_Z64_END_RECORD_LOC_SIZE = 20         # Including signature
+
+  CEN_MAX_END_RECORD_SIZE =
+    CEN_Z64_END_RECORD_LOC_SIZE + CEN_END_RECORD_SIZE + CEN_MAX_COMMENT_SIZE
+
   # General purpose flags.
   GP_FLAGS_ENCRYPTED = (1 << 0)
   GP_FLAGS_STREAMED  = (1 << 3)
