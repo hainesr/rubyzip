@@ -17,11 +17,13 @@ ZIP_ONE_DIRECTORY = ::File.join(ZIP_FIXTURES, 'one_directory.zip')
 ZIP_ONE_PNG_FILE = ::File.join(ZIP_FIXTURES, 'one_png_file.zip')
 ZIP_MULTI_FILE = ::File.join(ZIP_FIXTURES, 'multi_file.zip')
 ZIP_MULTI_FILE_STREAMED = ::File.join(ZIP_FIXTURES, 'multi_file_streamed.zip')
+ZIP_MAX_FILE_COMMENT = ::File.join(ZIP_FIXTURES, 'max_length_file_comment.zip')
 
 ZIP_ENC_ONE_TEXT_FILE_STOR = ::File.join(ZIP_FIXTURES, 'one_text_file_stored_enc.zip')
 ZIP_ENC_MULTI_FILE_STREAMED = ::File.join(ZIP_FIXTURES, 'multi_file_streamed_enc.zip')
 
 ZIP64_SIMPLE = ::File.join(ZIP_FIXTURES, 'zip64_simple.zip')
+ZIP64_MAX_FILE_COMMENT = ::File.join(ZIP_FIXTURES, 'zip64_max_length_file_comment.zip')
 
 # Test binary data.
 BIN_LOCAL_HEADER = ::File.join(BIN_FIXTURES, 'local_header.bin')
