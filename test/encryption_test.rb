@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class EncryptionTest < MiniTest::Test
+class EncryptionTest < Minitest::Test
   ENCRYPT_ZIP_TEST_FILE = 'test/data/zipWithEncryption.zip'
   INPUT_FILE1 = 'test/data/file1.txt'
   INPUT_FILE2 = 'test/data/file2.txt'

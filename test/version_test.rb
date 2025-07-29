@@ -3,7 +3,7 @@
 require 'test_helper'
 require 'zip/version'
 
-class VersionTest < MiniTest::Test
+class VersionTest < Minitest::Test
   def test_version
     # Ensure all our versions numbers have at least MAJOR.MINOR.PATCH
     # elements separated by dots, to comply with Semantic Versioning.
