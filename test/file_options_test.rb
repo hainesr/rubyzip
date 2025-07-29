@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require_relative 'test_helper'
 
 class FileOptionsTest < Minitest::Test
   ZIPPATH = ::File.join(Dir.tmpdir, 'options.zip').freeze
