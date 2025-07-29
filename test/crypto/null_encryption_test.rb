@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class NullEncrypterTest < MiniTest::Test
+class NullEncrypterTest < Minitest::Test
   def setup
     @encrypter = ::Zip::NullEncrypter.new
   end
@@ -32,7 +32,7 @@ class NullEncrypterTest < MiniTest::Test
   end
 end
 
-class NullDecrypterTest < MiniTest::Test
+class NullDecrypterTest < Minitest::Test
   def setup
     @decrypter = ::Zip::NullDecrypter.new
   end
