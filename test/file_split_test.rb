@@ -3,6 +3,8 @@
 require_relative 'test_helper'
 require_relative 'helpers/assert_entry'
 
+require 'zip/file'
+
 class ZipFileSplitTest < Minitest::Test
   TEST_ZIP = TestZipFile::TEST_ZIP2.clone
   TEST_ZIP.zip_name = 'large_zip_file.zip'

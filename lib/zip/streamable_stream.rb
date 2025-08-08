@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'delegate'
+
 module Zip
   class StreamableStream < DelegateClass(Entry) # :nodoc:all
     def initialize(entry)

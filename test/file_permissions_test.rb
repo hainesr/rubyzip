@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/file'
+
 class FilePermissionsTest < Minitest::Test
   ZIPNAME = File.join(File.dirname(__FILE__), 'umask.zip')
   FILENAME = File.join(File.dirname(__FILE__), 'umask.txt')

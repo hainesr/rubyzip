@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require 'zlib'
+
+require_relative 'compressor'
+require_relative 'config'
+require_relative 'crypto/null_encryption'
+
 module Zip
   class Deflater < Compressor # :nodoc:all
     def initialize(output_stream, level = Zip.default_compression, encrypter = NullEncrypter.new)

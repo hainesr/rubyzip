@@ -2,6 +2,8 @@
 
 require 'openssl'
 
+require_relative 'encryption'
+
 module Zip
   module AESEncryption # :nodoc:
     VERIFIER_LENGTH = 2

@@ -20,6 +20,8 @@ class TestFiles
 
   class << self
     def create_test_files
+      return if File.exist?('test/data/generated')
+
       FileUtils.mkdir_p 'test/data/generated'
 
       ASCII_TEST_FILES.each_with_index do |filename, index|
@@ -72,6 +74,8 @@ class TestZipFile
   end
 
   def self.create_test_zips
+    return if File.exist?(TEST_ZIP1.zip_name)
+
     raise "failed to create test zip '#{TEST_ZIP1.zip_name}'" \
       unless system("zip -q #{TEST_ZIP1.zip_name} test/data/file2.txt")
     raise "failed to remove entry from '#{TEST_ZIP1.zip_name}'" \
@@ -128,12 +132,12 @@ class TestZipFile
       unless system(
         "zip -q #{TEST_ZIP4.zip_name} #{TEST_ZIP4.entry_names.join(' ')}"
       )
-  rescue StandardError
+  rescue StandardError => e
     # If there are any Windows developers wanting to use a command line zip.exe
     # to help create the following files, there's a free one available from
     # http://stahlworks.com/dev/index.php?tool=zipunzip
     # that works with the above code
-    raise $ERROR_INFO.to_s +
+    raise e.to_s +
           "\n\nziptest.rb requires the Info-ZIP program 'zip' in the path\n" \
           "to create test data. If you don't have it you can download\n" \
           'the necessary test files at http://sf.net/projects/rubyzip.'

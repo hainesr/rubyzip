@@ -3,6 +3,8 @@
 require_relative 'test_helper'
 require_relative 'helpers/crc_tests'
 
+require 'zip/pass_thru_compressor'
+
 class PassThruCompressorTest < Minitest::Test
   include CrcTests
 

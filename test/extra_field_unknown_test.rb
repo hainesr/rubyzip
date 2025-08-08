@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/extra_field'
+
 class ZipExtraFieldUnknownTest < Minitest::Test
   def test_new
     extra = ::Zip::ExtraField::Unknown.new

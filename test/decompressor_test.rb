@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/decompressor'
+
 class DecompressorTest < Minitest::Test
   TEST_COMPRESSION_METHOD = 255
 

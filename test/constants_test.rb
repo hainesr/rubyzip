@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/constants'
+
 class ConstantsTest < Minitest::Test
   def test_compression_methods
     assert_equal(0, Zip::COMPRESSION_METHOD_STORE)

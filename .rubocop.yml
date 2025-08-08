@@ -95,7 +95,7 @@ Style/HashTransformValues:
 # Allow non-default behaviour for Zip.
 Style/ModuleFunction:
   Exclude:
-    - 'lib/zip.rb'
+    - 'lib/zip/config.rb'
 
 # Allow this multi-line block chain as it actually reads better
 # than the alternatives.

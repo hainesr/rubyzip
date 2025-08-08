@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'rbconfig'
+
 module Zip
   # :stopdoc:
 

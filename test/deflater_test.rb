@@ -3,6 +3,9 @@
 require_relative 'test_helper'
 require_relative 'helpers/crc_tests'
 
+require 'zip/deflater'
+require 'zip/inflater'
+
 class DeflaterTest < Minitest::Test
   include CrcTests
 

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'zip/ioextras/abstract_output_stream'
+
 module CrcTests
   class TestOutputStream
     include ::Zip::IOExtras::AbstractOutputStream

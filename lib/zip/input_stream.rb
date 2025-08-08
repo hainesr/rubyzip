@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+require 'stringio'
+
+require_relative 'crypto/decrypted_io'
+require_relative 'crypto/aes_encryption'
+require_relative 'crypto/null_encryption'
+require_relative 'decompressor'
+require_relative 'deflater'
+require_relative 'entry'
+require_relative 'errors'
+require_relative 'inflater'
+require_relative 'ioextras/abstract_input_stream'
+require_relative 'null_decompressor'
+require_relative 'pass_thru_decompressor'
+
 ##
 module Zip
   # InputStream is the basic class for reading zip entries in a

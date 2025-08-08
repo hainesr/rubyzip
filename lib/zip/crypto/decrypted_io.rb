@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'aes_encryption'
+
 module Zip
   class DecryptedIo # :nodoc:all
     CHUNK_SIZE = 32_768
