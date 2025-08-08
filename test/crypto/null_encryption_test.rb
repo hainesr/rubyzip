@@ -2,6 +2,8 @@
 
 require_relative '../test_helper'
 
+require 'zip/crypto/null_encryption'
+
 class NullEncrypterTest < Minitest::Test
   def setup
     @encrypter = ::Zip::NullEncrypter.new

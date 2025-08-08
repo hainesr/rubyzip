@@ -3,6 +3,8 @@
 require_relative 'test_helper'
 require_relative 'helpers/decompressor_tests'
 
+require 'zip/pass_thru_decompressor'
+
 class PassThruDecompressorTest < Minitest::Test
   include DecompressorTests
 

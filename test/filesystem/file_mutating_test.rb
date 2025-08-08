@@ -2,6 +2,7 @@
 
 require_relative '../test_helper'
 
+require 'zip/file'
 require 'zip/filesystem'
 
 class FileMutatingTest < Minitest::Test

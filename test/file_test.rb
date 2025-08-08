@@ -5,6 +5,8 @@ require_relative 'helpers/assert_entry'
 require_relative 'helpers/common_zipfile_fixtures'
 require_relative 'helpers/zip_entry_data'
 
+require 'zip/file'
+
 class ZipFileTest < Minitest::Test
   include CommonZipFileFixture
   include ZipEntryData

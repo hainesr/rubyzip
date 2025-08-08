@@ -3,6 +3,8 @@
 require_relative 'test_helper'
 require_relative 'helpers/decompressor_tests'
 
+require 'zip/inflater'
+
 class InflaterTest < Minitest::Test
   include DecompressorTests
 

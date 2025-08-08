@@ -4,6 +4,8 @@ require_relative 'test_helper'
 require_relative 'helpers/assert_entry'
 require_relative 'helpers/common_zipfile_fixtures'
 
+require 'zip/file'
+
 class ZipFileExtractTest < Minitest::Test
   include CommonZipFileFixture
   EXTRACTED_FILENAME = 'test/data/generated/extEntry'

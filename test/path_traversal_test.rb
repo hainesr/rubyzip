@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+require 'tmpdir'
+
 require_relative 'test_helper'
+
+require 'zip/file'
 
 class PathTraversalTest < Minitest::Test
   TEST_FILE_ROOT = File.absolute_path('test/data/path_traversal')

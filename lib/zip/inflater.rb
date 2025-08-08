@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require 'zlib'
+
+require_relative 'constants'
+require_relative 'decompressor'
+require_relative 'errors'
+
 module Zip
   class Inflater < Decompressor # :nodoc:all
     def initialize(*args)

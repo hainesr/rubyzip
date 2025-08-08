@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/entry'
+
 class ZipCentralDirectoryEntryTest < Minitest::Test
   def test_read_from_stream
     File.open('test/data/testDirectory.bin', 'rb') do |file|

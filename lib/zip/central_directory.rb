@@ -2,7 +2,10 @@
 
 require 'forwardable'
 
+require_relative 'constants'
 require_relative 'dirtyable'
+require_relative 'entry'
+require_relative 'entry_set'
 
 module Zip
   class CentralDirectory # :nodoc:

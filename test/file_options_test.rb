@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/file'
+
 class FileOptionsTest < Minitest::Test
   ZIPPATH = ::File.join(Dir.tmpdir, 'options.zip').freeze
   TXTPATH = ::File.expand_path(::File.join('data', 'file1.txt'), __dir__).freeze

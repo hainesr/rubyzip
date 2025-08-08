@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'zlib'
+
+require_relative 'encryption'
+
 module Zip
   module TraditionalEncryption # :nodoc:
     def initialize(password)

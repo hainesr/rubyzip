@@ -3,6 +3,9 @@
 require_relative 'test_helper'
 require_relative 'helpers/assert_entry'
 
+require 'zip/file'
+require 'zip/input_stream'
+
 class ZipInputStreamTest < Minitest::Test
   include AssertEntry
 

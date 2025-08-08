@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'constants'
+require_relative 'decompressor'
+
 module Zip
   class PassThruDecompressor < Decompressor # :nodoc:all
     def initialize(*args)

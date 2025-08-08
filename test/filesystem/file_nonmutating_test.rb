@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require 'digest/sha1'
+
 require_relative '../test_helper'
 require_relative '../helpers/extra_assertions'
 
+require 'zip/file'
 require 'zip/filesystem'
 
 class FileNonmutatingTest < Minitest::Test

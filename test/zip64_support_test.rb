@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/file'
+
 class Zip64SupportTest < Minitest::Test
   TEST_FILE = File.join(File.dirname(__FILE__), 'data', 'zip64-sample.zip')
 
