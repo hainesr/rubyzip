@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'constants'
+
 module Zip
   # The superclass for all rubyzip error types. Simply rescue this one if
   # you don't need to know what sort of error has been raised.

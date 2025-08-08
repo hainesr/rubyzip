@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/input_stream'
+
 class Bzip2SupportTest < Minitest::Test
   BZIP2_ZIP_TEST_FILE = 'test/data/zipWithBzip2Compression.zip'
 

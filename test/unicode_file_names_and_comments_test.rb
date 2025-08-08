@@ -2,6 +2,10 @@
 
 require_relative 'test_helper'
 
+require 'zip/file'
+require 'zip/input_stream'
+require 'zip/output_stream'
+
 class ZipUnicodeFileNamesAndComments < Minitest::Test
   FILENAME = File.join(File.dirname(__FILE__), 'test1.zip')
 

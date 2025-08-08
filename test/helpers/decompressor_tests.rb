@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'English'
+
 module DecompressorTests
   # expects @ref_text, @ref_lines and @decompressor
 

@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
+require 'fileutils'
 require 'pathname'
+require 'stringio'
 
+require_relative 'config'
 require_relative 'constants'
+require_relative 'decompressor'
 require_relative 'dirtyable'
+require_relative 'dos_time'
+require_relative 'errors'
+require_relative 'extra_field'
+require_relative 'ioextras'
+require_relative 'null_input_stream'
 
 module Zip
   # Zip::Entry represents an entry in a Zip archive.

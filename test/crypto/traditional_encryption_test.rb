@@ -2,6 +2,9 @@
 
 require_relative '../test_helper'
 
+require 'zip/dos_time'
+require 'zip/crypto/traditional_encryption'
+
 class TraditionalEncrypterTest < Minitest::Test
   def setup
     @mtime = ::Zip::DOSTime.new(2014, 12, 17, 15, 56, 24)

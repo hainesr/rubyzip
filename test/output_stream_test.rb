@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
+require 'tmpdir'
+
 require_relative 'test_helper'
 require_relative 'helpers/assert_entry'
+
+require 'zip/file'
+require 'zip/output_stream'
 
 class ZipOutputStreamTest < Minitest::Test
   include AssertEntry
@@ -90,11 +95,11 @@ class ZipOutputStreamTest < Minitest::Test
     name = TestFiles::EMPTY_TEST_DIR
     begin
       ::Zip::OutputStream.open(name)
-    rescue SystemCallError
-      assert($ERROR_INFO.kind_of?(Errno::EISDIR) || # Linux
-                 $ERROR_INFO.kind_of?(Errno::EEXIST) || # Windows/cygwin
-                 $ERROR_INFO.kind_of?(Errno::EACCES), # Windows
-             "Expected Errno::EISDIR (or on win/cygwin: Errno::EEXIST), but was: #{$ERROR_INFO.class}")
+    rescue SystemCallError => e
+      assert(e.kind_of?(Errno::EISDIR) || # Linux
+             e.kind_of?(Errno::EEXIST) || # Windows/cygwin
+             e.kind_of?(Errno::EACCES),   # Windows
+             "Expected Errno::EISDIR (or on win/cygwin: Errno::EEXIST), but was: #{e.class}")
     end
   end
 

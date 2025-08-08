@@ -2,6 +2,10 @@
 
 require_relative 'test_helper'
 
+require 'zip/input_stream'
+require 'zip/crypto/aes_encryption'
+require 'zip/crypto/traditional_encryption'
+
 class StoredSupportTest < Minitest::Test
   STORED_ZIP_TEST_FILE = 'test/data/zipWithStoredCompression.zip'
   ENCRYPTED_STORED_ZIP_TEST_FILE =

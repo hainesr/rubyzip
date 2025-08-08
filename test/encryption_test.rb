@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
+require 'zlib'
+
 require_relative 'test_helper'
+
+require 'zip/input_stream'
+require 'zip/output_stream'
+require 'zip/crypto/aes_encryption'
+require 'zip/crypto/traditional_encryption'
 
 class EncryptionTest < Minitest::Test
   ENCRYPT_ZIP_TEST_FILE = 'test/data/zipWithEncryption.zip'

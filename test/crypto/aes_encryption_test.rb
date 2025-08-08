@@ -2,6 +2,8 @@
 
 require_relative '../test_helper'
 
+require 'zip/crypto/aes_encryption'
+
 class AESDecrypterTest < Minitest::Test
   def setup
     @decrypter256 = ::Zip::AESDecrypter.new('password', ::Zip::AESEncryption::STRENGTH_256_BIT)

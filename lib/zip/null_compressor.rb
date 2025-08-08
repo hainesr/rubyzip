@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'singleton'
+
+require_relative 'compressor'
+
 module Zip
   class NullCompressor < Compressor # :nodoc:all
     include Singleton

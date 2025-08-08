@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'ioextras/abstract_input_stream'
+require_relative 'null_decompressor'
+
 module Zip
   module NullInputStream # :nodoc:all
     include ::Zip::NullDecompressor

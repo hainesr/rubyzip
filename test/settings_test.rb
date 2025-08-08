@@ -3,6 +3,8 @@
 require_relative 'test_helper'
 require_relative 'helpers/common_zipfile_fixtures'
 
+require 'zip/file'
+
 class ZipSettingsTest < Minitest::Test
   # TODO: Refactor out into common test module
   include CommonZipFileFixture

@@ -2,6 +2,10 @@
 
 require_relative 'test_helper'
 
+require 'zip/dos_time'
+require 'zip/extra_field'
+require 'zip/file'
+
 class ZipExtraFieldTest < Minitest::Test
   def test_new
     extra_pure = ::Zip::ExtraField.new('')

@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'stringio'
+
+require_relative 'central_directory'
+require_relative 'crypto/null_encryption'
+require_relative 'deflater'
+require_relative 'entry'
+require_relative 'extra_field'
+require_relative 'ioextras/abstract_output_stream'
+require_relative 'null_compressor'
+require_relative 'pass_thru_compressor'
+require_relative 'streamable_stream'
 
 ##
 module Zip

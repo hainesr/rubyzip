@@ -2,6 +2,8 @@
 
 require_relative 'test_helper'
 
+require 'zip/extra_field'
+
 class ZipExtraFieldUTTest < Minitest::Test
   PARSE_TESTS = [
     ["UT\x05\x00\x01PS>A", 0b001, true, true, false],

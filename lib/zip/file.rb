@@ -2,8 +2,17 @@
 
 require 'fileutils'
 require 'forwardable'
+require 'stringio'
 
+require_relative 'central_directory'
+require_relative 'config'
+require_relative 'constants'
+require_relative 'entry'
+require_relative 'errors'
 require_relative 'file_split'
+require_relative 'input_stream'
+require_relative 'output_stream'
+require_relative 'streamable_directory'
 
 module Zip
   # Zip::File is modeled after java.util.zip.ZipFile from the Java SDK.

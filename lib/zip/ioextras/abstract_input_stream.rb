@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'English'
+
+require_relative 'fake_io'
+
 module Zip
   module IOExtras # :nodoc:
     # Implements many of the convenience methods of IO

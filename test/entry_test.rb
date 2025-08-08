@@ -3,6 +3,9 @@
 require_relative 'test_helper'
 require_relative 'helpers/zip_entry_data'
 
+require 'zip/entry'
+require 'zip/file'
+
 class ZipEntryTest < Minitest::Test
   include ZipEntryData
 
