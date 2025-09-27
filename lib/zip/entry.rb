@@ -406,8 +406,9 @@ module Zip
        @extra ? @extra.local_size : 0].pack('VvvvvvVVVvv')
     end
 
-    def write_local_entry(io, rewrite: false) # :nodoc:
-      prep_local_zip64_extra
+    def write_local_entry(io, suppress_zip64: false, rewrite: false) # :nodoc:
+      # We can suppress the local zip64 extra field unless we know the size is large.
+      prep_local_zip64_extra if !suppress_zip64 || (@size && @size >= 0xFFFFFFFF)
       verify_local_header_size! if rewrite
       @local_header_offset = io.tell
 
@@ -592,8 +593,11 @@ module Zip
       ].pack('VCCvvvvvVVVvvvvvVV')
     end
 
-    def write_c_dir_entry(io) # :nodoc:
-      prep_cdir_zip64_extra
+    def write_c_dir_entry(io, suppress_zip64: false) # :nodoc: # rubocop:disable Metrics/CyclomaticComplexity
+      # We can suppress the central dir zip64 extra field unless we know the size
+      # is large, or that the local header offset address is beyond 0xFFFFFFFF.
+      prep_cdir_zip64_extra if !suppress_zip64 || (@size && @size >= 0xFFFFFFFF) ||
+                               (@local_header_offset && @local_header_offset >= 0xFFFFFFFF)
 
       case @fstype
       when ::Zip::FSTYPE_UNIX

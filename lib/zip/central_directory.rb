@@ -39,9 +39,9 @@ module Zip
       read_central_directory_entries(io)
     end
 
-    def write_to_stream(io) # :nodoc:
+    def write_to_stream(io, suppress_zip64: false) # :nodoc:
       cdir_offset = io.tell
-      @entry_set.each { |entry| entry.write_c_dir_entry(io) }
+      @entry_set.each { |entry| entry.write_c_dir_entry(io, suppress_zip64: suppress_zip64) }
       eocd_offset = io.tell
       cdir_size = eocd_offset - cdir_offset
       if Zip.write_zip64_support &&

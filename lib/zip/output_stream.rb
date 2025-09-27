@@ -29,7 +29,7 @@ module Zip
 
     # Opens the indicated zip file. If a file with that name already
     # exists it will be overwritten.
-    def initialize(file_name, stream: false, encrypter: nil)
+    def initialize(file_name, stream: false, encrypter: nil, suppress_zip64: false)
       super()
       @file_name = file_name
       @output_stream = if stream
@@ -43,6 +43,7 @@ module Zip
       @cdir = ::Zip::CentralDirectory.new
       @compressor = ::Zip::NullCompressor.instance
       @encrypter = encrypter || ::Zip::NullEncrypter.new
+      @suppress_zip64 = suppress_zip64
       @closed = false
       @current_entry = nil
     end
@@ -51,19 +52,19 @@ module Zip
       # Same as #initialize but if a block is passed the opened
       # stream is passed to the block and closed when the block
       # returns.
-      def open(file_name, encrypter: nil)
+      def open(file_name, encrypter: nil, suppress_zip64: false)
         return new(file_name) unless block_given?
 
-        zos = new(file_name, stream: false, encrypter: encrypter)
+        zos = new(file_name, stream: false, encrypter: encrypter, suppress_zip64: suppress_zip64)
         yield zos
       ensure
         zos.close if zos
       end
 
       # Same as #open but writes to a filestream instead
-      def write_buffer(io = ::StringIO.new, encrypter: nil)
+      def write_buffer(io = ::StringIO.new, encrypter: nil, suppress_zip64: false)
         io.binmode if io.respond_to?(:binmode)
-        zos = new(io, stream: true, encrypter: encrypter)
+        zos = new(io, stream: true, encrypter: encrypter, suppress_zip64: suppress_zip64)
         yield zos
         zos.close_buffer
       end
@@ -75,7 +76,7 @@ module Zip
 
       finalize_current_entry
       update_local_headers
-      @cdir.write_to_stream(@output_stream)
+      @cdir.write_to_stream(@output_stream, suppress_zip64: @suppress_zip64)
       @output_stream.close
       @closed = true
     end
@@ -86,7 +87,7 @@ module Zip
 
       finalize_current_entry
       update_local_headers
-      @cdir.write_to_stream(@output_stream)
+      @cdir.write_to_stream(@output_stream, suppress_zip64: @suppress_zip64)
       @closed = true
       @output_stream.flush
       @output_stream
@@ -157,7 +158,7 @@ module Zip
     def init_next_entry(entry)
       finalize_current_entry
       @cdir << entry
-      entry.write_local_entry(@output_stream)
+      entry.write_local_entry(@output_stream, suppress_zip64: @suppress_zip64)
       @encrypter.reset!
       @output_stream << @encrypter.header(entry.mtime)
       @compressor = get_compressor(entry)
@@ -178,7 +179,7 @@ module Zip
       pos = @output_stream.pos
       @cdir.each do |entry|
         @output_stream.pos = entry.local_header_offset
-        entry.write_local_entry(@output_stream, rewrite: true)
+        entry.write_local_entry(@output_stream, suppress_zip64: @suppress_zip64, rewrite: true)
       end
       @output_stream.pos = pos
     end
