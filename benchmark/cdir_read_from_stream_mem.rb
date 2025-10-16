@@ -5,7 +5,7 @@ require 'zip'
 require 'benchmark'
 require 'benchmark/memory'
 
-DATA_DIR = File.expand_path('../test/data', __dir__)
+DATA_DIR = File.expand_path('../test/zip/data', __dir__)
 
 zip_file1 = File.open(File.join(DATA_DIR, 'globTest.zip'), 'rb')
 zip_file2 = File.open(File.join(DATA_DIR, '100000-files.zip'), 'rb')
