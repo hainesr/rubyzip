@@ -4,7 +4,7 @@ require 'bundler/setup'
 require 'zip'
 require 'stackprof'
 
-DATA_DIR = File.expand_path('../test/data', __dir__)
+DATA_DIR = File.expand_path('../test/zip/data', __dir__)
 
 zip_file = File.open(File.join(DATA_DIR, '100000-files.zip'), 'rb')
 cdir = Zip::CentralDirectory.new
