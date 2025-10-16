@@ -17,7 +17,7 @@ AllCops:
   TargetRubyVersion: 3.0
   NewCops: enable
   Exclude:
-    - 'test/data/*'
+    - 'test/zip/data/*'
 
 # Allow this in this file because adding the extra lines is pointless.
 Layout/EmptyLineBetweenDefs:
@@ -33,7 +33,7 @@ Layout/HashAlignment:
 Layout/LineLength:
   Max: 100
   Exclude:
-    - 'test/**/*.rb'
+    - 'test/zip/**/*.rb'
 
 Lint/EmptyClass:
   Enabled: false
@@ -43,40 +43,40 @@ Lint/EmptyClass:
 Lint/SuppressedException:
   AllowComments: true
   Exclude:
-    - 'test/**/*.rb'
+    - 'test/zip/**/*.rb'
 
 # Allow this "useless" test, as we are testing <=> here.
 Lint/BinaryOperatorWithIdenticalOperands:
   Exclude:
-    - 'test/entry_test.rb'
+    - 'test/zip/entry_test.rb'
 
 # Turn off ABC metrics for the tests and set a workable max given
 # the current state of the code.
 Metrics/AbcSize:
   Max: 37
   Exclude:
-    - 'test/**/*.rb'
+    - 'test/zip/**/*.rb'
 
 # Turn block length metrics off for the tests and gemspec.
 Metrics/BlockLength:
   Exclude:
     - 'rubyzip.gemspec'
-    - 'test/**/*.rb'
+    - 'test/zip/**/*.rb'
 
 # Turn class length metrics off for the tests.
 Metrics/ClassLength:
   Exclude:
-    - 'test/**/*.rb'
+    - 'test/zip/**/*.rb'
 
 # Turn method length metrics off for the tests.
 Metrics/MethodLength:
   Exclude:
-    - 'test/**/*.rb'
+    - 'test/zip/**/*.rb'
 
 # These tests are just better with snake_case numbers.
 Naming/VariableNumber:
   Exclude:
-    - 'test/file_permissions_test.rb'
+    - 'test/zip/file_permissions_test.rb'
 
 # Need to allow accessors in Entry to be separated for doc purposes.
 Style/AccessorGrouping:
