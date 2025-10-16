@@ -103,13 +103,6 @@ Style/MultilineBlockChain:
   Exclude:
     - 'lib/zip/crypto/traditional_encryption.rb'
 
-# Allow inner slashes when using // for regex literals. Allow the
-# Guardfile to use a syntax that is more consistent with its own style.
-Style/RegexpLiteral:
-  AllowInnerSlashes: true
-  Exclude:
-    - 'Guardfile'
-
 Style/SymbolArray:
   EnforcedStyle: brackets
 
