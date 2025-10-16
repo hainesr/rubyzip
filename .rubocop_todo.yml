@@ -48,6 +48,10 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 15
 
+Minitest:
+  Exclude:
+    - 'test/**/*.rb'
+
 # Offense count: 7
 Naming/AccessorMethodName:
   Exclude:

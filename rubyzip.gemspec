@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# Copyright (c) 2002-2025, The Rubyzip Developers.
+#
+# Licensed under the BSD License. See LICENCE for details.
+
 require_relative 'lib/zip/version'
 
 Gem::Specification.new do |s|
@@ -28,10 +32,11 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 3.0'
 
-  s.add_development_dependency 'minitest', '~> 5.25'
-  s.add_development_dependency 'rake', '~> 13.2'
-  s.add_development_dependency 'rdoc', '~> 6.11'
-  s.add_development_dependency 'rubocop', '~> 1.80.2'
+  s.add_development_dependency 'minitest', '~> 5.26'
+  s.add_development_dependency 'rake', '~> 13.3'
+  s.add_development_dependency 'rdoc', '~> 6.15'
+  s.add_development_dependency 'rubocop', '~> 1.81.1'
+  s.add_development_dependency 'rubocop-minitest', '~> 0.38.2'
   s.add_development_dependency 'rubocop-performance', '~> 1.26.0'
   s.add_development_dependency 'rubocop-rake', '~> 0.7.1'
   s.add_development_dependency 'simplecov', '~> 0.22.0'
