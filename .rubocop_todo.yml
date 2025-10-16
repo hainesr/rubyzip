@@ -50,7 +50,7 @@ Metrics/PerceivedComplexity:
 
 Minitest:
   Exclude:
-    - 'test/**/*.rb'
+    - 'test/zip/**/*.rb'
 
 # Offense count: 7
 Naming/AccessorMethodName:
@@ -124,7 +124,7 @@ Style/SafeNavigation:
     - 'lib/zip/entry.rb'
     - 'lib/zip/input_stream.rb'
     - 'lib/zip/output_stream.rb'
-    - 'test/file_extract_test.rb'
-    - 'test/filesystem/file_nonmutating_test.rb'
-    - 'test/filesystem/file_stat_test.rb'
-    - 'test/helpers/assert_entry.rb'
+    - 'test/zip/file_extract_test.rb'
+    - 'test/zip/filesystem/file_nonmutating_test.rb'
+    - 'test/zip/filesystem/file_stat_test.rb'
+    - 'test/zip/helpers/assert_entry.rb'
