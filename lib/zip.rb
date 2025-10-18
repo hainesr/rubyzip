@@ -43,7 +43,7 @@ require 'zip/errors'
 # file/directory interface in the style of the standard ruby ::File and
 # ::Dir APIs then `require 'zip/filesystem'` and see FileSystem.
 module Zip
-  extend self
+  extend self # rubocop:disable Style/ModuleFunction
 
   attr_accessor :unicode_names,
                 :on_exists_proc,

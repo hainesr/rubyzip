@@ -17,5 +17,8 @@ jobs:
         ruby-version: '3.0'
         bundler-cache: true
 
-    - name: Rubocop
-      run: bundle exec rubocop
+    - name: Rubocop (rubyzip)
+      run: bundle exec rake rubocop:rubyzip
+
+    - name: Rubocop (zip)
+      run: bundle exec rake rubocop:zip
