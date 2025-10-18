@@ -9,11 +9,21 @@ require 'minitest/test_task'
 require 'rdoc/task'
 require 'rubocop/rake_task'
 
-task default: :test
+task default: 'test:all'
 
-Minitest::TestTask.create do |test|
-  test.framework = 'require "simplecov"'
-  test.test_globs = 'test/**/*_test.rb'
+namespace :test do
+  Minitest::TestTask.create(:rubyzip) do |test|
+    test.framework = 'require "simplecov"'
+    test.test_globs = 'test/rubyzip/**/*_test.rb'
+  end
+
+  Minitest::TestTask.create(:zip) do |test|
+    test.framework = 'require "simplecov"'
+    test.test_globs = 'test/zip/**/*_test.rb'
+  end
+
+  desc 'Run all tests'
+  task all: ['test:rubyzip', 'test:zip']
 end
 
 RDoc::Task.new do |rdoc|
