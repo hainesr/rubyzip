@@ -1,0 +1,194 @@
+# Copyright (c) 2002-2025, The Rubyzip Developers.
+#
+# Licensed under the BSD License. See LICENCE for details.
+
+# This is the top-level Rubocop configuration for rubyzip v3.x.
+
+plugins:
+  - rubocop-performance
+  - rubocop-rake
+
+# When excluding files, use merge mode so we preserve default Rubocop config.
+inherit_mode:
+  merge:
+    - Exclude
+
+AllCops:
+  SuggestExtensions: false
+  TargetRubyVersion: 3.0
+  NewCops: enable
+
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
+# Allow this in this file because adding the extra lines is pointless.
+Layout/EmptyLineBetweenDefs:
+  Exclude:
+    - 'lib/zip/errors.rb'
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+  EnforcedColonStyle: table
+
+Layout/LineLength:
+  Max: 100
+  Exclude:
+    - 'test/zip/**/*.rb'
+
+# Allow this "useless" test, as we are testing <=> here.
+Lint/BinaryOperatorWithIdenticalOperands:
+  Exclude:
+    - 'test/zip/entry_test.rb'
+
+Lint/EmptyClass:
+  Enabled: false
+
+Lint/MissingSuper:
+  Exclude:
+    - 'lib/zip/extra_field.rb'
+    - 'lib/zip/extra_field/aes.rb'
+    - 'lib/zip/extra_field/ntfs.rb'
+    - 'lib/zip/extra_field/old_unix.rb'
+    - 'lib/zip/extra_field/universal_time.rb'
+    - 'lib/zip/extra_field/unix.rb'
+    - 'lib/zip/extra_field/unknown.rb'
+    - 'lib/zip/extra_field/zip64.rb'
+    - 'lib/zip/extra_field/zip64_placeholder.rb'
+
+# In some cases we just need to catch an exception, rather than
+# actually handle it. Allow the tests to make use of this shortcut.
+Lint/SuppressedException:
+  AllowComments: true
+  Exclude:
+    - 'test/zip/**/*.rb'
+
+# Turn off ABC metrics for the tests and set a workable max given
+# the current state of the code.
+Metrics/AbcSize:
+  Max: 37
+  Exclude:
+    - 'test/zip/**/*.rb'
+
+# Turn block length metrics off for the gemspec.
+Metrics/BlockLength:
+  Exclude:
+    - 'rubyzip.gemspec'
+    - 'test/zip/**/*.rb'
+
+# Turn class length metrics off for the tests.
+Metrics/ClassLength:
+  Max: 675
+  Exclude:
+    - 'test/zip/**/*.rb'
+
+Metrics/CyclomaticComplexity:
+  Max: 14
+
+# Turn method length metrics off for the tests.
+Metrics/MethodLength:
+  Max: 34
+  Exclude:
+    - 'test/zip/**/*.rb'
+
+Metrics/ParameterLists:
+  Max: 11
+  MaxOptionalParameters: 9
+
+Metrics/PerceivedComplexity:
+  Max: 15
+
+Naming/AccessorMethodName:
+  Exclude:
+    - 'lib/zip/entry.rb'
+    - 'lib/zip/input_stream.rb'
+    - 'lib/zip/streamable_stream.rb'
+
+Naming/PredicateMethod:
+  Exclude:
+    - 'test/zip/data/notzippedruby.rb'
+
+# Need to allow accessors in Entry to be separated for doc purposes.
+Style/AccessorGrouping:
+  Exclude:
+    - 'lib/zip/entry.rb'
+
+# These tests are just better with snake_case numbers.
+Naming/VariableNumber:
+  Exclude:
+    - 'test/zip/file_permissions_test.rb'
+
+Style/ClassAndModuleChildren:
+  Exclude:
+    - 'lib/zip/extra_field/generic.rb'
+    - 'lib/zip/extra_field/aes.rb'
+    - 'lib/zip/extra_field/ntfs.rb'
+    - 'lib/zip/extra_field/old_unix.rb'
+    - 'lib/zip/extra_field/universal_time.rb'
+    - 'lib/zip/extra_field/unix.rb'
+    - 'lib/zip/extra_field/unknown.rb'
+    - 'lib/zip/extra_field/zip64.rb'
+    - 'lib/zip/extra_field/zip64_placeholder.rb'
+
+# Set a consistent way of checking types.
+Style/ClassCheck:
+  EnforcedStyle: kind_of?
+
+Style/Documentation:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/IfUnlessModifier:
+  Exclude:
+    - 'lib/zip/entry.rb'
+    - 'lib/zip/file_split.rb'
+    - 'lib/zip/filesystem/dir.rb'
+    - 'lib/zip/filesystem/file.rb'
+    - 'lib/zip/pass_thru_decompressor.rb'
+    - 'lib/zip/streamable_stream.rb'
+
+# Allow this multi-line block chain as it actually reads better
+# than the alternatives.
+Style/MultilineBlockChain:
+  Exclude:
+    - 'lib/zip/crypto/traditional_encryption.rb'
+
+Style/MutableConstant:
+  Exclude:
+    - 'lib/zip/extra_field.rb'
+
+Style/NumericPredicate:
+  Exclude:
+    - 'lib/zip/entry.rb'
+    - 'lib/zip/extra_field/old_unix.rb'
+    - 'lib/zip/extra_field/universal_time.rb'
+    - 'lib/zip/extra_field/unix.rb'
+    - 'lib/zip/file.rb'
+    - 'lib/zip/filesystem/file.rb'
+    - 'lib/zip/input_stream.rb'
+    - 'lib/zip/ioextras.rb'
+    - 'lib/zip/ioextras/abstract_input_stream.rb'
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Style/SafeNavigation:
+  Exclude:
+    - 'lib/zip/entry.rb'
+    - 'lib/zip/input_stream.rb'
+    - 'lib/zip/output_stream.rb'
+    - 'test/zip/file_extract_test.rb'
+    - 'test/zip/filesystem/file_nonmutating_test.rb'
+    - 'test/zip/filesystem/file_stat_test.rb'
+    - 'test/zip/helpers/assert_entry.rb'
+
+# Turn this cop off for these files as it fires for objects without
+# an empty? method.
+Style/ZeroLengthPredicate:
+  Exclude:
+    - 'lib/zip/file.rb'
+    - 'lib/zip/input_stream.rb'

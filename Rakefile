@@ -34,4 +34,19 @@ RDoc::Task.new do |rdoc|
   rdoc.options << "-t Rubyzip version #{Zip::VERSION}"
 end
 
-RuboCop::RakeTask.new
+namespace :rubocop do
+  common_patterns =
+    ['benchmark/*.rb', 'bin/*', '.simplecov', 'Gemfile', 'Rakefile', 'rubyzip.gemspec']
+
+  RuboCop::RakeTask.new(:rubyzip) do |rubocop|
+    rubocop.patterns = common_patterns +
+                       ['lib/rubyzip.rb', 'lib/rubyzip/**/*.rb', 'test/rubyzip/**/*.rb']
+    rubocop.options = ['--config=.rubocop.rubyzip.yml']
+  end
+
+  RuboCop::RakeTask.new(:zip) do |rubocop|
+    rubocop.patterns = common_patterns +
+                       ['lib/zip.rb', 'lib/zip/**/*.rb', 'samples/zip/**/*.rb', 'test/zip/**/*.rb']
+    rubocop.options = ['--config=.rubocop.zip.yml']
+  end
+end
