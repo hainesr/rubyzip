@@ -4,8 +4,8 @@
 #
 # Licensed under the BSD License. See LICENCE for details.
 
-# Rubyzip is a ruby module for reading and writing zip files.
+##
 module Rubyzip
+  # The version of the Rubyzip library.
+  VERSION = '4.0.0.alpha'
 end
-
-require_relative 'rubyzip/version'
