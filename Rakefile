@@ -9,6 +9,9 @@ require 'minitest/test_task'
 require 'rdoc/task'
 require 'rubocop/rake_task'
 
+require_relative 'lib/rubyzip/version'
+require_relative 'lib/zip/version'
+
 task default: 'test:all'
 
 namespace :test do
@@ -26,12 +29,26 @@ namespace :test do
   task all: ['test:rubyzip', 'test:zip']
 end
 
-RDoc::Task.new do |rdoc|
-  rdoc.main = 'README.md'
-  rdoc.rdoc_files.include('README.md', 'lib/**/*.rb')
-  rdoc.options << '--markup=markdown'
-  rdoc.options << '--tab-width=2'
-  rdoc.options << "-t Rubyzip version #{Zip::VERSION}"
+namespace :rdoc do
+  names = { rdoc: 'rubyzip', clobber_rdoc: 'rubyzip:clobber', rerdoc: 'rubyzip:rerdoc' }
+  RDoc::Task.new(names) do |rdoc|
+    rdoc.main = 'README.md'
+    rdoc.rdoc_files.include('README.md', 'lib/rubyzip.rb', 'lib/rubyzip/**/*.rb')
+    rdoc.rdoc_dir = 'html/rubyzip'
+    rdoc.markup = 'markdown'
+    rdoc.title = "Rubyzip version #{Rubyzip::VERSION}"
+    rdoc.options << '--tab-width=2'
+  end
+
+  names = { rdoc: 'zip', clobber_rdoc: 'zip:clobber', rerdoc: 'zip:rerdoc' }
+  RDoc::Task.new(names) do |rdoc|
+    rdoc.main = 'README.md'
+    rdoc.rdoc_files.include('README.md', 'lib/zip.rb', 'lib/zip/**/*.rb')
+    rdoc.rdoc_dir = 'html/zip'
+    rdoc.markup = 'markdown'
+    rdoc.title = "Rubyzip version #{Zip::VERSION}"
+    rdoc.options << '--tab-width=2'
+  end
 end
 
 namespace :rubocop do
