@@ -4,8 +4,6 @@
 #
 # Licensed under the BSD License. See LICENCE for details.
 
-# Rubyzip is a ruby module for reading and writing zip files.
-module Rubyzip
-end
+require 'minitest/autorun'
 
-require_relative 'rubyzip/version'
+Minitest::Test.make_my_diffs_pretty!
