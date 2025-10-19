@@ -28,6 +28,7 @@ class InputStreamTest < Minitest::Test
 
       # Test getting past the last entry. This should return nil.
       assert_nil(zis.next_entry)
+      assert_nil(zis.next_entry)
     end
   end
 
