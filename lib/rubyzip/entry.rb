@@ -4,6 +4,8 @@
 #
 # Licensed under the BSD License. See LICENCE for details.
 
+require_relative 'constants'
+
 ##
 module Rubyzip
   # Entry represents an entry in a zip file.
@@ -11,6 +13,10 @@ module Rubyzip
     attr_reader :compression_method, :compressed_size, :crc32, :name, :uncompressed_size
 
     def initialize(name, header = nil)
+      if name.bytesize > LIMIT_ENTRY_NAME_SIZE
+        raise ArgumentError, "Entry name cannot be larger than #{LIMIT_ENTRY_NAME_SIZE} bytes."
+      end
+
       @name = name
 
       return unless header

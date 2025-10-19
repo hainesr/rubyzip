@@ -49,6 +49,31 @@ class EntryTest < Minitest::Test
     assert_equal(@entry_name, @entry_with_header.name)
   end
 
+  def test_name_size_limit_ascii
+    name = 'a' * Rubyzip::LIMIT_ENTRY_NAME_SIZE
+
+    # Should not raise anything.
+    Rubyzip::Entry.new(name)
+
+    name += 'a'
+    assert_raises(ArgumentError) do
+      Rubyzip::Entry.new(name)
+    end
+  end
+
+  def test_name_size_limit_utf8
+    # Each '£' character takes 2 bytes in UTF-8, so add an 'a' to be on the limit.
+    name = "a#{'£' * (Rubyzip::LIMIT_ENTRY_NAME_SIZE / 2)}"
+
+    # Should not raise anything.
+    Rubyzip::Entry.new(name)
+
+    name += 'a' # Add one more byte.
+    assert_raises(ArgumentError) do
+      Rubyzip::Entry.new(name)
+    end
+  end
+
   def test_streamed?
     refute_predicate(@entry, :streamed?)
     refute_predicate(@entry_with_header, :streamed?)
