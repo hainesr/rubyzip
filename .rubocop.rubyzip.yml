@@ -37,6 +37,9 @@ Metrics/BlockLength:
   Exclude:
     - 'rubyzip.gemspec'
 
+Minitest/MultipleAssertions:
+  Max: 5
+
 # Set a consistent way of checking types.
 Style/ClassCheck:
   EnforcedStyle: kind_of?
