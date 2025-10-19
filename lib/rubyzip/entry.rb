@@ -8,10 +8,16 @@
 module Rubyzip
   # Entry represents an entry in a zip file.
   class Entry
-    attr_reader :name
+    attr_reader :compression_method, :compressed_size, :crc32, :name, :uncompressed_size
 
-    def initialize(name)
+    def initialize(name, header = nil)
       @name = name
+
+      return unless header
+
+      _sig, _version_to_extract, _fs_type, _gp_flags, @compression_method,
+      _last_mod_time, _last_mod_date, @crc32, @compressed_size, @uncompressed_size,
+      _name_len, _extra_len = header.unpack(LOC_PACK)
     end
   end
 end
