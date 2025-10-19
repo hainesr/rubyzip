@@ -18,11 +18,15 @@ class InputStreamTest < Minitest::Test
 
   def test_get_next_entry
     File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+      # Test getting the first entry. This should not raise anything.
       zis = Rubyzip::InputStream.new(zip)
       entry = zis.next_entry
 
       assert_instance_of(Rubyzip::Entry, entry)
       assert_equal('lorem_ipsum.txt', entry.name)
+
+      # Test getting past the last entry. This should return nil.
+      assert_nil(zis.next_entry)
     end
   end
 end
