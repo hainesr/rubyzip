@@ -10,18 +10,19 @@ require 'rubyzip/input_stream'
 
 class InputStreamTest < Minitest::Test
   def test_create_from_stream
-    zip = ::File.open(ZIP_ONE_TEXT_FILE, 'rb')
-
-    # Should not raise anything.
-    Rubyzip::InputStream.new(zip)
+    File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+      # Should not raise anything.
+      Rubyzip::InputStream.new(zip)
+    end
   end
 
   def test_get_next_entry
-    zip = ::File.open(ZIP_ONE_TEXT_FILE, 'rb')
-    zis = Rubyzip::InputStream.new(zip)
-    entry = zis.next_entry
+    File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+      zis = Rubyzip::InputStream.new(zip)
+      entry = zis.next_entry
 
-    assert_instance_of(Rubyzip::Entry, entry)
-    assert_equal('lorem_ipsum.txt', entry.name)
+      assert_instance_of(Rubyzip::Entry, entry)
+      assert_equal('lorem_ipsum.txt', entry.name)
+    end
   end
 end
