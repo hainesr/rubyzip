@@ -1,0 +1,13 @@
+# A dummy RuboCop configuration file so that calling `rubocop` in the project root
+# will load the actual configuration from `.rubocop.rubyzip.yml`.
+# This also allows IDEs and editors that integrate with RuboCop to work properly.
+
+inherit_from:
+  - .rubocop.rubyzip.yml
+
+AllCops:
+  Exclude:
+    - 'lib/zip.rb'
+    - 'lib/zip/**/*'
+    - 'samples/zip/**/*'
+    - 'test/zip/**/*'
