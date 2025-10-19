@@ -12,7 +12,7 @@ require 'rubocop/rake_task'
 require_relative 'lib/rubyzip/version'
 require_relative 'lib/zip/version'
 
-task default: 'test:all'
+task default: 'test:rubyzip'
 
 namespace :test do
   Minitest::TestTask.create(:rubyzip) do |test|
