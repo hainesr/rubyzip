@@ -4,6 +4,8 @@
 #
 # Licensed under the BSD License. See LICENCE for details.
 
+require_relative 'limits'
+
 ##
 module Rubyzip # :nodoc:
   # Local headers.
