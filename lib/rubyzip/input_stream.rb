@@ -19,12 +19,12 @@ module Rubyzip
 
     def next_entry
       begin
-        name, = Utilities.read_local_header(@io)
+        name, header, = Utilities.read_local_header(@io)
       rescue Error
         return nil
       end
 
-      Entry.new(name)
+      Entry.new(name, header)
     end
   end
 end
