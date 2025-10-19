@@ -20,6 +20,10 @@ module Rubyzip
       _name_len, _extra_len = header.unpack(LOC_PACK)
     end
 
+    def directory?
+      @name.end_with?('/')
+    end
+
     def encrypted?
       @gp_flags & GP_FLAGS_ENCRYPTED == GP_FLAGS_ENCRYPTED
     end
