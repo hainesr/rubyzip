@@ -24,6 +24,7 @@ class InputStreamTest < Minitest::Test
 
       assert_instance_of(Rubyzip::Entry, entry)
       assert_equal('lorem_ipsum.txt', entry.name)
+      assert_equal(Rubyzip::COMPRESSION_METHOD_DEFLATE, entry.compression_method)
 
       # Test getting past the last entry. This should return nil.
       assert_nil(zis.next_entry)
