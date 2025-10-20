@@ -21,7 +21,7 @@ module Rubyzip
       end
 
       def read(len = nil)
-        return if @remaining <= 0
+        return (len.nil? || len.zero? ? '' : nil) if eof?
 
         len = @remaining if len.nil? || len > @remaining
 
