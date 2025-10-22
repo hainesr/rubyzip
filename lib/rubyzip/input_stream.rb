@@ -13,16 +13,31 @@ module Rubyzip
   # InputStream provides a simple streaming interface for reading zip entries
   # from a zip file.
   class InputStream
-    def initialize(io)
-      @io = io
+    def initialize(io_or_file)
+      if io_or_file.respond_to?(:read)
+        @io = io_or_file
+        @io_from_file = false
+      else
+        @io = ::File.open(io_or_file, 'rb')
+        @io_from_file = true
+      end
+
       @current_entry = nil
     end
 
-    def self.open(io)
-      zis = new(io)
+    def self.open(io_or_file)
+      zis = new(io_or_file)
       return zis unless block_given?
 
-      yield zis
+      begin
+        yield zis
+      ensure
+        zis.close
+      end
+    end
+
+    def close
+      @io.close if @io_from_file
     end
 
     def close_entry
