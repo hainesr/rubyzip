@@ -34,7 +34,7 @@ class StoredDecompressorTest < Minitest::Test
 
   def test_read_at_eof
     File.open(TXT_LOREM_IPSUM, 'rb') do |is|
-      decompressor = Rubyzip::Codecs::StoredDecompressor.new(is, ::File.size(TXT_LOREM_IPSUM))
+      decompressor = Rubyzip::Codecs::StoredDecompressor.new(is, File.size(TXT_LOREM_IPSUM))
       decompressor.read
 
       assert_empty(decompressor.read(0))
@@ -45,7 +45,7 @@ class StoredDecompressorTest < Minitest::Test
 
   def test_short_input
     File.open(TXT_LOREM_IPSUM, 'rb') do |is|
-      decompressor = Rubyzip::Codecs::StoredDecompressor.new(is, ::File.size(TXT_LOREM_IPSUM) + 1)
+      decompressor = Rubyzip::Codecs::StoredDecompressor.new(is, File.size(TXT_LOREM_IPSUM) + 1)
       decompressor.read
 
       assert_raises(EOFError) do
