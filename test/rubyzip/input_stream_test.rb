@@ -22,7 +22,7 @@ class InputStreamTest < Minitest::Test
   end
 
   def test_open_from_stream
-    ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+    File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
       # Should not raise anything.
       assert_instance_of(Rubyzip::InputStream, Rubyzip::InputStream.open(zip))
     end
@@ -98,10 +98,10 @@ class InputStreamTest < Minitest::Test
   end
 
   def test_partial_reads_from_entry
-    text = ::File.read(TXT_LOREM_IPSUM)
+    text = File.read(TXT_LOREM_IPSUM)
     half_len = text.length / 2
 
-    ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+    File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
       Rubyzip::InputStream.open(zip) do |zis|
         zis.next_entry
 
@@ -113,7 +113,7 @@ class InputStreamTest < Minitest::Test
   end
 
   def test_read_at_eof
-    ::File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
+    File.open(ZIP_ONE_TEXT_FILE, 'rb') do |zip|
       Rubyzip::InputStream.open(zip) do |zis|
         zis.next_entry
         zis.read
@@ -138,7 +138,7 @@ class InputStreamTest < Minitest::Test
   end
 
   def test_read_multiple_entries_via_block
-    ::File.open(ZIP_MULTI_FILE, 'rb') do |zip|
+    File.open(ZIP_MULTI_FILE, 'rb') do |zip|
       Rubyzip::InputStream.open(zip) do |zis|
         ['lorem_ipsum.txt', 'zip.png', 'one_level/lorem_ipsum.txt'].each do |name|
           entry = zis.next_entry
