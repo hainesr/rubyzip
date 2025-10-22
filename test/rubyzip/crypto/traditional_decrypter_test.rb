@@ -31,6 +31,17 @@ class TraditionalDecrypterTest < Minitest::Test
     end
   end
 
+  def test_read_at_eof
+    File.open(BIN_LOREM_IPSUM_ENC, 'rb') do |is|
+      decrypter = Rubyzip::Crypto::TraditionalDecrypter.new(is, 'Rubyz1p!')
+      decrypter.read
+
+      assert_empty(decrypter.read(0))
+      assert_empty(decrypter.read)
+      assert_nil(decrypter.read(1))
+    end
+  end
+
   def test_bad_password
     text = File.read(TXT_LOREM_IPSUM)
     File.open(BIN_LOREM_IPSUM_ENC, 'rb') do |is|
