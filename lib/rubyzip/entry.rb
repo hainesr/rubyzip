@@ -21,7 +21,7 @@ module Rubyzip
 
       return unless header
 
-      _sig, _version_to_extract, _fs_type, @gp_flags, @compression_method,
+      _sig, @version_needed_to_extract, _fs_type, @gp_flags, @compression_method,
       _last_mod_time, _last_mod_date, @crc32, @compressed_size, @uncompressed_size,
       _name_len, _extra_len = header.unpack(LOC_PACK)
     end
@@ -40,6 +40,10 @@ module Rubyzip
 
     def utf8?
       @gp_flags & GP_FLAGS_UTF8 == GP_FLAGS_UTF8
+    end
+
+    def version_needed_to_extract
+      @version_needed_to_extract || 10
     end
   end
 end
