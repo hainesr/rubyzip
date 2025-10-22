@@ -12,6 +12,17 @@ module Rubyzip
   module Utilities # :nodoc:
     module_function
 
+    def dos_to_ruby_time(bin_dos_date_time)
+      year = ((bin_dos_date_time >> 25) & 0x7f) + 1980
+      month = (bin_dos_date_time >> 21) & 0x0f
+      day = (bin_dos_date_time >> 16) & 0x1f
+      hour = (bin_dos_date_time >> 11) & 0x1f
+      minute = (bin_dos_date_time >> 5) & 0x3f
+      second = (bin_dos_date_time << 1) & 0x3e
+
+      Time.local(year, month, day, hour, minute, second)
+    end
+
     def read_local_header(io)
       header_data = io.read(LOC_SIZE)
 
