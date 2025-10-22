@@ -5,12 +5,13 @@
 # Licensed under the BSD License. See LICENCE for details.
 
 require_relative 'constants'
+require_relative 'utilities'
 
 ##
 module Rubyzip
   # Entry represents an entry in a zip file.
   class Entry
-    attr_reader :compression_method, :compressed_size, :crc32, :name, :uncompressed_size
+    attr_reader :compression_method, :compressed_size, :crc32, :mtime, :name, :uncompressed_size
 
     def initialize(name, header = nil)
       if name.bytesize > LIMIT_ENTRY_NAME_SIZE
@@ -22,8 +23,10 @@ module Rubyzip
       return unless header
 
       _sig, @version_needed_to_extract, _fs_type, @gp_flags, @compression_method,
-      _last_mod_time, _last_mod_date, @crc32, @compressed_size, @uncompressed_size,
+      last_mod_time, last_mod_date, @crc32, @compressed_size, @uncompressed_size,
       _name_len, _extra_len = header.unpack(LOC_PACK)
+
+      @mtime = Utilities.dos_to_ruby_time((last_mod_date << 16) | last_mod_time)
     end
 
     def directory?
