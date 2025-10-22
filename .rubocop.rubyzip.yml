@@ -37,6 +37,10 @@ Metrics/BlockLength:
   Exclude:
     - 'rubyzip.gemspec'
 
+Metrics/ClassLength:
+  Exclude:
+    - 'test/rubyzip/**/*.rb'
+
 Metrics/CyclomaticComplexity:
   Max: 10
 

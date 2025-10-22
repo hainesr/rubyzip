@@ -9,7 +9,7 @@ require_relative 'test_helper'
 require 'rubyzip/entry_input_stream'
 require 'stringio'
 
-class EntryInputStreamTest < Minitest::Test # rubocop:disable Metrics/ClassLength
+class EntryInputStreamTest < Minitest::Test
   def test_read_stored_entry
     text = File.read(TXT_LOREM_IPSUM)
 
