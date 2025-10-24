@@ -44,4 +44,8 @@ class UniversalTimeTest < Minitest::Test
 
     assert_equal('UT', ut.id)
   end
+
+  def test_label
+    assert_equal('UniversalTime', Rubyzip::ExtraFields::UniversalTime.label)
+  end
 end
