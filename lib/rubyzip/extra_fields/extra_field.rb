@@ -16,6 +16,10 @@ module Rubyzip
         merge
       end
 
+      def self.label
+        @label ||= name.split('::')[-1]
+      end
+
       def id
         self.class.const_get(:EXTRA_FIELD_ID)
       end
