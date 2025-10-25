@@ -39,4 +39,38 @@ class SetTest < Minitest::Test
     refute_nil(efs['UniversalTime'])
     assert_equal(mtime, efs['UniversalTime'].mtime)
   end
+
+  def test_respond_to
+    extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
+    efs = Rubyzip::ExtraFields::Set.new(extra_data)
+
+    assert_respond_to(efs, :mtime)
+    assert_respond_to(efs, :atime)
+    refute_respond_to(efs, :time)
+  end
+
+  def test_respond_to_with_no_fields
+    efs = Rubyzip::ExtraFields::Set.new
+
+    refute_respond_to(efs, :mtime)
+  end
+
+  def test_delegate
+    extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
+    efs = Rubyzip::ExtraFields::Set.new(extra_data)
+    mtime = Time.local(2022, 8, 21, 14, 58, 20)
+    atime = Time.local(2022, 8, 21, 14, 58, 22)
+
+    assert_nil(efs.delegate(:ctime))
+    assert_equal(mtime, efs.delegate(:mtime))
+    assert_equal(atime, efs.delegate(:atime))
+  end
+
+  def test_delegate_with_no_fields
+    efs = Rubyzip::ExtraFields::Set.new
+
+    assert_raises(NoMethodError) do
+      efs.delegate(:mtime)
+    end
+  end
 end
