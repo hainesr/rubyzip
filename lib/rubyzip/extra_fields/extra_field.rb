@@ -12,8 +12,7 @@ module Rubyzip
     # Subclasses are required to implement merge and define EXTRA_FIELD_ID.
     class ExtraField
       def initialize(data)
-        @data = data
-        merge
+        merge(data)
       end
 
       def self.label
