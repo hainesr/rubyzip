@@ -19,7 +19,7 @@ module Rubyzip
 
     module_function
 
-    def dos_to_ruby_time(bin_dos_date_time)
+    def dos_to_ruby_time(bin_dos_date_time) # rubocop:disable Metrics/AbcSize
       year = ((bin_dos_date_time >> 25) & 0x7f) + 1980
       month = (bin_dos_date_time >> 21) & 0x0f
       day = (bin_dos_date_time >> 16) & 0x1f
@@ -28,6 +28,8 @@ module Rubyzip
       second = (bin_dos_date_time << 1) & 0x3e
 
       Time.local(year, month, day, hour, minute, second)
+    rescue ArgumentError
+      warn 'WARNING: an invalid date/time has been detected.' if Rubyzip.warn_on_invalid_date
     end
 
     def read_local_header(io)
