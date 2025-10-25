@@ -33,7 +33,7 @@ class SetTest < Minitest::Test
   def test_new
     extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
     efs = Rubyzip::ExtraFields::Set.new(extra_data)
-    mtime = Time.local(2022, 8, 21, 14, 58, 20)
+    mtime = Time.utc(2022, 8, 21, 13, 58, 20)
 
     assert_equal(1, efs.length)
     refute_nil(efs['UniversalTime'])
@@ -58,8 +58,8 @@ class SetTest < Minitest::Test
   def test_delegate
     extra_data = ::File.read(BIN_LOCAL_HEADER).slice(0x2d..0x49)
     efs = Rubyzip::ExtraFields::Set.new(extra_data)
-    mtime = Time.local(2022, 8, 21, 14, 58, 20)
-    atime = Time.local(2022, 8, 21, 14, 58, 22)
+    mtime = Time.utc(2022, 8, 21, 13, 58, 20)
+    atime = Time.utc(2022, 8, 21, 13, 58, 22)
 
     assert_nil(efs.delegate(:ctime))
     assert_equal(mtime, efs.delegate(:mtime))
