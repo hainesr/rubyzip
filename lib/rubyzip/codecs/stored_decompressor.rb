@@ -12,7 +12,7 @@ module Rubyzip
   module Codecs
     # A decompressor for stored (i.e., uncompressed) entries.
     class StoredDecompressor < Decompressor
-      DECOMPRESSION_METHOD = COMPRESSION_METHOD_STORE
+      DECOMPRESSION_METHOD = COMPRESSION_METHOD_STORE # :nodoc:
 
       def eof?
         @remaining_data <= 0
