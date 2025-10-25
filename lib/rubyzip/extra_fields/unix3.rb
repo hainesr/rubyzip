@@ -18,12 +18,12 @@ module Rubyzip
 
       private
 
-      def merge
-        @version = @data.unpack1('C')                                        # offset 0
-        uid_size = @data[1].unpack1('C')                                     # offset 1
-        @uid = @data[2, uid_size].unpack1(Utilities::UNPACK_BYTES[uid_size]) # offset 2
-        gid_size = @data[2 + uid_size].unpack1('C')                          # offset 2 + uid_size
-        @gid = @data[3 + uid_size, gid_size].unpack1(Utilities::UNPACK_BYTES[gid_size])
+      def merge(data)
+        @version = data.unpack1('C')                                        # offset 0
+        uid_size = data[1].unpack1('C')                                     # offset 1
+        @uid = data[2, uid_size].unpack1(Utilities::UNPACK_BYTES[uid_size]) # offset 2
+        gid_size = data[2 + uid_size].unpack1('C')                          # offset 2 + uid_size
+        @gid = data[3 + uid_size, gid_size].unpack1(Utilities::UNPACK_BYTES[gid_size])
       end
     end
   end
