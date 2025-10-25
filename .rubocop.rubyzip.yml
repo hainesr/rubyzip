@@ -58,6 +58,10 @@ Naming/InclusiveLanguage:
 Style/ClassCheck:
   EnforcedStyle: kind_of?
 
+# Turn this on in case we make use of this feature in future.
+Style/DocumentDynamicEvalDefinition:
+  Enabled: true
+
 Style/HashEachMethods:
   Enabled: true
 
