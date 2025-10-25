@@ -16,7 +16,7 @@ module Rubyzip
       "Entry name cannot be longer than #{LIMIT_ENTRY_NAME_SIZE} characters " \
       "or larger than #{LIMIT_ENTRY_NAME_SIZE} bytes.".freeze
 
-    attr_reader :compression_method, :compressed_size, :crc32, :mtime, :name, :uncompressed_size
+    attr_reader :compression_method, :compressed_size, :crc32, :name, :uncompressed_size
 
     def initialize(name, header = nil, extra_field_data = nil)
       raise ArgumentError, NAME_TOO_LONG_MESSAGE if name.bytesize > LIMIT_ENTRY_NAME_SIZE
@@ -39,6 +39,12 @@ module Rubyzip
 
     def encrypted?
       @gp_flags & GP_FLAGS_ENCRYPTED == GP_FLAGS_ENCRYPTED
+    end
+
+    def mtime
+      # If there is an extra field that provides mtime, use it if it's set.
+      time = @extra_fields.delegate(:mtime) if @extra_fields.respond_to?(:mtime)
+      time || @mtime
     end
 
     def streamed?
