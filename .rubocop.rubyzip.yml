@@ -50,6 +50,10 @@ Metrics/MethodLength:
 Minitest/MultipleAssertions:
   Max: 5
 
+# Turn on checks for exclusionary terms in the codebase.
+Naming/InclusiveLanguage:
+  Enabled: true
+
 # Set a consistent way of checking types.
 Style/ClassCheck:
   EnforcedStyle: kind_of?
