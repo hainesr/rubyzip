@@ -10,10 +10,11 @@ require 'rubyzip/entry'
 
 class EntryTest < Minitest::Test
   def setup
-    header = File.read(BIN_LOCAL_HEADER)
-    @entry_name = 'lorem_ipsum.txt'
-    @entry = Rubyzip::Entry.new(@entry_name)
-    @entry_with_header = Rubyzip::Entry.new(@entry_name, header)
+    ::File.open(BIN_LOCAL_HEADER, 'rb') do |header|
+      @entry_name, header_data, extras = Rubyzip::Utilities.read_local_header(header)
+      @entry = Rubyzip::Entry.new(@entry_name)
+      @entry_with_header = Rubyzip::Entry.new(@entry_name, header_data, extras)
+    end
   end
 
   def test_compressed_size
@@ -99,5 +100,24 @@ class EntryTest < Minitest::Test
 
     assert_nil(@entry.mtime)
     assert_equal(time, @entry_with_header.mtime)
+  end
+
+  def test_respond_to
+    assert_respond_to(@entry_with_header, :atime)
+    refute_respond_to(@entry_with_header, :xtime)
+    refute_respond_to(@entry, :atime)
+  end
+
+  def test_delegation_to_extra_fields
+    # Should not raise anything.
+    @entry_with_header.ctime
+
+    assert_raises(NoMethodError) do
+      @entry_with_header.xtime
+    end
+
+    assert_raises(NoMethodError) do
+      @entry.atime
+    end
   end
 end
