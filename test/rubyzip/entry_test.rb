@@ -17,6 +17,14 @@ class EntryTest < Minitest::Test
     end
   end
 
+  def test_create_with_utf8_name
+    entry = Rubyzip::Entry.new('lörèm_ipşuṁ.txt')
+
+    assert_equal(15, entry.name.length)
+    assert_equal(20, entry.name.bytesize)
+    assert_equal('lörèm_ipşuṁ.txt', entry.name)
+  end
+
   def test_compressed_size
     assert_nil(@entry.compressed_size)
     assert_equal(1439, @entry_with_header.compressed_size)
@@ -153,6 +161,28 @@ class EntryTest < Minitest::Test
       assert_predicate(entry, :zip64?)
       assert_equal(229, entry.compressed_size)
       assert_equal(482, entry.uncompressed_size)
+    end
+  end
+
+  def test_utf8_name_gp_not_set
+    File.open(BIN_LOCAL_HEADER_UTF8_NOGP, 'rb') do |header|
+      name, header_data, extras = Rubyzip::Utilities.read_local_header(header)
+      entry = Rubyzip::Entry.new(name, header_data, extras)
+
+      assert_equal(15, entry.name.length)
+      assert_equal(20, entry.name.bytesize)
+      assert_equal('lörèm_ipşuṁ.txt', entry.name)
+    end
+  end
+
+  def test_utf8_name_gp_set
+    File.open(BIN_LOCAL_HEADER_UTF8_GP, 'rb') do |header|
+      name, header_data, extras = Rubyzip::Utilities.read_local_header(header)
+      entry = Rubyzip::Entry.new(name, header_data, extras)
+
+      assert_equal(15, entry.name.length)
+      assert_equal(20, entry.name.bytesize)
+      assert_equal('lörèm_ipşuṁ.txt', entry.name)
     end
   end
 end
