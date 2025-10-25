@@ -4,7 +4,6 @@
 #
 # Licensed under the BSD License. See LICENCE for details.
 
-require_relative '../utilities'
 require_relative 'extra_field'
 
 ##
@@ -25,48 +24,21 @@ module Rubyzip
       CTIME_MASK = 0b100
       MTIME_MASK = 0b001
 
-      def initialize(data)
-        @index = {}
-        super
-      end
-
-      def atime
-        @atime ||= time(:atime)
-      end
-
-      def ctime
-        @ctime ||= time(:ctime)
-      end
-
-      def mtime
-        @mtime ||= time(:mtime)
-      end
+      attr_reader :atime, :ctime, :mtime
 
       private
 
-      def merge
-        i = 0
-        if flag?(MTIME_MASK)
-          @index[:mtime] = i
-          i += 1
-        end
+      def merge(data)
+        flags = data.unpack1('C')
+        i = -3 # Start at -3 so we can increment i below first.
 
-        if flag?(ATIME_MASK)
-          @index[:atime] = i
-          i += 1
-        end
+        @mtime, @atime, @ctime =
+          [MTIME_MASK, ATIME_MASK, CTIME_MASK].map do |mask|
+            next if flags.nobits?(mask)
 
-        @index[:ctime] = i if flag?(CTIME_MASK)
-      end
-
-      def flag?(mask)
-        @data.unpack1('C').allbits?(mask)
-      end
-
-      def time(type)
-        return if @index[type].nil?
-
-        Time.at(@data[1 + (@index[type] * 4), 4].unpack1('l<'), in: 'UTC')
+            i += 4
+            Time.at(data[i, 4].unpack1('l<'), in: 'UTC')
+          end
       end
     end
   end
