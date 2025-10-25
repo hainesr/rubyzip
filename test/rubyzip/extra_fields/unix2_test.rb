@@ -10,7 +10,7 @@ require 'rubyzip/extra_fields/unix2'
 
 class Unix2Test < Minitest::Test
   def setup
-    data = "\xE9\x03\xEA\x03"
+    data = "\xE9\x03\xEA\x03".b
     @ux = Rubyzip::ExtraFields::Unix2.new(data)
   end
 

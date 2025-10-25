@@ -12,7 +12,7 @@ module Rubyzip
     # An extra field that stores file and directory timestamp data (in Win32
     # format) for an Entry.
     class NTFS < ExtraField
-      EXTRA_FIELD_ID = "\n\x00"
+      EXTRA_FIELD_ID = "\n\x00".b
 
       WINDOWS_TICK = 10_000_000.0
       SEC_TO_UNIX_EPOCH = 11_644_473_600
