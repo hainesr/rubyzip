@@ -10,6 +10,13 @@ require_relative 'errors'
 ##
 module Rubyzip
   module Utilities # :nodoc:
+    UNPACK_BYTES = {
+      1 => 'C',
+      2 => 'v',
+      4 => 'V',
+      8 => 'Q<'
+    }.freeze
+
     module_function
 
     def dos_to_ruby_time(bin_dos_date_time)
