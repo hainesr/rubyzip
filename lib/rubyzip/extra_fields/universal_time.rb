@@ -66,7 +66,7 @@ module Rubyzip
       def time(type)
         return if @index[type].nil?
 
-        Time.at(@data[1 + (@index[type] * 4), 4].unpack1('l<'))
+        Time.at(@data[1 + (@index[type] * 4), 4].unpack1('l<'), in: 'UTC')
       end
     end
   end
