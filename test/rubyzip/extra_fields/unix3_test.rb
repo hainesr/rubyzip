@@ -10,7 +10,7 @@ require 'rubyzip/extra_fields/unix3'
 
 class Unix3Test < Minitest::Test
   def setup
-    data = "\x01\x04\xF6\x01\x00\x00\x04\x14\x00\x00\x00"
+    data = "\x01\x04\xF6\x01\x00\x00\x04\x14\x00\x00\x00".b
     @ux = Rubyzip::ExtraFields::Unix3.new(data)
   end
 

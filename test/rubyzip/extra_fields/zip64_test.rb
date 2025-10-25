@@ -11,7 +11,7 @@ require 'rubyzip/extra_fields/zip64'
 class Zip64Test < Minitest::Test
   def setup
     # This data is only sufficient to test local header Zip64 extentions.
-    data = "\xE2\x01\x00\x00\x00\x00\x00\x00\xE5\x00\x00\x00\x00\x00\x00\x00"
+    data = "\xE2\x01\x00\x00\x00\x00\x00\x00\xE5\x00\x00\x00\x00\x00\x00\x00".b
     @zip64 = Rubyzip::ExtraFields::Zip64.new(data)
   end
 

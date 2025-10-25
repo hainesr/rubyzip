@@ -24,7 +24,7 @@ class UtilitiesTest < Minitest::Test
   end
 
   def test_read_local_header_with_bad_signature
-    header = File.read(BIN_LOCAL_HEADER)
+    header = File.binread(BIN_LOCAL_HEADER)
     header[0] = 'Z'
     io = StringIO.new(header)
 
