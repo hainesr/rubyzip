@@ -13,9 +13,14 @@ module Rubyzip
     #
     # This extra field holds 16bit UIDs and GIDs.
     class Unix2 < ExtraField
+      # The ID of this extra field (Ux).
       EXTRA_FIELD_ID = 'Ux'.b
 
-      attr_reader :gid, :uid
+      # The group ID of the entry.
+      attr_reader :gid
+
+      # The user ID of the entry.
+      attr_reader :uid
 
       private
 
