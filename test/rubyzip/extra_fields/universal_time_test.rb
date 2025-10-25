@@ -30,7 +30,7 @@ class UniversalTimeTest < Minitest::Test
   end
 
   def test_times
-    time = Time.local(2004, 9, 8, 1, 33, 20)
+    time = Time.utc(2004, 9, 8, 0, 33, 20)
     ut = Rubyzip::ExtraFields::UniversalTime.new("\x03PS>APS>A")
 
     assert_equal(time, ut.atime)
