@@ -5,6 +5,7 @@
 # Licensed under the BSD License. See LICENCE for details.
 
 require_relative 'constants'
+require_relative 'extra_fields/set'
 require_relative 'utilities'
 
 ##
@@ -17,10 +18,11 @@ module Rubyzip
 
     attr_reader :compression_method, :compressed_size, :crc32, :mtime, :name, :uncompressed_size
 
-    def initialize(name, header = nil)
+    def initialize(name, header = nil, extra_field_data = nil)
       raise ArgumentError, NAME_TOO_LONG_MESSAGE if name.bytesize > LIMIT_ENTRY_NAME_SIZE
 
       @name = name
+      @extra_fields = ExtraFields::Set.new(extra_field_data)
 
       return unless header
 
@@ -49,6 +51,16 @@ module Rubyzip
 
     def version_needed_to_extract
       @version_needed_to_extract || 10
+    end
+
+    def method_missing(symbol, *args)
+      return super unless respond_to?(symbol)
+
+      @extra_fields.delegate(symbol, *args)
+    end
+
+    def respond_to_missing?(symbol, include_all)
+      @extra_fields.respond_to?(symbol, include_all)
     end
   end
 end
