@@ -25,11 +25,15 @@ module Rubyzip
     'UTF-8'
   end
 
-  def error_on_invalid_crc32 # rubocop:disable Naming/PredicateMethod
+  def error_on_invalid_crc32
     true
   end
 
-  def error_on_invalid_entry_size # rubocop:disable Naming/PredicateMethod
+  def error_on_invalid_entry_size
+    true
+  end
+
+  def warn_on_invalid_date
     true
   end
 end

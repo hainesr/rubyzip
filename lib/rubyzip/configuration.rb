@@ -48,6 +48,13 @@ module Rubyzip
     # Default: `'UTF-8'`
     attr_accessor :name_and_comment_encoding
 
+    # Configure whether we print a warning, or not, if we detect an invalid
+    # date/time in a Zip archive. In either case the invalid date/time is
+    # ignored and processing of the Zip archive will continue.
+    #
+    # Default: `true`
+    attr_accessor :warn_on_invalid_date
+
     # :call-seq:
     #   reset!
     #
@@ -58,6 +65,7 @@ module Rubyzip
       @error_on_invalid_crc32 = true
       @error_on_invalid_entry_size = true
       @name_and_comment_encoding = 'UTF-8'
+      @warn_on_invalid_date = true
     end
 
     # :call-seq:
