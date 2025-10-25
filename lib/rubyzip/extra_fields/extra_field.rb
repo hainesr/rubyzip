@@ -9,7 +9,7 @@ module Rubyzip
   module ExtraFields # :nodoc:
     # This is the superclass for all extra fields.
     #
-    # Subclasses are required to implement merge and define EXTRA_FIELD_ID.
+    # Subclasses are required to implement `merge` and define `EXTRA_FIELD_ID`.
     class ExtraField
       def initialize(data)
         merge(data)

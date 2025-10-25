@@ -18,13 +18,21 @@ module Rubyzip
     # timestamps are stored using per-second granularity (zip's default
     # behavior can only store timestamps to the nearest even second).
     class UniversalTime < ExtraField
+      # The ID of this extra field (UT).
       EXTRA_FIELD_ID = 'UT'.b
 
-      ATIME_MASK = 0b010
-      CTIME_MASK = 0b100
-      MTIME_MASK = 0b001
+      ATIME_MASK = 0b010 # :nodoc:
+      CTIME_MASK = 0b100 # :nodoc:
+      MTIME_MASK = 0b001 # :nodoc:
 
-      attr_reader :atime, :ctime, :mtime
+      # The last access time of the entry.
+      attr_reader :atime
+
+      # The creation time of the entry.
+      attr_reader :ctime
+
+      # The last modification time of the entry.
+      attr_reader :mtime
 
       private
 

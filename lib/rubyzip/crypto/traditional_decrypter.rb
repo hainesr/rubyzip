@@ -10,10 +10,10 @@ require_relative 'decrypter'
 
 ##
 module Rubyzip
-  module Crypto
+  module Crypto # :nodoc:
     # A decrypter that implements 'traditional' Zip encryption.
     class TraditionalDecrypter < Decrypter
-      HEADER_BYTESIZE = 12
+      HEADER_BYTESIZE = 12 # :nodoc:
 
       def initialize(io, password)
         super(io)

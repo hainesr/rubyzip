@@ -8,10 +8,10 @@ require 'zlib'
 
 ##
 module Rubyzip
-  module Crypto
+  module Crypto # :nodoc:
     # This is the superclass for all decrypters.
     #
-    # Subclasses are required to implement decrypt and define HEADER_BYTESIZE.
+    # Subclasses are required to implement `decrypt` and define `HEADER_BYTESIZE`.
     class Decrypter
       def initialize(io)
         @io = io
