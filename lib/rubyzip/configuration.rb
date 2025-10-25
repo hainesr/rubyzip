@@ -29,6 +29,10 @@ module Rubyzip
     # Default: `true`.
     attr_accessor :error_on_invalid_entry_size
 
+    # :call-seq:
+    #   reset!
+    #
+    # Return all configurable aspects of Rubyzip to their defaults.
     def reset!
       @__configured = false
 
@@ -36,6 +40,11 @@ module Rubyzip
       @error_on_invalid_entry_size = true
     end
 
+    # :call-seq:
+    #   configure { |config| ... }
+    #
+    # Yield this configuration so that multiple fields can be configured
+    # at once.
     def configure
       yield self unless @__configured
       @__configured = true

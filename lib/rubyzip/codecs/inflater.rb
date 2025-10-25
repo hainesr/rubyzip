@@ -17,6 +17,13 @@ module Rubyzip
       DECOMPRESSION_METHOD = COMPRESSION_METHOD_DEFLATE # :nodoc:
       MAX_CHUNK_SIZE = 32_768 # :nodoc:
 
+      # :call-seq:
+      #   new(io, data_length) -> Inflater
+      #
+      # Create a new decompressor for the Inflate algorithm. `io` is an
+      # IO-like object from which data will be read and decompressed.
+      # `data_length` tell the decompressor how much data should be read
+      # from the stream in total, to decompress it entirely.
       def initialize(io, data_length)
         super
 
@@ -24,6 +31,10 @@ module Rubyzip
         @buffer = +''
       end
 
+      # :call-seq:
+      #   eof? -> true or false
+      #
+      # Have we reached the end of this stream?
       def eof?
         @buffer.empty? && @zlib_inflater.finished?
       end
