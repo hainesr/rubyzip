@@ -15,6 +15,12 @@ module Rubyzip
     class TraditionalDecrypter < Decrypter
       HEADER_BYTESIZE = 12 # :nodoc:
 
+      # :call-seq:
+      #   new(io, password) -> TraditionalDecrypter
+      #
+      # Creates a new decrypter for the Zip "traditional" encryption
+      # algorithm. `io` is an IO-like object from which data will be
+      # read and decrypted.
       def initialize(io, password)
         super(io)
 

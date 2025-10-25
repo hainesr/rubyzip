@@ -14,6 +14,7 @@ require_relative 'errors'
 ##
 module Rubyzip
   class EntryInputStream # :nodoc:
+    # :nodoc:
     def initialize(io, entry, password = '')
       @io = io
       @crc32 = Zlib.crc32
@@ -24,10 +25,12 @@ module Rubyzip
       @decompressor = assemble_io(password)
     end
 
+    # :nodoc:
     def eof?
       @decompressor.eof?
     end
 
+    # :nodoc:
     def read(len = nil)
       return (len.nil? || len.zero? ? '' : nil) if eof?
 
@@ -45,10 +48,12 @@ module Rubyzip
       buf
     end
 
+    # :nodoc:
     def valid_crc32?
       @entry.crc32 == @crc32
     end
 
+    # :nodoc:
     def validate_crc32!
       return if valid_crc32?
 
