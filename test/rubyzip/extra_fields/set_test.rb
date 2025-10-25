@@ -35,7 +35,7 @@ class SetTest < Minitest::Test
     efs = Rubyzip::ExtraFields::Set.new(extra_data)
     mtime = Time.utc(2022, 8, 21, 13, 58, 20)
 
-    assert_equal(1, efs.length)
+    assert_equal(2, efs.length)
     refute_nil(efs['UniversalTime'])
     assert_equal(mtime, efs['UniversalTime'].mtime)
   end
