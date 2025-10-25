@@ -12,11 +12,18 @@ require_relative 'utilities'
 module Rubyzip
   # Entry represents an entry in a zip file.
   class Entry
-    NAME_TOO_LONG_MESSAGE =
+    NAME_TOO_LONG_MESSAGE = # :nodoc:
       "Entry name cannot be longer than #{LIMIT_ENTRY_NAME_SIZE} characters " \
       "or larger than #{LIMIT_ENTRY_NAME_SIZE} bytes.".freeze
 
-    attr_reader :compression_method, :crc32, :name
+    # The compression method used to store the payload for this entry.
+    attr_reader :compression_method
+
+    # The CRC32 checksum of this entry's payload.
+    attr_reader :crc32
+
+    # The name of the entry.
+    attr_reader :name
 
     def initialize(name, header = nil, extra_field_data = nil)
       raise ArgumentError, NAME_TOO_LONG_MESSAGE if name.bytesize > LIMIT_ENTRY_NAME_SIZE

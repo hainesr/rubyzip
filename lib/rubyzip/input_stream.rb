@@ -11,7 +11,33 @@ require_relative 'utilities'
 ##
 module Rubyzip
   # InputStream provides a simple streaming interface for reading zip entries
-  # from a zip file.
+  # from a ZIP archive in sequence.
+  #
+  # This class does not read any information from the ZIP Central Directory.
+  #
+  # ## Read from a file
+  #
+  # ```
+  # Rubyzip::InputStream.open('my_zip.zip') do |zis|
+  #   while (entry = zis.next_entry)
+  #     puts "Contents of #{entry.name}: '#{zis.read}'"
+  #   end
+  # end
+  # ```
+  #
+  # ## Read from a stream
+  #
+  # Stream can be any IO-like class, such as StringIO.
+  #
+  # ```
+  # ::File.open('my_zip.zip', 'rb') do |io|
+  #   Rubyzip::InputStream.open(io) do |zis|
+  #     while (entry = zis.next_entry)
+  #       puts "Contents of #{entry.name}: '#{zis.read}'"
+  #     end
+  #   end
+  # end
+  # ```
   class InputStream
     def initialize(io_or_file)
       if io_or_file.respond_to?(:read)
