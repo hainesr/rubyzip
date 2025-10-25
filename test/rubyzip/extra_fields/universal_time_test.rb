@@ -10,13 +10,13 @@ require 'rubyzip/extra_fields/universal_time'
 
 class UniversalTimeTest < Minitest::Test
   PARSE_TESTS = [
-    ["\x01PS>A", true, true, false],
-    ["\x02PS>A", false, true, true],
-    ["\x04PS>A", true, false, true],
-    ["\x03PS>APS>A", false, true, false],
-    ["\x05PS>APS>A", true, false, false],
-    ["\x06PS>APS>A", false, false, true],
-    ["\x07PS>APS>APS>A", false, false, false]
+    ["\x01PS>A".b, true, true, false],
+    ["\x02PS>A".b, false, true, true],
+    ["\x04PS>A".b, true, false, true],
+    ["\x03PS>APS>A".b, false, true, false],
+    ["\x05PS>APS>A".b, true, false, false],
+    ["\x06PS>APS>A".b, false, false, true],
+    ["\x07PS>APS>APS>A".b, false, false, false]
   ].freeze
 
   def test_parse
@@ -31,7 +31,7 @@ class UniversalTimeTest < Minitest::Test
 
   def test_times
     time = Time.utc(2004, 9, 8, 0, 33, 20)
-    ut = Rubyzip::ExtraFields::UniversalTime.new("\x03PS>APS>A")
+    ut = Rubyzip::ExtraFields::UniversalTime.new("\x03PS>APS>A".b)
 
     assert_equal(time, ut.atime)
     assert_nil(ut.ctime)
@@ -39,7 +39,7 @@ class UniversalTimeTest < Minitest::Test
   end
 
   def test_id
-    data = "\x01PS>A"
+    data = "\x01PS>A".b
     ut = Rubyzip::ExtraFields::UniversalTime.new(data)
 
     assert_equal('UT', ut.id)
