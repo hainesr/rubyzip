@@ -13,13 +13,17 @@ module Rubyzip
   # This error is raised if there is a mismatch between CRC-32 checksums
   # when decompressing an entry.
   class CRC32Error < Error
-    def initialize(expected, actual)
+    def initialize(expected, actual) # :nodoc:
       super()
 
       @expected = expected
       @actual = actual
     end
 
+    # :call-seq:
+    #   message -> String
+    #
+    # Return the message provided by this error.
     def message
       'Invalid CRC32 checksum when decompressed - ' \
         "expected 0x#{@expected.to_s(16)}; got 0x#{@actual.to_s(16)}."
@@ -29,11 +33,15 @@ module Rubyzip
   # This error is raised if the size of an entry gets too big as it is being
   # extracted.
   class EntrySizeError < Error
-    def initialize(entry)
+    def initialize(entry) # :nodoc:
       super()
       @entry = entry
     end
 
+    # :call-seq:
+    #   message -> String
+    #
+    # Return the message provided by this error.
     def message
       "Entry '#{@entry.name}' should be #{@entry.uncompressed_size}B, " \
         'but is larger when extracted.'
