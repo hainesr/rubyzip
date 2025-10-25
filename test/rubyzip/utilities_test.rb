@@ -40,4 +40,18 @@ class UtilitiesTest < Minitest::Test
     assert_equal(time1, dos_to_ruby_time(0x5515774A))
     assert_equal(time2, dos_to_ruby_time(0x551A7010))
   end
+
+  def test_dos_to_ruby_time_invalid_date
+    bad_date = 0x45A195EA
+
+    assert_output('', %r{WARNING: an invalid date/time has been detected\.}) do
+      dos_to_ruby_time(bad_date)
+    end
+
+    assert_silent do
+      Rubyzip.stub :warn_on_invalid_date, false do
+        dos_to_ruby_time(bad_date)
+      end
+    end
+  end
 end

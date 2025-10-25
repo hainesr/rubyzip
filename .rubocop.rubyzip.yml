@@ -54,6 +54,11 @@ Minitest/MultipleAssertions:
 Naming/InclusiveLanguage:
   Enabled: true
 
+# Disable predicate method naming check for the mock configuration methods in test helper.
+Naming/PredicateMethod:
+  Exclude:
+    - 'test/rubyzip/test_helper.rb'
+
 # Set a consistent way of checking types.
 Style/ClassCheck:
   EnforcedStyle: kind_of?
