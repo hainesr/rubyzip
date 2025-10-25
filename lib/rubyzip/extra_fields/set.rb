@@ -21,6 +21,15 @@ module Rubyzip
         merge(data.dup) unless data.nil?
       end
 
+      def delegate(symbol, *_args)
+        field = @fields[ExtraFields.extra_field_for_method(symbol)]
+        field.__send__(symbol)
+      end
+
+      def respond_to_missing?(symbol, _)
+        !@fields[ExtraFields.extra_field_for_method(symbol)].nil?
+      end
+
       private
 
       def merge(data)
