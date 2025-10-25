@@ -25,6 +25,7 @@ ZIP64_SIMPLE = File.join(ZIP_FIXTURES, 'zip64_simple.zip')
 BIN_LOCAL_HEADER = File.join(BIN_FIXTURES, 'local_header.bin')
 BIN_LOCAL_HEADER_ZIP64 = File.join(BIN_FIXTURES, 'local_header_zip64.bin')
 BIN_LOCAL_HEADER_NO_EXTRAS = File.join(BIN_FIXTURES, 'local_header_no_extras.bin')
+BIN_LOCAL_HEADER_UT_NTFS = File.join(BIN_FIXTURES, 'local_header_ut_ntfs.bin')
 
 BIN_LOREM_IPSUM_DEFLATED = File.join(BIN_FIXTURES, 'lorem_ipsum_deflated.bin')
 BIN_LOREM_IPSUM_ENC = File.join(BIN_FIXTURES, 'lorem_ipsum_enc.bin')
