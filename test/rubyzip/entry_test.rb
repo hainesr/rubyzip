@@ -120,4 +120,15 @@ class EntryTest < Minitest::Test
       @entry.atime
     end
   end
+
+  def test_simple_zip64
+    File.open(BIN_LOCAL_HEADER_ZIP64, 'rb') do |header|
+      name, header_data, extras = Rubyzip::Utilities.read_local_header(header)
+      entry = Rubyzip::Entry.new(name, header_data, extras)
+
+      assert_predicate(entry, :zip64?)
+      assert_equal(229, entry.compressed_size)
+      assert_equal(482, entry.uncompressed_size)
+    end
+  end
 end

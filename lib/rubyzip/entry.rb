@@ -16,7 +16,7 @@ module Rubyzip
       "Entry name cannot be longer than #{LIMIT_ENTRY_NAME_SIZE} characters " \
       "or larger than #{LIMIT_ENTRY_NAME_SIZE} bytes.".freeze
 
-    attr_reader :compression_method, :compressed_size, :crc32, :name, :uncompressed_size
+    attr_reader :compression_method, :crc32, :name
 
     def initialize(name, header = nil, extra_field_data = nil)
       raise ArgumentError, NAME_TOO_LONG_MESSAGE if name.bytesize > LIMIT_ENTRY_NAME_SIZE
@@ -31,6 +31,14 @@ module Rubyzip
       _name_len, _extra_len = header.unpack(LOC_PACK)
 
       @mtime = Utilities.dos_to_ruby_time((last_mod_date << 16) | last_mod_time)
+    end
+
+    def compressed_size
+      if zip64? && @compressed_size == LIMIT_ENTRY_COMPRESSED_SIZE
+        @extra_fields['Zip64'].compressed_size
+      else
+        @compressed_size
+      end
     end
 
     def directory?
@@ -51,8 +59,20 @@ module Rubyzip
       @gp_flags & GP_FLAGS_STREAMED == GP_FLAGS_STREAMED
     end
 
+    def uncompressed_size
+      if zip64? && @uncompressed_size == LIMIT_ENTRY_UNCOMPRESSED_SIZE
+        @extra_fields['Zip64'].uncompressed_size
+      else
+        @uncompressed_size
+      end
+    end
+
     def utf8?
       @gp_flags & GP_FLAGS_UTF8 == GP_FLAGS_UTF8
+    end
+
+    def zip64?
+      !@extra_fields['Zip64'].nil?
     end
 
     def version_needed_to_extract
