@@ -32,7 +32,7 @@ module Rubyzip
     def initialize(name, header = nil, extra_field_data = nil)
       raise ArgumentError, NAME_TOO_LONG_MESSAGE if name.bytesize > LIMIT_ENTRY_NAME_SIZE
 
-      @name = name
+      @name = normalize_string_encoding(name)
       @extra_fields = ExtraFields::Set.new(extra_field_data)
 
       return unless header
@@ -148,6 +148,18 @@ module Rubyzip
     # :nodoc:
     def respond_to_missing?(symbol, include_all)
       @extra_fields.respond_to?(symbol, include_all)
+    end
+
+    private
+
+    def normalize_string_encoding(string)
+      return string if string.frozen?
+
+      if utf8?
+        string.force_encoding('UTF-8')
+      else
+        string.force_encoding(Rubyzip.name_and_comment_encoding)
+      end
     end
   end
 end
