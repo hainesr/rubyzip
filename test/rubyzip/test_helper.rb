@@ -21,6 +21,10 @@ Minitest::Test.make_my_diffs_pretty!
 module Rubyzip
   module_function
 
+  def name_and_comment_encoding
+    'UTF-8'
+  end
+
   def error_on_invalid_crc32 # rubocop:disable Naming/PredicateMethod
     true
   end
