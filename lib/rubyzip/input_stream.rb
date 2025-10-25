@@ -67,10 +67,12 @@ module Rubyzip
     end
 
     def close_entry
+      return if @current_entry.nil?
+
       # Just read to the end of the current entry.
       read
 
-      nil
+      @current_entry = nil
     end
 
     def next_entry(password: '')
