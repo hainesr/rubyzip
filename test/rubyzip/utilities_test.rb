@@ -54,4 +54,24 @@ class UtilitiesTest < Minitest::Test
       end
     end
   end
+
+  def test_read_streaming_header_with_sig
+    crc32 = 0xbb66b4ec
+    comp_size = 0x59f
+    uncomp_size = 0xe52
+    header = [Rubyzip::STR_SIGN, crc32, comp_size, uncomp_size].pack('VVVV')
+    header_stream = StringIO.new(header)
+
+    assert_equal([crc32, comp_size, uncomp_size], read_streaming_header(header_stream))
+  end
+
+  def test_read_streaming_header_no_sig
+    crc32 = 0xbb66b4ec
+    comp_size = 0x59f
+    uncomp_size = 0xe52
+    header = [crc32, comp_size, uncomp_size].pack('VVV')
+    header_stream = StringIO.new(header)
+
+    assert_equal([crc32, comp_size, uncomp_size], read_streaming_header(header_stream))
+  end
 end
