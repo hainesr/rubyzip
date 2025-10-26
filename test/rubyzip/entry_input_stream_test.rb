@@ -18,6 +18,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.expect(:compression_method, Rubyzip::COMPRESSION_METHOD_STORE)
     entry.expect(:crc32, 0xbb66b4ec)
     entry.expect(:encrypted?, false)
+    entry.expect(:streamed?, false)
     entry.expect(:uncompressed_size, text.length)
 
     File.open(TXT_LOREM_IPSUM, 'rb') do |is|
@@ -38,6 +39,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.expect(:compression_method, Rubyzip::COMPRESSION_METHOD_DEFLATE)
     entry.expect(:crc32, 0xbb66b4ec)
     entry.expect(:encrypted?, false)
+    entry.expect(:streamed?, false)
     entry.expect(:uncompressed_size, text.length)
 
     File.open(BIN_LOREM_IPSUM_DEFLATED, 'rb') do |is|
@@ -59,6 +61,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.expect(:compression_method, Rubyzip::COMPRESSION_METHOD_STORE)
     entry.expect(:crc32, 0xbb66b4ec)
     entry.expect(:encrypted?, false)
+    entry.expect(:streamed?, false)
     entry.expect(:uncompressed_size, text.length)
     entry.expect(:uncompressed_size, text.length)
     entry.expect(:uncompressed_size, text.length)
@@ -80,6 +83,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.expect(:compressed_size, File.size(BIN_LOREM_IPSUM_DEFLATED))
     entry.expect(:compression_method, Rubyzip::COMPRESSION_METHOD_DEFLATE)
     entry.expect(:encrypted?, false)
+    entry.expect(:streamed?, false)
     entry.expect(:uncompressed_size, File.size(TXT_LOREM_IPSUM))
 
     File.open(BIN_LOREM_IPSUM_DEFLATED, 'rb') do |is|
@@ -103,6 +107,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.expect(:compression_method, Rubyzip::COMPRESSION_METHOD_STORE)
     entry.expect(:crc32, 0xbb66b4ec)
     entry.expect(:encrypted?, true)
+    entry.expect(:streamed?, false)
     entry.expect(:uncompressed_size, text.length)
 
     File.open(BIN_LOREM_IPSUM_ENC, 'rb') do |is|
@@ -179,6 +184,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.expect(:crc32, 0x12345678)
     entry.expect(:crc32, 0x12345678)
     entry.expect(:encrypted?, false)
+    entry.expect(:streamed?, false)
     entry.expect(:uncompressed_size, text.length)
 
     eis = Rubyzip::EntryInputStream.new(text, entry)
@@ -198,6 +204,7 @@ class EntryInputStreamTest < Minitest::Test
     entry.expect(:crc32, 0x12345678)
     entry.expect(:crc32, 0x12345678)
     entry.expect(:encrypted?, false)
+    entry.expect(:streamed?, false)
     entry.expect(:uncompressed_size, text.length)
 
     eis = Rubyzip::EntryInputStream.new(text, entry)

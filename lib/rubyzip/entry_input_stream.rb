@@ -31,7 +31,7 @@ module Rubyzip
     end
 
     # :nodoc:
-    def read(len = nil)
+    def read(len = nil) # rubocop:disable Metrics
       return (len.nil? || len.zero? ? '' : nil) if eof?
 
       buf = @decompressor.read(len)
@@ -44,6 +44,8 @@ module Rubyzip
         warn "WARNING: #{error.message}"
       end
       @crc32 = Zlib.crc32(buf, @crc32)
+
+      @entry.update_streaming_data(Utilities.read_streaming_header(@io)) if eof? && @entry.streamed?
 
       buf
     end
