@@ -21,7 +21,7 @@ Along the way we will return to the Zip specification and make sure that we adhe
 - [x] Universal time extra field (UT).
 - [x] New Unix extra field (ux) (read only).
 - [x] Old Unix extra field (Ux) (read only).
-- [ ] Old old Unix extra field (UX) (read only).
+- [x] Old old Unix extra field (UX) (read only).
 - [x] NTFS extra field (0x000a) (read only).
 - [x] Zip64 extra field (0x0001) (read only).
 - [x] CRC32 checks on decompressed entries.
