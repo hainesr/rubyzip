@@ -150,6 +150,11 @@ module Rubyzip
       @extra_fields.respond_to?(symbol, include_all)
     end
 
+    # :nodoc:
+    def update_streaming_data(new_data)
+      @crc32, @compressed_size, @uncompressed_size = new_data
+    end
+
     private
 
     def normalize_string_encoding(string)
