@@ -46,7 +46,7 @@ module Rubyzip
           break if @zlib_inflater.finished?
 
           read_len = [@remaining_data, MAX_CHUNK_SIZE].min
-          @buffer << inflate(read_len)
+          @buffer << (read_len.zero? ? crawl_inflate : inflate(read_len))
           @remaining_data -= read_len
         end
 
@@ -63,6 +63,18 @@ module Rubyzip
           retried += 1
           retry
         end
+      end
+
+      # This method reads a byte at a time in an attempt to cope with
+      # streamed entries. If we go any quicker we might read too much,
+      # and if we read too much then we've broken our stream if it
+      # doesn't support seek (say, we're streaming).
+      def crawl_inflate
+        buf = +''
+
+        buf << @zlib_inflater.inflate(@io.read(1)) until @zlib_inflater.finished?
+
+        buf
       end
     end
   end
