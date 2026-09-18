@@ -1,3 +1,14 @@
+# 3.7.0 (2026-09-18)
+
+- Add AES Encryption. [#678](https://github.com/rubyzip/rubyzip/pull/678)
+- Add methods to `Zip::File` for bulk adding and extraction of entries. [#679](https://github.com/rubyzip/rubyzip/pull/679)
+- Support setting the encoding of an `InputStream`. [#668](https://github.com/rubyzip/rubyzip/pull/668)
+
+Tooling/internal:
+
+- Add an AGENTS.md for those using such.
+- Attempt to fix transient failures in encryption tests.
+
 # 3.6.0 (2026-09-01)
 
 - Forward options from OutputStream.open without a block. [#674](https://github.com/rubyzip/rubyzip/pull/674)
