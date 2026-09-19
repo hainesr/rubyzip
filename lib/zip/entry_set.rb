@@ -17,24 +17,62 @@ module Zip
       @entry_set.include?(to_key(entry))
     end
 
+    # Returns the single entry matching `entry` (or `nil` if there isn't
+    # one) when `Zip.allow_duplicate_entry_names` is off. When it's on,
+    # returns an Array of every entry matching `entry` (empty if there are
+    # none).
     def find_entry(entry)
-      @entry_set[to_key(entry)]
+      bucket = @entry_set[to_key(entry)]
+      return bucket&.first unless ::Zip.allow_duplicate_entry_names
+
+      # Return a copy, not the live bucket, so callers iterating the result
+      # (e.g. to delete entries one by one) aren't mutating storage they're
+      # currently iterating over.
+      bucket ? bucket.dup : []
     end
 
     def <<(entry)
-      @entry_set[to_key(entry)] = entry if entry
+      return unless entry
+
+      key = to_key(entry)
+      if ::Zip.allow_duplicate_entry_names
+        (@entry_set[key] ||= []) << entry
+      else
+        @entry_set[key] = [entry]
+      end
     end
 
     alias push <<
 
     def size
-      @entry_set.size
+      @entry_set.each_value.sum(&:size)
     end
 
     alias length size
 
     def delete(entry)
-      entry if @entry_set.delete(to_key(entry))
+      key = to_key(entry)
+      bucket = @entry_set[key]
+      return nil unless bucket
+
+      # A bucket can only hold more than one entry when duplicates are
+      # allowed, so only then is there any ambiguity about *which* one to
+      # remove worth resolving by identity/equality. Off, preserve the
+      # original by-name-only semantics exactly: whatever is in the
+      # (at most one-element) bucket gets removed, regardless of whether it
+      # matches `entry` itself - the argument doesn't have to be the exact
+      # stored object, just something that resolves to the same key.
+      idx =
+        if ::Zip.allow_duplicate_entry_names
+          bucket.index { |e| e.equal?(entry) } || bucket.index(entry)
+        else
+          0
+        end
+      return nil unless idx
+
+      removed = bucket.delete_at(idx)
+      @entry_set.delete(key) if bucket.empty?
+      removed
     end
 
     def each(&block)
@@ -42,12 +80,16 @@ module Zip
     end
 
     def entries
-      sorted_entries.values
+      sorted_entries.values.flatten(1)
     end
 
     # deep clone
     def dup
-      EntrySet.new(@entry_set.values.map(&:dup))
+      # Use raw insertion order (@entry_set.values), not the
+      # Zip.sort_entries-dependent #entries, so the copy's internal storage
+      # order doesn't end up depending on the sort flag's value at the
+      # moment of duping.
+      EntrySet.new(@entry_set.values.flatten(1).map(&:dup))
     end
 
     def ==(other)
@@ -57,7 +99,10 @@ module Zip
     end
 
     def parent(entry)
-      @entry_set[to_key(entry.parent_as_string)]
+      bucket = @entry_set[to_key(entry.parent_as_string)]
+      return bucket&.first unless ::Zip.allow_duplicate_entry_names
+
+      bucket ? bucket.dup : []
     end
 
     def glob(pattern, flags = ::File::FNM_PATHNAME | ::File::FNM_DOTMATCH | ::File::FNM_EXTGLOB)

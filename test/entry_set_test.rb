@@ -187,4 +187,127 @@ class ZipEntrySetTest < Minitest::Test
 
     assert_equal(entries[0, 2].sort, entry_set.glob('a/{a,b}').sort)
   end
+
+  def test_push_overwrites_by_default
+    zes = Zip::EntrySet.new
+    entry1 = Zip::Entry.new('zf.zip', 'name1', comment: 'first')
+    entry2 = Zip::Entry.new('zf.zip', 'name1', comment: 'second')
+    zes << entry1
+    zes << entry2
+
+    assert_equal(1, zes.size)
+    assert_equal(entry2, zes.find_entry('name1'))
+  end
+
+  def test_push_appends_when_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    zes = Zip::EntrySet.new
+    entry1 = Zip::Entry.new('zf.zip', 'name1', comment: 'first')
+    entry2 = Zip::Entry.new('zf.zip', 'name1', comment: 'second')
+    zes << entry1
+    zes << entry2
+
+    assert_equal(2, zes.size)
+    assert_equal([entry1, entry2], zes.find_entry('name1'))
+  end
+
+  def test_find_entry_returns_array_when_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    zes = Zip::EntrySet.new(ZIP_ENTRIES)
+    assert_equal([ZIP_ENTRIES.first], zes.find_entry(ZIP_ENTRIES.first.name))
+    assert_equal([], zes.find_entry('does-not-exist'))
+  end
+
+  def test_size_counts_entries_not_names_when_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    zes = Zip::EntrySet.new(ZIP_ENTRIES)
+    assert_equal(ZIP_ENTRIES.size, zes.size)
+    zes << Zip::Entry.new('zf.zip', ZIP_ENTRIES.first.name, comment: 'dup')
+    assert_equal(ZIP_ENTRIES.size + 1, zes.size)
+  end
+
+  def test_delete_removes_only_the_given_duplicate
+    Zip.allow_duplicate_entry_names = true
+
+    # Two entries that are attribute-identical (Entry#== is content-based,
+    # not identity-based), so `Array#delete` would remove both instead of
+    # just the one requested.
+    entry1 = Zip::Entry.new('zf.zip', 'name1', comment: 'same')
+    entry2 = Zip::Entry.new('zf.zip', 'name1', comment: 'same')
+    assert_equal(entry1, entry2)
+
+    zes = Zip::EntrySet.new([entry1, entry2])
+    assert_equal(2, zes.size)
+
+    removed = zes.delete(entry1)
+    assert_equal(entry1, removed)
+    assert_equal(1, zes.size)
+    assert_equal([entry2], zes.find_entry('name1'))
+  end
+
+  def test_delete_removes_key_once_bucket_is_empty
+    Zip.allow_duplicate_entry_names = true
+
+    entry = Zip::Entry.new('zf.zip', 'name1')
+    zes = Zip::EntrySet.new([entry])
+    zes.delete(entry)
+
+    refute(zes.include?(entry))
+    assert_equal([], zes.find_entry('name1'))
+  end
+
+  def test_entries_flattened_with_duplicates
+    Zip.allow_duplicate_entry_names = true
+
+    dup_entry = Zip::Entry.new('zf.zip', ZIP_ENTRIES.first.name, comment: 'dup')
+    zes = Zip::EntrySet.new(ZIP_ENTRIES + [dup_entry])
+
+    assert_equal(ZIP_ENTRIES.size + 1, zes.entries.size)
+    assert(zes.entries.include?(dup_entry))
+  end
+
+  def test_delete_matches_by_name_only_when_duplicates_not_allowed
+    # Regression test: delete must still work by name alone (not requiring
+    # object identity or attribute equality) when duplicates aren't allowed,
+    # matching pre-existing behavior - only once duplicates are allowed is
+    # there more than one candidate per name to disambiguate between.
+    stored = Zip::Entry.new('zf.zip', 'name1', size: 100, crc: 111)
+    zes = Zip::EntrySet.new([stored])
+
+    lookalike = Zip::Entry.new('zf.zip', 'name1', size: 999, crc: 222)
+    refute_equal(lookalike, stored)
+
+    removed = zes.delete(lookalike)
+    assert_equal(stored, removed)
+    refute(zes.include?('name1'))
+  end
+
+  def test_dup_preserves_insertion_order_regardless_of_sort_entries
+    entry1 = Zip::Entry.new('zf.zip', 'zzz.txt')
+    entry2 = Zip::Entry.new('zf.zip', 'aaa.txt')
+    zes = Zip::EntrySet.new([entry1, entry2])
+
+    Zip.sort_entries = true
+    copy = zes.dup
+    Zip.sort_entries = false
+
+    assert_equal(zes.entries.map(&:name), copy.entries.map(&:name))
+  end
+
+  def test_dup_with_duplicates
+    Zip.allow_duplicate_entry_names = true
+
+    dup_entry = Zip::Entry.new('zf.zip', ZIP_ENTRIES.first.name, comment: 'dup')
+    zes = Zip::EntrySet.new(ZIP_ENTRIES + [dup_entry])
+    copy = zes.dup
+
+    assert_equal(zes, copy)
+
+    # demonstrate that this is a deep copy
+    copy.entries.first.name = 'a totally different name'
+    assert(zes != copy)
+  end
 end
