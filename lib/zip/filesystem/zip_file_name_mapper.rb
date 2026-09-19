@@ -14,12 +14,18 @@ module Zip
 
       attr_accessor :pwd
 
+      # Always returns a single entry (the first match), even when
+      # Zip.allow_duplicate_entry_names is on, since this filesystem-style
+      # API has no way to represent more than one entry per path.
       def find_entry(filename)
-        @zip_file.find_entry(expand_to_entry(filename))
+        entry = @zip_file.find_entry(expand_to_entry(filename))
+        entry.kind_of?(Array) ? entry.first : entry
       end
 
+      # See #find_entry.
       def get_entry(filename)
-        @zip_file.get_entry(expand_to_entry(filename))
+        entry = @zip_file.get_entry(expand_to_entry(filename))
+        entry.kind_of?(Array) ? entry.first : entry
       end
 
       def get_input_stream(filename, &a_proc)

@@ -21,6 +21,23 @@ class FileNonmutatingTest < Minitest::Test
     @zip_file.file.umask(0o006)
   end
 
+  def test_uses_first_match_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    buffer = Zip::File.open_buffer(create: true) do |zf|
+      zf.add('dup.txt', 'test/data/file1.txt')
+      zf.add('dup.txt', 'test/data/file2.txt') { true }
+    end
+
+    Zip::File.open_buffer(buffer) do |zf|
+      assert(zf.file.exists?('dup.txt'))
+      assert_equal(::File.read('test/data/file1.txt'), zf.file.read('dup.txt'))
+      assert_equal(::File.size('test/data/file1.txt'), zf.file.size('dup.txt'))
+    end
+  ensure
+    Zip.reset!
+  end
+
   def test_exists?
     assert(!@zip_file.file.exists?('notAFile'))
     assert(@zip_file.file.exists?('file1'))
