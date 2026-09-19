@@ -392,6 +392,8 @@ Additionally, if you want to configure rubyzip to overwrite existing files while
 Zip.continue_on_exists_proc = true
 ```
 
+As of version 3.8.0, writing a second entry with the same name as one already written via `Zip::OutputStream#put_next_entry` raises `Zip::EntryExistsError` by default, instead of silently discarding the first entry's central directory record while its data remains in the archive. If you need an archive to contain multiple entries with the same name, see [Duplicate Entry Names](#duplicate-entry-names) below.
+
 ### Non-ASCII Names
 
 To store non-English filenames as UTF-8 (decoded correctly by Windows 7 or later and other modern tools), set this option:
@@ -494,6 +496,22 @@ Zip.inflater_chunk_size = 1024 # Default is 4096.
 ```
 
 Consider setting `Zip.inflater_chunk_size` to a higher number (e.g. 32,768) if you know your data is not highly compressible (other zip files, JPEGs, etc) and you value performance over a smaller memory footprint.
+
+### Duplicate Entry Names
+
+By default, rubyzip only ever keeps one entry per name: adding, renaming or writing an entry whose name already exists either raises (see [Existing Files](#existing-files) above) or silently replaces the existing entry, and reading a zip that already contains duplicate names on disk keeps only the last one. Some other zip tools do allow a single archive to contain multiple entries with the same name. To read and write such archives with rubyzip, enable this setting:
+
+```ruby
+Zip.allow_duplicate_entry_names = true
+```
+
+This should be set once, at program start-up. With it enabled:
+
+* Query methods such as `Zip::File#find_entry` and `Zip::File#get_entry` return an Array of every entry matching a name (possibly empty), instead of a single entry or `nil`.
+* `Zip::File#add` and `Zip::File#rename`, given a `continue_on_exists_proc` that returns `true`, let the new entry coexist with the existing one(s) rather than replacing them.
+* `Zip::File#remove` and `Zip::File#rename`, given a bare name, act on every entry with that name. `Zip::File#get_input_stream`, `Zip::File#read` and `Zip::File#extract` act on the first match. Pass an actual `Zip::Entry` (e.g. one obtained from `#find_entry`) instead of a name to any of these to target one specific duplicate.
+* `Zip::OutputStream#put_next_entry` allows writing more than one entry with the same name instead of raising.
+* The `Zip::FileSystem` adapter (`zip.file`/`zip.dir`) always sees only the first matching entry for a given path, since it mimics Ruby's `::File`/ `::Dir` APIs, which have no way to represent more than one file per path.
 
 ### Block Form
 
