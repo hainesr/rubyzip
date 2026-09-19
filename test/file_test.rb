@@ -445,6 +445,19 @@ class ZipFileTest < Minitest::Test
     end
   end
 
+  def test_add_existing_entry_name_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open(TEST_ZIP.zip_name) do |zf|
+      name = zf.entries.first.name
+      count_before = zf.size
+      zf.add(name, 'test/data/file2.txt') { true }
+
+      assert_equal(count_before + 1, zf.size)
+      assert_equal(2, zf.find_entry(name).size)
+    end
+  end
+
   def test_add_directory
     ::Zip::File.open(TEST_ZIP.zip_name) do |zf|
       zf.add(TestFiles::EMPTY_TEST_DIR, TestFiles::EMPTY_TEST_DIR)
@@ -499,6 +512,24 @@ class ZipFileTest < Minitest::Test
     end
   end
 
+  def test_mkdir_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open_buffer(create: true) do |zf|
+      zf.mkdir('dir')
+
+      # Still correctly detects a real collision...
+      assert_raises(Errno::EEXIST) do
+        zf.mkdir('dir')
+      end
+
+      # ...and doesn't falsely raise for a brand-new name (regression test
+      # for find_entry returning a truthy empty Array when nothing matches).
+      zf.mkdir('other_dir')
+      assert(zf.find_entry('other_dir/').first.directory?)
+    end
+  end
+
   def test_remove
     entry, *remaining = TEST_ZIP.entry_names
 
@@ -515,6 +546,37 @@ class ZipFileTest < Minitest::Test
     assert(!zf_read.entries.map(&:name).include?(entry))
     assert_equal(zf_read.entries.map(&:name).sort, remaining.sort)
     zf_read.close
+  end
+
+  def test_remove_by_name_removes_all_matches_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open_buffer(create: true) do |zf|
+      zf.add('dup.txt', 'test/data/file1.txt')
+      zf.add('dup.txt', 'test/data/file2.txt') { true }
+      zf.add('other.txt', 'test/data/file1.txt')
+
+      zf.remove('dup.txt')
+
+      assert_equal([], zf.find_entry('dup.txt'))
+      assert_equal(1, zf.find_entry('other.txt').size)
+    end
+  end
+
+  def test_remove_entry_object_removes_only_that_entry_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open_buffer(create: true) do |zf|
+      zf.add('dup.txt', 'test/data/file1.txt')
+      zf.add('dup.txt', 'test/data/file2.txt') { true }
+
+      target = zf.find_entry('dup.txt').last
+      zf.remove(target)
+
+      remaining = zf.find_entry('dup.txt')
+      assert_equal(1, remaining.size)
+      refute_equal(target, remaining.first)
+    end
   end
 
   def test_rename
@@ -538,6 +600,35 @@ class ZipFileTest < Minitest::Test
     assert(zf_read.entries.map(&:name).include?(new_name))
     assert_equal(contents, zf_read.read(new_name))
     zf_read.close
+  end
+
+  def test_rename_by_name_renames_all_matches_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open_buffer(create: true) do |zf|
+      zf.add('dup.txt', 'test/data/file1.txt')
+      zf.add('dup.txt', 'test/data/file2.txt') { true }
+
+      zf.rename('dup.txt', 'renamed.txt')
+
+      assert_equal([], zf.find_entry('dup.txt'))
+      assert_equal(2, zf.find_entry('renamed.txt').size)
+    end
+  end
+
+  def test_rename_entry_object_renames_only_that_entry_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open_buffer(create: true) do |zf|
+      zf.add('dup.txt', 'test/data/file1.txt')
+      zf.add('dup.txt', 'test/data/file2.txt') { true }
+
+      target = zf.find_entry('dup.txt').last
+      zf.rename(target, 'renamed.txt')
+
+      assert_equal(1, zf.find_entry('dup.txt').size)
+      assert_equal(1, zf.find_entry('renamed.txt').size)
+    end
   end
 
   def test_rename_with_each
@@ -931,6 +1022,86 @@ class ZipFileTest < Minitest::Test
 
       # Should not raise anything.
       zf.get_entry('test/data/generated/empty.txt')
+    end
+  end
+
+  def test_find_get_entry_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open(TEST_ZIP.zip_name) do |zf|
+      assert_equal([], zf.find_entry('not_in_here.txt'))
+
+      matches = zf.find_entry('test/data/generated/empty.txt')
+      assert_equal(1, matches.size)
+
+      assert_raises(Errno::ENOENT) do
+        zf.get_entry('not_in_here.txt')
+      end
+
+      # Should not raise anything.
+      zf.get_entry('test/data/generated/empty.txt')
+    end
+  end
+
+  def test_reading_existing_duplicate_names_zip_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open('test/data/DuplicateEntryNames.zip') do |zf|
+      assert_equal(3, zf.size)
+
+      matches = zf.find_entry('dup.txt')
+      assert_equal(2, matches.size)
+      assert_equal(["first content\n", "second content\n"],
+                   matches.map { |e| zf.get_input_stream(e, &:read) })
+
+      assert_equal("unique content\n", zf.read('unique.txt'))
+    end
+  end
+
+  # With Zip.allow_duplicate_entry_names off (the default), reading a zip
+  # that already contains duplicate names on disk keeps today's behavior
+  # unchanged: only the last entry with a given name survives, silently.
+  # This is intentional, for backwards compatibility, not an oversight.
+  def test_reading_existing_duplicate_names_zip_with_duplicates_not_allowed
+    Zip::File.open('test/data/DuplicateEntryNames.zip') do |zf|
+      assert_equal(2, zf.size)
+      assert_equal("second content\n", zf.read('dup.txt'))
+    end
+  end
+
+  def test_get_input_stream_and_read_use_first_match_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::File.open_buffer(create: true) do |zf|
+      zf.add('dup.txt', 'test/data/file1.txt')
+      zf.add('dup.txt', 'test/data/file2.txt') { true }
+
+      first_content = ::File.read('test/data/file1.txt')
+      assert_equal(first_content, zf.get_input_stream('dup.txt', &:read))
+      assert_equal(first_content, zf.read('dup.txt'))
+
+      # Passing the specific Entry object targets that one instead.
+      second_entry = zf.find_entry('dup.txt').last
+      assert_equal(::File.read('test/data/file2.txt'),
+                   zf.get_input_stream(second_entry, &:read))
+    end
+  end
+
+  def test_extract_uses_first_match_with_duplicates_allowed
+    Zip.allow_duplicate_entry_names = true
+
+    buffer = Zip::File.open_buffer(create: true) do |zf|
+      zf.add('dup.txt', 'test/data/file1.txt')
+      zf.add('dup.txt', 'test/data/file2.txt') { true }
+    end
+
+    Dir.mktmpdir do |tmp|
+      Zip::File.open_buffer(buffer) do |zf|
+        zf.extract('dup.txt', destination_directory: tmp)
+      end
+
+      dest = ::File.join(tmp, 'dup.txt')
+      assert_equal(::File.read('test/data/file1.txt'), ::File.read(dest))
     end
   end
 

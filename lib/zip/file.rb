@@ -206,8 +206,15 @@ module Zip
     # Returns an input stream to the specified entry. If a block is passed
     # the stream object is passed to the block and the stream is automatically
     # closed afterwards just as with ruby's builtin File.open method.
+    #
+    # If +entry+ is a name (rather than a Zip::Entry) and
+    # Zip.allow_duplicate_entry_names is on and more than one entry shares
+    # that name, the first matching entry is used. Pass the specific
+    # Zip::Entry (e.g. from #find_entry) to target a particular duplicate.
     def get_input_stream(entry, &a_proc)
-      get_entry(entry).get_input_stream(&a_proc)
+      target = entry.kind_of?(Entry) ? entry : get_entry(entry)
+      target = target.first if target.kind_of?(Array)
+      target.get_input_stream(&a_proc)
     end
 
     # Returns an output stream to the specified entry. If entry is not an instance
@@ -215,6 +222,9 @@ module Zip
     # specified. If a block is passed the stream object is passed to the block and
     # the stream is automatically closed afterwards just as with ruby's builtin
     # File.open method.
+    #
+    # If an entry with the same name already exists, it is replaced (as with
+    # ::File.open(path, 'w')), regardless of Zip.allow_duplicate_entry_names.
     def get_output_stream(entry, permissions: nil, comment: nil,
                           extra: nil, compressed_size: nil, crc: nil,
                           compression_method: nil, compression_level: nil,
@@ -234,6 +244,11 @@ module Zip
         raise ArgumentError,
               "cannot open stream to directory entry - '#{new_entry}'"
       end
+
+      # Always replace any existing entry (or entries) with this name, so
+      # there's exactly one entry under this name afterwards, regardless of
+      # Zip.allow_duplicate_entry_names.
+      remove(new_entry.name) if @cdir.include?(new_entry.name)
       new_entry.unix_perms = permissions
       zip_streamable_entry = StreamableStream.new(new_entry)
       @cdir << zip_streamable_entry
@@ -294,18 +309,32 @@ module Zip
       self
     end
 
-    # Removes the specified entry.
+    # Removes the specified entry. If +entry+ is a name (rather than a
+    # Zip::Entry) and Zip.allow_duplicate_entry_names is on, every entry
+    # matching that name is removed. Pass the specific Zip::Entry to remove
+    # only that one.
     def remove(entry)
-      @cdir.delete(get_entry(entry))
+      if entry.kind_of?(Entry)
+        @cdir.delete(entry)
+      elsif Zip.allow_duplicate_entry_names
+        get_entry(entry).each { |e| @cdir.delete(e) }
+      else
+        @cdir.delete(get_entry(entry))
+      end
     end
 
-    # Renames the specified entry.
+    # Renames the specified entry. If +entry+ is a name (rather than a
+    # Zip::Entry) and Zip.allow_duplicate_entry_names is on, every entry
+    # matching that name is renamed. Pass the specific Zip::Entry to rename
+    # only that one.
     def rename(entry, new_name, &continue_on_exists_proc)
-      found_entry = get_entry(entry)
+      found_entries = resolve_entries(entry)
       check_entry_exists(new_name, continue_on_exists_proc, 'rename')
-      @cdir.delete(found_entry)
-      found_entry.name = new_name
-      @cdir << found_entry
+      found_entries.each do |found_entry|
+        @cdir.delete(found_entry)
+        found_entry.name = new_name
+        @cdir << found_entry
+      end
     end
 
     # Replaces the specified entry with the contents of src_path (from
@@ -321,9 +350,16 @@ module Zip
     #
     # NB: The caller is responsible for making sure `destination_directory` is
     # safe, if it is passed.
+    #
+    # If +entry+ is a name (rather than a Zip::Entry) and
+    # Zip.allow_duplicate_entry_names is on and more than one entry shares
+    # that name, the first matching entry is used (a filesystem destination
+    # can't represent more than one entry's content). Pass the specific
+    # Zip::Entry to target a particular duplicate.
     def extract(entry, entry_path = nil, destination_directory: '.', &block)
-      block ||= proc { ::Zip.on_exists_proc }
-      found_entry = get_entry(entry)
+      block ||= proc { Zip.on_exists_proc }
+      found_entry = entry.kind_of?(Entry) ? entry : get_entry(entry)
+      found_entry = found_entry.first if found_entry.kind_of?(Array)
       entry_path ||= found_entry.name
       found_entry.extract(entry_path, destination_directory: destination_directory, &block)
     end
@@ -400,15 +436,19 @@ module Zip
       false
     end
 
-    # Searches for entry with the specified name. Returns nil if
-    # no entry is found. See also get_entry
+    # Searches for entry with the specified name. Returns nil if no entry
+    # is found, unless Zip.allow_duplicate_entry_names is on, in which case
+    # it returns an Array of every entry matching that name (empty if there
+    # are none). See also get_entry
     def find_entry(entry_name)
       selected_entry = @cdir.find_entry(entry_name)
-      return if selected_entry.nil?
+      if Zip.allow_duplicate_entry_names
+        selected_entry.each { |e| apply_restore_options(e) }
+      else
+        return if selected_entry.nil?
 
-      selected_entry.restore_ownership   = @restore_ownership
-      selected_entry.restore_permissions = @restore_permissions
-      selected_entry.restore_times       = @restore_times
+        apply_restore_options(selected_entry)
+      end
       selected_entry
     end
 
@@ -416,14 +456,15 @@ module Zip
     # if no entry is found.
     def get_entry(entry)
       selected_entry = find_entry(entry)
-      raise Errno::ENOENT, entry if selected_entry.nil?
+      not_found = Zip.allow_duplicate_entry_names ? selected_entry.empty? : selected_entry.nil?
+      raise Errno::ENOENT, entry if not_found
 
       selected_entry
     end
 
     # Creates a directory
     def mkdir(entry_name, permission = 0o755)
-      raise Errno::EEXIST, "File exists - #{entry_name}" if find_entry(entry_name)
+      raise Errno::EEXIST, "File exists - #{entry_name}" if @cdir.include?(entry_name)
 
       entry_name = entry_name.dup.to_s
       entry_name << '/' unless entry_name.end_with?('/')
@@ -431,6 +472,22 @@ module Zip
     end
 
     private
+
+    def apply_restore_options(entry)
+      entry.restore_ownership   = @restore_ownership
+      entry.restore_permissions = @restore_permissions
+      entry.restore_times       = @restore_times
+    end
+
+    # Resolves +entry+ to an Array of the Zip::Entry objects it refers to:
+    # exactly [entry] if it's already a Zip::Entry, otherwise every entry
+    # matching that name (one, unless Zip.allow_duplicate_entry_names is on).
+    def resolve_entries(entry)
+      return [entry] if entry.kind_of?(Entry)
+
+      found = get_entry(entry)
+      found.kind_of?(Array) ? found : [found]
+    end
 
     def add_recursive_dir(entry_prefix, src_dir, depth, max_depth, continue_on_exists_proc)
       ::Dir.children(src_dir).sort.each do |child|
@@ -493,7 +550,10 @@ module Zip
       continue_on_exists_proc ||= proc { Zip.continue_on_exists_proc }
       raise ::Zip::EntryExistsError.new proc_name, entry_name unless continue_on_exists_proc.call
 
-      remove get_entry(entry_name)
+      # When duplicate entry names are allowed, a truthy continue_on_exists_proc
+      # means "let the new entry coexist", so the pre-existing one(s) are left
+      # alone rather than being replaced.
+      remove(entry_name) unless Zip.allow_duplicate_entry_names
     end
 
     def check_file(path)
