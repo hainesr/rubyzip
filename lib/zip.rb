@@ -53,6 +53,7 @@ module Zip
                 :write_zip64_support,
                 :warn_invalid_date,
                 :case_insensitive_match,
+                :allow_duplicate_entry_names,
                 :force_entry_names_encoding,
                 :validate_entry_sizes,
                 :validate_declared_number_of_entries,
@@ -78,6 +79,7 @@ module Zip
     @write_zip64_support = true
     @warn_invalid_date = true
     @case_insensitive_match = false
+    @allow_duplicate_entry_names = false
     @force_entry_names_encoding = nil
     @validate_entry_sizes = true
     @validate_declared_number_of_entries = false # Set this to `true` in v4.0.0?

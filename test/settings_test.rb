@@ -72,6 +72,29 @@ class ZipSettingsTest < Minitest::Test
     end
   end
 
+  def test_default_allow_duplicate_entry_names
+    refute(Zip.allow_duplicate_entry_names)
+  end
+
+  def test_true_continue_on_exists_proc_with_duplicates_allowed
+    Zip.continue_on_exists_proc = true
+    Zip.allow_duplicate_entry_names = true
+
+    original_name = nil
+
+    ::Zip::File.open(TEST_ZIP.zip_name) do |zf|
+      original_name = zf.entries.first.name
+      count_before = zf.size
+      zf.add(original_name, 'test/data/file2.txt')
+
+      # Both the original entry and the new one coexist, rather than the
+      # new one replacing the old.
+      assert_equal(count_before + 1, zf.size)
+      matches = zf.find_entry(original_name)
+      assert_equal(2, matches.size)
+    end
+  end
+
   def test_false_warn_invalid_date
     test_file = File.join(File.dirname(__FILE__), 'data', 'WarnInvalidDate.zip')
     Zip.warn_invalid_date = false
