@@ -104,6 +104,10 @@ module Zip
 
     # Closes the current entry and opens a new for writing.
     # +entry+ can be a ZipEntry object or a string.
+    #
+    # Raises Zip::EntryExistsError if an entry with the same name has
+    # already been written to this stream, unless
+    # Zip.allow_duplicate_entry_names is on.
     def put_next_entry(
       entry_name, comment = '', extra = ExtraField.new,
       compression_method = Entry::DEFLATED, level = Zip.default_compression
@@ -130,6 +134,7 @@ module Zip
       raise Error, 'entry is not a ZipEntry' unless entry.kind_of?(Entry)
 
       finalize_current_entry
+      check_duplicate_name(entry, 'copy_raw_entry')
       @cdir << entry
       src_pos = entry.local_header_offset
       entry.write_local_entry(@output_stream)
@@ -167,12 +172,20 @@ module Zip
 
     def init_next_entry(entry)
       finalize_current_entry
+      check_duplicate_name(entry, 'put_next_entry')
       @encrypter.prepare_entry(entry)
       @cdir << entry
       entry.write_local_entry(@output_stream, suppress_extra_fields: @suppress_extra_fields)
       @encrypter.reset!
       @output_stream << @encrypter.header(entry.mtime) unless entry.directory?
       @compressor = get_compressor(entry)
+    end
+
+    def check_duplicate_name(entry, proc_name)
+      return if Zip.allow_duplicate_entry_names
+      return unless @cdir.include?(entry.name)
+
+      raise EntryExistsError.new(proc_name, entry.name)
     end
 
     def get_compressor(entry)

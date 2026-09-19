@@ -162,6 +162,74 @@ class ZipOutputStreamTest < Minitest::Test
     end
   end
 
+  def test_put_next_entry_raises_on_duplicate_name
+    Zip::OutputStream.open(TEST_ZIP.zip_name) do |zos|
+      zos.put_next_entry('dup.txt')
+      zos << 'first content'
+
+      error = assert_raises(Zip::EntryExistsError) do
+        zos.put_next_entry('dup.txt')
+      end
+      assert_match(/'put_next_entry'/, error.message)
+    end
+
+    # The first entry's data and central directory record remain intact -
+    # this is the rubyzip/rubyzip#562 regression.
+    Zip::File.open(TEST_ZIP.zip_name) do |zf|
+      assert_equal(1, zf.size)
+      assert_equal('first content', zf.read('dup.txt'))
+    end
+  end
+
+  def test_put_next_entry_allows_duplicate_name_when_configured
+    Zip.allow_duplicate_entry_names = true
+
+    Zip::OutputStream.open(TEST_ZIP.zip_name) do |zos|
+      zos.put_next_entry('dup.txt')
+      zos << 'first content'
+      zos.put_next_entry('dup.txt')
+      zos << 'second content'
+    end
+
+    Zip::File.open(TEST_ZIP.zip_name) do |zf|
+      matches = zf.find_entry('dup.txt')
+      assert_equal(2, matches.size)
+      assert_equal(['first content', 'second content'],
+                   matches.map { |e| zf.get_input_stream(e, &:read) })
+    end
+  end
+
+  def test_copy_raw_entry_raises_on_duplicate_name
+    entry = Zip::File.open(TestZipFile::TEST_ZIP2.zip_name, &:entries).first
+
+    Zip::OutputStream.open(TEST_ZIP.zip_name) do |zos|
+      zos.copy_raw_entry(entry)
+
+      error = assert_raises(Zip::EntryExistsError) do
+        zos.copy_raw_entry(entry)
+      end
+      assert_match(/'copy_raw_entry'/, error.message)
+    end
+
+    Zip::File.open(TEST_ZIP.zip_name) do |zf|
+      assert_equal(1, zf.size)
+    end
+  end
+
+  def test_copy_raw_entry_allows_duplicate_name_when_configured
+    entry = Zip::File.open(TestZipFile::TEST_ZIP2.zip_name, &:entries).first
+
+    Zip.allow_duplicate_entry_names = true
+    Zip::OutputStream.open(TEST_ZIP.zip_name) do |zos|
+      zos.copy_raw_entry(entry)
+      zos.copy_raw_entry(entry)
+    end
+
+    Zip::File.open(TEST_ZIP.zip_name) do |zf|
+      assert_equal(2, zf.find_entry(entry.name).size)
+    end
+  end
+
   def test_chained_put_into_next_entry
     stored_text = 'hello world in stored text'
     stored_text2 = 'with chain'
