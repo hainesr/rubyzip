@@ -29,6 +29,14 @@ bundle install
 
 This installs the development dependencies declared in `rubyzip.gemspec` (minitest, rubocop, rdoc, simplecov, etc). There's also a `:benchmark` group in the `Gemfile` for the scripts under `benchmark/`, which isn't needed for normal development — CI runs with `BUNDLE_WITHOUT: benchmark`.
 
+If you are testing with JRuby or TruffleRuby use the following to avoid issues with installing dependencies:
+
+```shell
+BUNDLE_WITHOUT=benchmark bundle install
+```
+
+And then use `BUNDLE_WITHOUT=benchmark` before any `bundle exec` commands.
+
 ## Testing
 
 Tests are written with Minitest and live under `test/`, mirroring the structure of `lib/zip/`. Test file names end in `_test.rb`.
@@ -83,10 +91,18 @@ RDoc comments (markdown-flavoured) document the public API. If you change or add
 bundle exec rake rdoc
 ```
 
+If you need to force all RDoc comments to be rebuilt, use:
+
+```shell
+bundle exec rake rerdoc
+```
+
 ## Other conventions
 
 - All Ruby files start with `# frozen_string_literal: true`.
+- In Markdown files, allow paragraph text and text in bulleted lists to wrap. Do not insert line-breaks to artificially format the raw Markdown file.
 - Keep the public API changes backwards-compatible where possible; this is a widely-used library. Breaking API changes are called out prominently in `README.md` and `Changelog.md` (see the "Updating to version 3.0" section of the README for an example of the level of detail expected).
+- Do not add entries to the `Changelog.md` file. This is built by hand at release time.
 - This projects adheres to the principles of Semantic Versioning (see the summary section at https://semver.org)
 - Don't bump the version in `lib/zip/version.rb` yourself unless specifically asked to — releases are cut deliberately. Do raise a note if you think that a change requires more than just a patch-level version number bump.
 - Security issues should never be discussed in public issues/PRs; the README asks that they be emailed directly to the maintainer instead. If you notice something that looks like a security vulnerability while working in this repo, flag it to the user rather than opening a public PR describing it.
