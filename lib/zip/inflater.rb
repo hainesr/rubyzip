@@ -2,15 +2,6 @@
 
 module Zip
   class Inflater < Decompressor # :nodoc:all
-    # The number of compressed bytes fed to Zlib in one go. Deflate can
-    # expand data by up to ~1000:1, so inflating a whole
-    # Decompressor::CHUNK_SIZE (32 KiB) at once can produce over 30 MiB of
-    # output for a single small read, all of which sits in @buffer until
-    # the caller has read it out. Keeping the input chunk small bounds the
-    # amount inflated beyond what the caller asked for to a few MiB in the
-    # worst case, without measurably slowing down normal files.
-    INPUT_CHUNK_SIZE = 4096
-
     def initialize(*args)
       super
 
@@ -42,7 +33,7 @@ module Zip
     def produce_input
       retried = 0
       begin
-        @zlib_inflater.inflate(input_stream.read(INPUT_CHUNK_SIZE))
+        @zlib_inflater.inflate(input_stream.read(Zip.inflater_chunk_size))
       rescue Zlib::BufError
         raise if retried >= 5 # how many times should we retry?
 

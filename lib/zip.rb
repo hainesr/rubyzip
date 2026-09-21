@@ -55,7 +55,8 @@ module Zip
                 :case_insensitive_match,
                 :force_entry_names_encoding,
                 :validate_entry_sizes,
-                :validate_declared_number_of_entries
+                :validate_declared_number_of_entries,
+                :inflater_chunk_size
 
   DEFAULT_RESTORE_OPTIONS = {
     restore_ownership:   false,
@@ -80,6 +81,7 @@ module Zip
     @force_entry_names_encoding = nil
     @validate_entry_sizes = true
     @validate_declared_number_of_entries = false # Set this to `true` in v4.0.0?
+    @inflater_chunk_size = 4096
   end
 
   # Set options for RubyZip in one block.

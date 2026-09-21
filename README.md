@@ -485,6 +485,14 @@ Prior to version 3.0, Zip64 support is disabled for writing by default.
 
 _NOTE_: If Zip64 write support is enabled then any extractor subsequently used may also require Zip64 support to read from the resultant archive.
 
+### Inflater chunk size
+
+When reading a deflated entry, rubyzip feeds the compressed data to Zlib in chunks of 4 KiB. Deflate can expand data by up to around 1000:1, so this bounds how much is inflated beyond what a single read asked for (to about 4 MiB in the worst case). Smaller values lower that bound further, at the cost of a little more overhead per byte on entries that barely compress; larger values do the opposite. To change it:
+
+```ruby
+Zip.inflater_chunk_size = 1024
+```
+
 ### Block Form
 
 You can set multiple settings at the same time by using a block:
