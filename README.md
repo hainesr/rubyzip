@@ -487,11 +487,13 @@ _NOTE_: If Zip64 write support is enabled then any extractor subsequently used m
 
 ### Inflater chunk size
 
-When reading a deflated entry, rubyzip feeds the compressed data to Zlib in chunks of 4 KiB. Deflate can expand data by up to around 1000:1, so this bounds how much is inflated beyond what a single read asked for (to about 4 MiB in the worst case). Smaller values lower that bound further, at the cost of a little more overhead per byte on entries that barely compress; larger values do the opposite. To change it:
+When reading a deflated entry, rubyzip feeds the compressed data to Zlib in chunks of 4 KiB. Deflate can compress data by up to around 1000:1, so this bounds how much is inflated beyond what a single read asked for (to about 4 MiB in the worst case). Smaller values lower that bound further, at the cost of a little more overhead per byte on entries that barely compress; larger values do the opposite. To change it:
 
 ```ruby
-Zip.inflater_chunk_size = 1024
+Zip.inflater_chunk_size = 1024 # Default is 4096.
 ```
+
+Consider setting `Zip.inflater_chunk_size` to a higher number (e.g. 32,768) if you know your data is not highly compressible (other zip files, JPEGs, etc) and you value performance over a smaller memory footprint.
 
 ### Block Form
 
